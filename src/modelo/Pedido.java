@@ -1,4 +1,4 @@
-package model;
+package modelo;
 
 import java.util.Currency;
 import java.util.List;

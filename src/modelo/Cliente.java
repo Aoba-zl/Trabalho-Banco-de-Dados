@@ -1,4 +1,4 @@
-package model;
+package modelo;
 
 import java.util.Date;
 import java.util.List;

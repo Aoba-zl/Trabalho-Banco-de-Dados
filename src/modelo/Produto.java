@@ -1,6 +1,5 @@
-package model;
+package modelo;
 
-import java.util.Currency;
 import java.util.List;
 
 public class Produto
@@ -8,7 +7,7 @@ public class Produto
 	private List<VariacaoProduto> variacoes;
     private List<Imagem> imagens;
     private String nome;
-    private Currency preco;
+    private double preco;
     private String descricao;
     private int estoqueTotal;
     private String Categoria;
@@ -53,12 +52,12 @@ public class Produto
         this.nome = nome;
     }
 
-    public Currency getPreco()
+    public double getPreco()
 	{
         return preco;
     }
 
-    public void setPreco(Currency preco)
+    public void setPreco(double preco)
 	{
         this.preco = preco;
     }

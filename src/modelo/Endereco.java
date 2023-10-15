@@ -1,4 +1,4 @@
-package model;
+package modelo;
 public class Endereco
 {
 	String cep;

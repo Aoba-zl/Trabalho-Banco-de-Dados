@@ -1,12 +1,11 @@
-package model;
+package modelo;
 
-import java.util.Currency;
 import java.util.List;
 
 public class Carrinho
 {
     private List<Item> itens;
-	private Currency total;
+	private double total;
 
     public List<Item> getItens()
 	{
@@ -17,13 +16,17 @@ public class Carrinho
 	{
         this.itens = itens;
     }
+    public void addItem(Item novoProduto)
+    {
+        this.itens.add(novoProduto);
+    }
 
-    public Currency getTotal()
+    public double getTotal()
 	{
         return total;
     }
 
-    public void setTotal(Currency total)
+    public void setTotal(double total)
 	{
         this.total = total;
     }
