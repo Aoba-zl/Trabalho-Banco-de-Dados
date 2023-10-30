@@ -31,7 +31,10 @@ public class Main extends Application
 //		winStore.addElements(pWin);
 		
 		WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
-		winRegProduct.addElements(pWin);
+//		winRegProduct.addElements(pWin);
+		
+		WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
+		winEditProduct.addElements(pWin);
 		
 		scnLogin = new Scene(pWin);
 		
