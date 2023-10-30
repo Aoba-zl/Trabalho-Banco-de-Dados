@@ -13,7 +13,7 @@ public class WinHomePageConstructor
 {
 	public void addElements(Pane pane)
 	{
-		Label lblHomePage = new Label("Página inicial");
+		Label lblHomePage = new Label("Página Inicial");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
 		lblHomePage.setStyle("-fx-font-size: 24px; -fx-alignment: center; -fx-font-weight: bold");
@@ -41,7 +41,7 @@ public class WinHomePageConstructor
 		HBox hbSearch = new HBox();
 		hbSearch.setPrefWidth(640);
 		hbSearch.setPrefHeight(30);
-		hbSearch.setLayoutY(64);
+		hbSearch.setLayoutY(60);
 		hbSearch.setPadding(new Insets(0, 0, 0, 20));
 		hbSearch.setStyle("-fx-spacing: 13px");
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
