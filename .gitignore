@@ -1,4 +1,11 @@
+*.class
+*.classpath
 *.idea
 *.iml
 *.xml
-
+/bin/
+.project
+.classpath
+.idea/
+out/
+/src/META-INF/MANIFEST.MF
