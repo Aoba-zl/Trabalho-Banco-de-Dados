@@ -58,8 +58,8 @@ public class WinLoginConstructor
 		vbUser.setLayoutX(195);
 		vbUser.setLayoutY(91);
 		
-		Image imgStore1 = new Image(getClass().getResource("image/Loja1.jpg").toString());
-		Image imgStore2 = new Image(getClass().getResource("image/Loja2.jpg").toString());
+		Image imgStore1 = new Image(getClass().getResource("image/Store1.jpg").toString());
+		Image imgStore2 = new Image(getClass().getResource("image/Store2.jpg").toString());
 		ImageView imgViewStore1 = new ImageView(imgStore1);
 		ImageView imgViewStore2 = new ImageView(imgStore2);
 		imgViewStore1.setFitHeight(150);
