@@ -16,7 +16,8 @@ public class Main extends Application
         mainPane.setPrefWidth(Constants.WIDTH);
         mainPane.setPrefHeight(Constants.HEIGHT);
 
-        WinAccountMenuConstructor accountMenu = new WinAccountMenuConstructor();
+        //TODO: Configurar tipo de conta
+        WinAccountMenuConstructor accountMenu = new WinAccountMenuConstructor("PlaceHolder");
         accountMenu.addElements(mainPane);
 
         Scene scene = new Scene(mainPane, Constants.WIDTH, Constants.HEIGHT);
