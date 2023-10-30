@@ -5,6 +5,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,7 +25,8 @@ public class WinAccountMenuConstructor
     public void addElements(Pane pane)
     {
         double marginMenu = (Constants.WIDTH * 0.08);
-        Button btnVoltar = new Button("Voltar");
+        Button btnBack = new Button();
+        setBtnBackStyle(btnBack);
         Label lblTitulo = new Label("Conta");
         lblTitulo.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
@@ -66,7 +69,7 @@ public class WinAccountMenuConstructor
 
 
         allElements.setPrefWidth(Constants.WIDTH);
-        bpTitle.setLeft(btnVoltar);
+        bpTitle.setLeft(btnBack);
         bpTitle.setCenter(lblTitulo);
         vbMenuTop.getChildren().addAll(btnData, btnAddress);
         vbMenuTop.setAlignment(Pos.TOP_CENTER);
@@ -75,7 +78,7 @@ public class WinAccountMenuConstructor
 
         vbContent.setAlignment(Pos.TOP_CENTER);
 
-        BorderPane.setMargin(bpTitle, new Insets(0, 0, 10, 0));
+//        BorderPane.setMargin(bpTitle, new Insets(0, 0, 10, 0));
         BorderPane.setMargin(vbMenu, new Insets(0, 0, 0, marginMenu));
         BorderPane.setMargin(vbContent, new Insets(0, marginMenu, 0, 0));
         allElements.setTop(bpTitle);
@@ -83,6 +86,20 @@ public class WinAccountMenuConstructor
         allElements.setRight(vbContent);
 
         pane.getChildren().add(allElements);
+    }
+
+    private void setBtnBackStyle(Button btnBack)
+    {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setStyle("-fx-border-color: rgba(255,255,255,0);" +
+                "-fx-background-color: rgba(255,255,255,0);");
+
+        btnBack.setGraphic(ivGoBackBtn);
     }
 
     private void go2Page(String page)
