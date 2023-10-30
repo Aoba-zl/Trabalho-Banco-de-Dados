@@ -11,6 +11,23 @@ import javafx.scene.layout.VBox;
 
 public class WinHomePageConstructor 
 {
+	private String user;
+	
+	private Label lblCartStore;
+	
+	WinHomePageConstructor (String user)
+    {
+        this.user = user;
+        if(this.user.contains("client"))
+        {
+        	lblCartStore = new Label("Carrinho🛒");
+        }
+        else
+        {
+        	lblCartStore = new Label("Loja🏬");        	
+        }
+    }
+	
 	public void addElements(Pane pane)
 	{
 		Label lblHomePage = new Label("Página Inicial");
@@ -19,10 +36,10 @@ public class WinHomePageConstructor
 		lblHomePage.setStyle("-fx-font-size: 24px; -fx-alignment: center; -fx-font-weight: bold");
 		lblHomePage.setLayoutY(25);
 		
-		Label lblCart = new Label("Carrinho🛒");
+		
 		Label lblExit = new Label("Sair❌");
 		Label lblAccount = new Label("Conta");
-		lblCart.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
+		lblCartStore.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
 		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
 		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
 		
@@ -31,7 +48,7 @@ public class WinHomePageConstructor
 		hbOption.setPrefHeight(30);
 		hbOption.setPadding(new Insets(0, 15, 0, 0));
 		hbOption.setStyle("-fx-alignment: top-right; -fx-spacing: 15px;");
-		hbOption.getChildren().addAll(lblCart, lblExit, lblAccount);
+		hbOption.getChildren().addAll(lblCartStore, lblExit, lblAccount);
 		
 		TextField tfSearch = new TextField();
 		tfSearch.setPromptText("Buscar item");
@@ -104,9 +121,34 @@ public class WinHomePageConstructor
 		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		spProduct.setContent(vbProduct);
 		
+		
+		//------------mudança de scene---------------
+		lblExit.setOnMouseClicked(e -> toLogin());
+		lblCartStore.setOnMouseClicked(e -> toCartStore(lblCartStore));
+		
 		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct);
+		
+		
+	}
+
+	private void toLogin() 
+	{
+		Main m = new Main();
+		m.changeScene("login");
 		
 	}
 	
-
+	private void toCartStore(Label lblCartStore)
+	{
+		Main m = new Main();
+		if(lblCartStore.getText().equals("Carrinho🛒"))
+		{
+			m.changeScene("cart");
+		}
+		else
+		{
+			m.changeScene("store");
+		}
+	}
+	
 }

@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -18,6 +20,13 @@ public class WinStoreConstructor
 		lblHomePage.setPrefWidth(640);
 		lblHomePage.setStyle("-fx-font-size: 24px; -fx-alignment: center; -fx-font-weight: bold");
 		lblHomePage.setLayoutY(25);
+		
+		Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
+		ImageView imgViewGoBack = new ImageView(imgGoBack);
+		imgViewGoBack.setFitWidth(24);
+		imgViewGoBack.setFitHeight(24);
+		imgViewGoBack.setStyle("-fx-cursor: hand");
+		imgViewGoBack.setPickOnBounds(true);
 		
 		Label lblExit = new Label("Sair❌");
 		Label lblAccount = new Label("Conta");
@@ -116,8 +125,12 @@ public class WinStoreConstructor
 		hbBtnAdd.setLayoutY(360);
 		hbBtnAdd.getChildren().add(btnAdd);
 		
+		//------------mudança de scene---------------
 		
-		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd);
+		
+		
+		
+		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, imgViewGoBack);
 		
 	}
 	

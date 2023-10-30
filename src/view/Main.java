@@ -8,42 +8,58 @@ import javafx.scene.layout.Pane;
 
 public class Main extends Application 
 {
-	private static Stage stage;
+	private Stage stage;
+	private static Scene scn;
+	private static Pane pWin;
 	
+	private static WinLoginConstructor winLogin = new WinLoginConstructor();
+	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor("store");
+	private static WinStoreConstructor winStore = new WinStoreConstructor();
+	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
+	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
 	{
 		stage = PrimaryStage;
-		Scene scnLogin;
 		
-		Pane pWin = new Pane();
+		pWin = new Pane();
 		pWin.setPrefWidth(640);
 		pWin.setPrefHeight(400);
 		
-		WinLoginConstructor winLogin = new WinLoginConstructor();
-//		winLogin.addElements(pWin);
+		winLogin.addElements(pWin);
 		
-		WinHomePageConstructor winHomePage = new WinHomePageConstructor();
-//		winHomePage.addElements(pWin);
+		scn = new Scene(pWin);
 		
-		WinStoreConstructor winStore = new WinStoreConstructor();
-//		winStore.addElements(pWin);
-		
-		WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
-//		winRegProduct.addElements(pWin);
-		
-		WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
-		winEditProduct.addElements(pWin);
-		
-		scnLogin = new Scene(pWin);
-		
-		stage.setScene(scnLogin);
+		stage.setScene(scn);
 		stage.setResizable(false);
 		stage.setTitle("Loja Online");
 		stage.show();
 	}
 	
+	void changeScene(String scnStr)
+	{
+		pWin.getChildren().clear();
+		switch(scnStr)
+		{
+			case "login":
+				winLogin.addElements(pWin);
+				break;
+			case "homePage":
+				winHomePage.addElements(pWin);
+				break;
+			case "cart":
+				System.out.println("carrinho");
+				break;
+			case "store":
+				winStore.addElements(pWin);
+				break;
+			case "regProduct":
+				winRegProduct.addElements(pWin);
+				break;
+		}
+		
+	}
 	
 	public static void main(String[] args) 
 	{

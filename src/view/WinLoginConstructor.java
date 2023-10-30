@@ -123,8 +123,17 @@ public class WinLoginConstructor
 										});
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
 		
+		//------------mudança de scene---------------
+		btnEnter.setOnAction(e -> toHomePage());
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		
 	}
+	
+	void toHomePage()
+	{
+		Main m = new Main();
+		m.changeScene("homePage");
+	}
+	
 }
