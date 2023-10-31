@@ -30,9 +30,9 @@ public class WinLoginConstructor
 		lblCreateRegister.setPrefWidth(75);
 		lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: #2675ff;");
 		
-		TextField tfUser = new TextField();
+		TextField tfUserName = new TextField();
 		TextField tfPassword = new TextField();
-		tfUser.setPrefWidth(120);
+		tfUserName.setPrefWidth(120);
 		tfPassword.setPrefWidth(120);
 		
 		Button btnEnter = new Button("Entrar");
@@ -44,7 +44,7 @@ public class WinLoginConstructor
 		HBox hbBtnEnter = new HBox(2);
 		hbBtnEnter.setStyle("-fx-alignment: bottom-right;");
 		hbBtnEnter.setPrefHeight(50);
-		hbUser.getChildren().addAll(lblUser, tfUser);
+		hbUser.getChildren().addAll(lblUser, tfUserName);
 		hbPassword.getChildren().addAll(lblPassword, tfPassword);
 		hbLblReg.getChildren().addAll(lblHasRegister, lblCreateRegister);
 		hbBtnEnter.getChildren().add(btnEnter);
@@ -124,13 +124,25 @@ public class WinLoginConstructor
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
 		
 		//------------mudança de scene---------------
-		btnEnter.setOnAction(e -> toHomePage());
+		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword));
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		
 	}
 	
-	void toHomePage()
+	private void signUpUser(TextField tfUserName, TextField tfPassword)
+	{
+		if(!tfUserName.getText().trim().isEmpty() && !tfPassword.getText().trim().isEmpty())
+		{
+			toHomePage();
+		}
+		else
+		{
+			System.out.println("Digite todos os valores");
+		}
+	}
+	
+	private void toHomePage()
 	{
 		Main m = new Main();
 		m.changeScene("homePage");
