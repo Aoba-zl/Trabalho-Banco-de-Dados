@@ -14,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.awt.event.MouseEvent;
+
 public class WinAccountMenuConstructor
 {
     String user;
@@ -39,7 +41,13 @@ public class WinAccountMenuConstructor
     {
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
-        setBtnBackStyle(btnBack);
+        setBtnBackImage(btnBack);
+        String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+        String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        setOverButtonStyle(btnBack, styleEnter, styleExit);
+
         Label lblTitulo = new Label("Conta");
         lblTitulo.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
@@ -67,7 +75,12 @@ public class WinAccountMenuConstructor
         btnOrderRecord.setPrefWidth(defaultWidthBtn);
         btnData.setStyle("-fx-border-radius: 8px; -fx-background-radius: 8px");
         btnAddress.setStyle("-fx-border-radius: 8px; -fx-background-radius: 8px");
-        btnOrderRecord.setStyle("-fx-background-color: rgba(0,0,0,0)");
+        styleEnter = "-fx-background-color: rgba(0,0,0,0); -fx-text-fill: purple; -fx-cursor: hand;" +
+                "-fx-font-weight: bold; -fx-underline: true";
+        styleExit = "-fx-background-color: rgba(0,0,0,0); -fx-text-fill: blue; -fx-cursor: hand;" +
+                "-fx-font-weight: bold";
+        setOverButtonStyle(btnOrderRecord, styleEnter, styleExit);
+
 
         String dataPage;
         String addressPage;
@@ -120,7 +133,12 @@ public class WinAccountMenuConstructor
 
     }
 
-    private void setBtnBackStyle(Button btnBack)
+    private void setBtnStyle(Button button, String style)
+    {
+        button.setStyle(style);
+    }
+
+    private void setBtnBackImage(Button btnBack)
     {
         Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
         ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
@@ -128,10 +146,14 @@ public class WinAccountMenuConstructor
         ivGoBackBtn.setFitHeight(widthHeight);
         ivGoBackBtn.setFitWidth(widthHeight);
 
-        btnBack.setStyle("-fx-border-color: rgba(255,255,255,0);" +
-                "-fx-background-color: rgba(255,255,255,0);");
-
         btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setOverButtonStyle(Button button, String styleEnter, String styleExit)
+    {
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
     }
 
     private void go2Page(String page)
