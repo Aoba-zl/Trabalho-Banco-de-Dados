@@ -6,3 +6,4 @@
 *.xml
 out/
 /src/META-INF/MANIFEST.MF
+/bin/
