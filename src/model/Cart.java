@@ -1,24 +1,25 @@
-package modelo;
+package model;
 
 import java.util.List;
 
-public class Carrinho
+public class Cart
 {
-    private List<Item> itens;
+    private List<Item> items;
 	private double total;
 
     public List<Item> getItens()
 	{
-        return itens;
+        return items;
     }
 
-    public void setItens(List<Item> itens)
+    public void setItems(List<Item> items)
 	{
-        this.itens = itens;
+        this.items = items;
     }
-    public void addItem(Item novoProduto)
+    
+    public void addItems(Item newProduct)
     {
-        this.itens.add(novoProduto);
+        this.items.add(newProduct);
     }
 
     public double getTotal()

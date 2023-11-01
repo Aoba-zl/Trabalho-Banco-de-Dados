@@ -1,4 +1,9 @@
+.project
+.classpath
+.idea/
 *.idea
 *.iml
 *.xml
-
+out/
+/src/META-INF/MANIFEST.MF
+/bin/
