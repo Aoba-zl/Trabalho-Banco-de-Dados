@@ -3,6 +3,7 @@ package View;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -15,12 +16,10 @@ import javafx.stage.Stage;
 
 
 
-public class WinPurchaseHistoryConstructor extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Pane pane= new Pane();
-        Scene scene= new Scene(pane, 640, 400);
+public class WinPurchaseHistoryConstructor {
+    private Boolean subTelaActive= false;
 
+    public void addElements(Pane pane) {
         Button btnReturn= new Button("<");
         Button btnQuit= new Button("Sair");
         Button btnAccount= new Button("Conta");
@@ -58,8 +57,21 @@ public class WinPurchaseHistoryConstructor extends Application {
 
 
 
+        // ---------------------Eventos---------------------------
 
-        // ------------------Status Window----------------------
+        btnSeePurchase.setOnMouseClicked(event -> {
+            subTelaActive= true;
+            pane.getChildren().add(subWindow());
+        });
+
+
+        // ----------------------------------------------------
+
+        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tbPurchaseHistory);
+
+    }
+
+    public BorderPane subWindow(){
         Pane panePurchaseStatus= new Pane();
         GridPane gridPurchaseStatus = new GridPane();
         panePurchaseStatus.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px");
@@ -76,7 +88,7 @@ public class WinPurchaseHistoryConstructor extends Application {
         Label lblFormPayment= new Label("Forma de Pagamento:");
         Label lblStatus= new Label("Status:");
         lblTittle.setFont(Font.font(20));
-        lblTittle.relocate(98, 5);
+        lblTittle.relocate(90, 5);
 
 
         TextField tfProductName= new TextField();
@@ -88,7 +100,9 @@ public class WinPurchaseHistoryConstructor extends Application {
         TextField tfStatus= new TextField();
 
         Button btnCancel= new Button("Cancelar Compra");
+        Button btnReturnPurchaseStatus= new Button("Voltar");
         btnCancel.relocate(160, 285);
+        btnReturnPurchaseStatus.relocate(60, 285);
 
         gridPurchaseStatus.setVgap(10);
         gridPurchaseStatus.setHgap(10);
@@ -110,39 +124,23 @@ public class WinPurchaseHistoryConstructor extends Application {
         gridPurchaseStatus.add(tfStatus, 2, 8);
 
 
-
-        panePurchaseStatus.getChildren().addAll(lblTittle, gridPurchaseStatus, btnCancel);
+        panePurchaseStatus.getChildren().addAll(lblTittle, gridPurchaseStatus, btnCancel, btnReturnPurchaseStatus);
 
 
         BorderPane paneTransp = new BorderPane();
         paneTransp.setPrefHeight(400);
         paneTransp.setPrefWidth(640);
         paneTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4)");
-        paneTransp.setVisible(false);
+        paneTransp.setVisible(subTelaActive);
 
 
         paneTransp.setCenter(panePurchaseStatus);
 
-
-        btnSeePurchase.setOnMouseClicked(event -> {
-            paneTransp.setVisible(true);
-        });
-
-        pane.setOnMouseClicked(event -> {
-            paneTransp.setVisible(false);});
+        btnReturnPurchaseStatus.setOnMouseClicked(event -> {paneTransp.setVisible(false);});
 
 
-        // ----------------------------------------------------
 
-        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tbPurchaseHistory, paneTransp);
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("MarketPlace");
-        primaryStage.show();
+        return paneTransp;
     }
 
-
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
 }
