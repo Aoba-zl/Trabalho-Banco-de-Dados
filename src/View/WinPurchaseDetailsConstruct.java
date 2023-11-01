@@ -8,18 +8,19 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class WinPurchaseDetailsConstruct  {
+    private Button btnBuy= new Button("Comprar");
+    private Label lblTittle= new Label("Detalhes da Compra");
+    private Label lblTotalPurchaseValue= new Label("Total:");
+    private Label lblPortage= new Label("Frete:");
+    private Label lblPaymentMethod= new Label("Método de Pagamento:");
+
 
     public void addElements(Pane pane) {
         Button btnReturn= new Button("<");
-        Button btnBuy= new Button("Comprar");
         btnBuy.relocate(500, 330);
         btnBuy.setPrefHeight(40);
         btnBuy.setPrefWidth(90);
 
-        Label lblTittle= new Label("Detalhes da Compra");
-        Label lblTotalPurchaseValue= new Label("Total:");
-        Label lblPortage= new Label("Frete:");
-        Label lblPaymentMethod= new Label("Método de Pagamento:");
         lblTittle.setFont(Font.font(24));
         lblTittle.relocate(210, 20);
         lblTotalPurchaseValue.setFont(Font.font(13));

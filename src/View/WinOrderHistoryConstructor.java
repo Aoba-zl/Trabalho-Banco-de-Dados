@@ -9,26 +9,24 @@ import javafx.stage.Stage;
 
 
 
-public class WinOrderHistoryConstructor extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Pane pane= new Pane();
-        Scene scene= new Scene(pane, 640, 400);
+public class WinOrderHistoryConstructor {
+    private Button btnSearch= new Button("Buscar");
+    private TextField tfSearch= new TextField();
+    private Label lblTitle= new Label("Histórico de Pedidos");
 
+
+    public void addElements(Pane pane) throws Exception {
         Button btnReturn= new Button("<");
         Button btnQuit= new Button("Sair");
         Button btnAccount= new Button("Conta");
-        Button btnSearch= new Button("Buscar");
         btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
         btnSearch.relocate(520, 50);
 
-        TextField tfSearch= new TextField();
         tfSearch.setMinSize(380, 30);
         tfSearch.relocate(115, 50);
 
-        Label lblTitle= new Label("Histórico de Pedidos");
         lblTitle.setMinSize(150, 25);
         lblTitle.relocate(210, 10);
         lblTitle.setFont(Font.font(20));
@@ -50,13 +48,5 @@ public class WinOrderHistoryConstructor extends Application {
 
         pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSearch, tfSearch,lblTitle, tbOrderHistory);
 
-
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("MarketPlace");
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        Application.launch(args);
     }
 }

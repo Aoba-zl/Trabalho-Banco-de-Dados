@@ -17,14 +17,16 @@ import javafx.stage.Stage;
 
 
 public class WinPurchaseHistoryConstructor {
-    private Boolean subTelaActive= false;
+    private Button btnSearch= new Button("Buscar");
+    private Button btnSeePurchase= new Button("Ver Compra");
+    private TextField tfSearch= new TextField();
+    Label lblTitle= new Label("Histórico de Compra");
+
 
     public void addElements(Pane pane) {
         Button btnReturn= new Button("<");
         Button btnQuit= new Button("Sair");
         Button btnAccount= new Button("Conta");
-        Button btnSearch= new Button("Buscar");
-        Button btnSeePurchase= new Button("Ver Compra");
         btnSeePurchase.setMinSize(100, 30);
         btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
@@ -32,11 +34,9 @@ public class WinPurchaseHistoryConstructor {
         btnSearch.relocate(520, 50);
         btnSeePurchase.relocate(480, 350);
 
-        TextField tfSearch= new TextField();
         tfSearch.setMinSize(380, 30);
         tfSearch.relocate(115, 50);
 
-        Label lblTitle= new Label("Histórico de Compra");
         lblTitle.setMinSize(150, 25);
         lblTitle.relocate(210, 10);
         lblTitle.setFont(Font.font(20));
@@ -57,10 +57,9 @@ public class WinPurchaseHistoryConstructor {
 
 
 
-        // ---------------------Eventos---------------------------
+        // ---------------------Events---------------------------
 
         btnSeePurchase.setOnMouseClicked(event -> {
-            subTelaActive= true;
             pane.getChildren().add(subWindow());
         });
 
@@ -131,13 +130,11 @@ public class WinPurchaseHistoryConstructor {
         paneTransp.setPrefHeight(400);
         paneTransp.setPrefWidth(640);
         paneTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4)");
-        paneTransp.setVisible(subTelaActive);
 
 
         paneTransp.setCenter(panePurchaseStatus);
 
         btnReturnPurchaseStatus.setOnMouseClicked(event -> {paneTransp.setVisible(false);});
-
 
 
         return paneTransp;
