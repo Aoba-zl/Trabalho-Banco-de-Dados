@@ -3,26 +3,37 @@ package View;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import javax.swing.text.Style;
 
 
 public class WinOrderHistoryConstructor {
-    private Button btnSearch= new Button("Buscar");
+    private Button btnSearch= new Button("\uD83D\uDD0D");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Pedidos");
 
 
     public void addElements(Pane pane) throws Exception {
-        Button btnReturn= new Button("<");
-        Button btnQuit= new Button("Sair");
+        Button btnReturn= new Button();
+        Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
         btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
         btnSearch.relocate(520, 50);
+        setBtnBackImage(btnReturn);
+        String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+        String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        setOverButtonStyle(btnReturn, styleEnter, styleExit);
+        setOverButtonStyle(btnQuit, styleEnter, styleExit);
+        setOverButtonStyle(btnAccount, styleEnter, styleExit);
 
         tfSearch.setMinSize(380, 30);
         tfSearch.relocate(115, 50);
@@ -48,5 +59,26 @@ public class WinOrderHistoryConstructor {
 
         pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSearch, tfSearch,lblTitle, tbOrderHistory);
 
+    }
+
+    private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button, String styleEnter, String styleExit) {
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
     }
 }

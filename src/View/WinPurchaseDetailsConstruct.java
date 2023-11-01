@@ -3,6 +3,8 @@ package View;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -16,10 +18,17 @@ public class WinPurchaseDetailsConstruct  {
 
 
     public void addElements(Pane pane) {
-        Button btnReturn= new Button("<");
+        Button btnReturn= new Button();
         btnBuy.relocate(500, 330);
         btnBuy.setPrefHeight(40);
         btnBuy.setPrefWidth(90);
+        setBtnBackImage(btnReturn);
+        String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+        String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        setOverButtonStyle(btnReturn, styleEnter, styleExit);
+
 
         lblTittle.setFont(Font.font(24));
         lblTittle.relocate(210, 20);
@@ -52,5 +61,27 @@ public class WinPurchaseDetailsConstruct  {
 
         pane.getChildren().addAll(tbProducts, btnBuy, btnReturn, lblPaymentMethod,lblPortage,lblTotalPurchaseValue,lblTittle, cbPaymentMethod);
 
+    }
+
+    private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style)
+    {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button, String styleEnter, String styleExit) {
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
     }
 }

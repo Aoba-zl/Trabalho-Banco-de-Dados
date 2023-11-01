@@ -2,6 +2,8 @@ package View;
 
 import javafx.application.Application;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -16,9 +18,9 @@ public class WinShoppingCartConstructor {
     private TextField tfQuantity= new TextField();
 
     public void addElements(Pane pane){
-        Button btnReturn= new Button("<");
+        Button btnReturn= new Button();
         Button btnAccount= new Button("Conta");
-        Button btnQuit= new Button("Sair");
+        Button btnQuit= new Button("Sair❌");
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
         btnRemove.setMinSize(100, 30);
@@ -28,13 +30,21 @@ public class WinShoppingCartConstructor {
         btnSelectAll.relocate(160, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
+        setBtnBackImage(btnReturn);
+        String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+        String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        setOverButtonStyle(btnReturn, styleEnter, styleExit);
+        setOverButtonStyle(btnQuit, styleEnter, styleExit);
+        setOverButtonStyle(btnAccount, styleEnter, styleExit);
 
         lblTittle.setFont(Font.font(20));
         lblTittle.relocate(280, 20);
         lblQuantity.setFont(Font.font(14));
         lblQuantity.relocate(30, 315);
         lblTotalPrice.setFont(Font.font(15));
-        lblTotalPrice.relocate(345, 355);
+        lblTotalPrice.relocate(335, 355);
 
         tfQuantity.setMaxSize(30, 30);
         tfQuantity.relocate(115, 315);
@@ -55,6 +65,27 @@ public class WinShoppingCartConstructor {
 
         pane.getChildren().addAll(tbShoppingCart, btnAccount,btnQuit,btnReturn,btnRemove, btnSelectAll, btnPlaceOrder,lblQuantity, lblTittle, lblTotalPrice, tfQuantity);
 
+    }
+
+    private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button, String styleEnter, String styleExit) {
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
     }
 
 }
