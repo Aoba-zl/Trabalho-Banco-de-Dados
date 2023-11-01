@@ -1,5 +1,9 @@
 package view;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -8,7 +12,12 @@ import javafx.scene.layout.VBox;
 
 public class WinAddressStoreConstructor
 {
-    public void addElements(VBox mainBox)
+    private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private String action = null;
+
+    public WinAddressStoreConstructor(VBox mainBox)
     {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
@@ -37,8 +46,8 @@ public class WinAddressStoreConstructor
         TextField tfNumber       = new TextField();
         TextField tfComplement   = new TextField();
 
-        Button btnEditAccount   = new Button("Editar");
-        btnEditAccount
+        Button btnEditAddress = new Button("Editar");
+        btnEditAddress
                 .setStyle("-fx-border-radius: 8px;-fx-background-radius: 8px");
         Button btnCancel   = new Button("Cancelar");
         btnCancel
@@ -59,9 +68,22 @@ public class WinAddressStoreConstructor
         bpComplemet.setRight(tfComplement);
 
         bpButtons.setRight(btnCancel);
-        bpButtons.setCenter(btnEditAccount);
+        bpButtons.setCenter(btnEditAddress);
 
         mainBox.getChildren().addAll(lblTitle, bpCep, bpEstateCity, bpNeighborhood,
                 bpStreet, bpNumber, bpComplemet, bpButtons);
+    }
+
+    StringProperty getMessageMenuPopUp()
+    {
+        return messageMenuPopUp;
+    }
+    BooleanProperty getIsMenuPopupActive()
+    {
+        return isMenuPopupActive;
+    }
+    BooleanProperty getReturnPopUp()
+    {
+        return returnPopUp;
     }
 }

@@ -1,5 +1,9 @@
 package view;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -10,7 +14,12 @@ import javafx.scene.layout.VBox;
 
 public class WinAccountStoreConstructor
 {
-    public void addElements(VBox mainBox)
+    private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private String action = null;
+
+    public WinAccountStoreConstructor(VBox mainBox)
     {
         Label lblTitle = new Label("Dados");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
@@ -62,5 +71,18 @@ public class WinAccountStoreConstructor
 
         mainBox.getChildren().addAll(lblTitle, bpLogin, bpName, bpCnpj, bpEmail, bpPhone,
                 bpBirthDate, bpButtons);
+    }
+
+    StringProperty getMessageMenuPopUp()
+    {
+        return messageMenuPopUp;
+    }
+    BooleanProperty getIsMenuPopupActive()
+    {
+        return isMenuPopupActive;
+    }
+    BooleanProperty getReturnPopUp()
+    {
+        return returnPopUp;
     }
 }

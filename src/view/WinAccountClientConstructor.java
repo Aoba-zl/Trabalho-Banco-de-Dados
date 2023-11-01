@@ -2,6 +2,8 @@ package view;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -17,9 +19,12 @@ public class WinAccountClientConstructor
     private BorderPane bpButtons;
     private Button btnDeleteAccount;
     private Button btnCancelEdit;
-    private BooleanProperty isDisableMenuButtons = new SimpleBooleanProperty(false);
+    private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private String action = null;
 
-    public void addElements(VBox mainBox)
+    public WinAccountClientConstructor(VBox mainBox)
     {
         Label lblTitle = new Label("Dados");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
@@ -104,32 +109,53 @@ public class WinAccountClientConstructor
         btnEditAccount.setOnMouseClicked(e -> btnEditClicked());
 
         btnCancelEdit.setOnMouseClicked(e ->
-        {changeCancelDeleteButtons(btnDeleteAccount);
-            isDisableMenuButtons.setValue(false);
-            setDisableEditableFields(true);});
+        {
+            changeCancelDeleteButtons(btnDeleteAccount);
+            setDisableEditableFields(true);
+        });
 
         btnDeleteAccount.setOnMouseClicked(
                 e -> deleteAccount());
 
+        returnPopUp.addListener(((observable, oldValue, newValue) ->
+        {
+            // TODO Chamar Controle
+            if (newValue && action == "edit")
+            {
+                setDisableEditableFields(true);
+                changeCancelDeleteButtons(btnDeleteAccount);
+            }
+            else if (newValue && action == "delete")
+            {
+            }
+            action = null;
+        }));
     }
 
     private void btnEditClicked()
     {
         // TODO: Completar event Click
-        boolean isDisable = tfName.isDisable();
-        setDisableEditableFields(!isDisable);
-        isDisableMenuButtons.setValue(isDisable);
-        if (!tfName.isDisable())
+        returnPopUp.setValue(false);
+        if (action == "edit")
         {
-            changeCancelDeleteButtons(btnCancelEdit);
+            messageMenuPopUp.setValue("Tem certeza de que deseja alterar a conta?");
+            isMenuPopupActive.setValue(true);
         }
         else
-            changeCancelDeleteButtons(btnDeleteAccount);
+        {
+            action = "edit";
+            setDisableEditableFields(false);
+            changeCancelDeleteButtons(btnCancelEdit);
+        }
     }
 
     private void deleteAccount()
     {
         // TODO: implementar deletar Conta
+        returnPopUp.setValue(false);
+        action = "delete";
+        messageMenuPopUp.setValue("Tem certeza de que deseja deletar a conta?");
+        isMenuPopupActive.setValue(true);
     }
 
     private void setDisableEditableFields(boolean isDisable)
@@ -151,8 +177,18 @@ public class WinAccountClientConstructor
         tfOtherSex.setVisible(isSelected);
     }
 
-    BooleanProperty getIsDisableMenuButtons()
+    BooleanProperty getIsMenuPopupActive()
     {
-        return isDisableMenuButtons;
+        return isMenuPopupActive;
+    }
+
+    StringProperty getMessageMenuPopUp()
+    {
+        return messageMenuPopUp;
+    }
+
+    BooleanProperty getReturnPopUp()
+    {
+        return returnPopUp;
     }
 }

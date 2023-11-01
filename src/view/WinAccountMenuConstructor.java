@@ -4,6 +4,8 @@ import Utils.Constants;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,25 +16,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.awt.event.MouseEvent;
-
 public class WinAccountMenuConstructor
 {
     String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
 
-    private final WinAccountClientConstructor winAccountClient = new WinAccountClientConstructor();
-    private final WinAccountStoreConstructor winAccountStore = new WinAccountStoreConstructor();
-    private final WinAddressStoreConstructor winAddressStore = new WinAddressStoreConstructor();
-    private final WinAddressClientConstructor winAddressClient = new WinAddressClientConstructor();
-    private final WinAllAddressClientConstructor winAllAddressClient = new WinAllAddressClientConstructor();
     private VBox vbContent;
-    private BooleanProperty isDisableButtons = new SimpleBooleanProperty(false);
+    private Label lblPopUpMessage = new Label();
+    private StringProperty messagePopUp = new SimpleStringProperty(null);
+    private BooleanProperty isPopupActive = new SimpleBooleanProperty(false);
+    private BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
 
     WinAccountMenuConstructor (String user)
     {
-        Bindings.bindBidirectional(isDisableButtons, winAccountClient.getIsDisableMenuButtons());
         this.user = user;
         this.user = "client";
     }
@@ -80,7 +77,7 @@ public class WinAccountMenuConstructor
         styleExit = "-fx-background-color: rgba(0,0,0,0); -fx-text-fill: blue; -fx-cursor: hand;" +
                 "-fx-font-weight: bold";
         setOverButtonStyle(btnOrderRecord, styleEnter, styleExit);
-
+        Pane panePopup = setPopUp();
 
         String dataPage;
         String addressPage;
@@ -91,10 +88,10 @@ public class WinAccountMenuConstructor
 
         } else {
             dataPage = "clientAccountData";
-            addressPage = "clientAddress";
+            addressPage = "clientAllAddress";
         }
 
-        winAccountClient.addElements(vbContent);
+        openWinClientMenu();
 //TODO        winAllAddressClient.addElements(vbContent);
 
         allElements.setPrefWidth(Constants.WIDTH);
@@ -123,12 +120,16 @@ public class WinAccountMenuConstructor
                 e -> go2Page(pageOrderRecord));
         btnBack.setOnMouseClicked(
                 e -> go2Page(pageBack));
-        isDisableButtons.addListener((observable, oldValue, newValue) ->
+
+        isPopupActive.addListener((observable, oldValue, newValue) ->
         {
-            btnBack.setDisable(newValue);
-            btnAddress.setDisable(newValue);
-            btnData.setDisable(newValue);
-            btnOrderRecord.setDisable(newValue);
+            if (newValue)
+            {
+                lblPopUpMessage.setText(messagePopUp.getValue());
+                pane.getChildren().add(panePopup);
+            }
+            else
+                pane.getChildren().remove(panePopup);
         });
 
     }
@@ -156,18 +157,97 @@ public class WinAccountMenuConstructor
         button.setStyle(styleExit);
     }
 
+    private Pane setPopUp()
+    {
+        Pane transparentPane = new Pane();
+        BorderPane popUp = new BorderPane();
+
+        transparentPane.setPrefSize(640, 400);
+        transparentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4)");
+
+        popUp.setPrefSize(200, 130);
+        popUp.setStyle("-fx-background-color: white; -fx-background-radius: 10px;" +
+                "-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 10px");
+        popUp.setLayoutX(220);
+        popUp.setLayoutY(135);
+
+        lblPopUpMessage.setStyle("-fx-wrap-text: true;");
+
+        BorderPane buttons = new BorderPane();
+        Button btnCancel = new Button("Cancelar");
+        btnCancel
+                .setStyle( "-fx-background-color: #FF9999; -fx-text-fill: white;" +
+                        "-fx-border-color: #ff6b6b; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        Button btnConfirm = new Button("Confirmar");
+        btnConfirm
+                .setStyle( "-fx-background-color: #59cdff; -fx-text-fill: white;" +
+                        "-fx-border-color: #00bbff; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        buttons.setLeft(btnCancel);
+        buttons.setRight(btnConfirm);
+
+        popUp.setTop(lblPopUpMessage);
+        popUp.setBottom(buttons);
+        popUp.setPadding(new Insets(15));
+        transparentPane.getChildren().add(popUp);
+
+        transparentPane.setOnMouseClicked(e -> isPopupActive.setValue(false));
+        btnCancel.setOnMouseClicked(e -> isPopupActive.setValue(false));
+        btnConfirm.setOnMouseClicked(e ->
+        {
+            isPopupActive.setValue(false);
+            returnPopUp.setValue(true);
+        });
+
+        return transparentPane;
+    }
+
     private void go2Page(String page)
     {
         vbContent.getChildren().clear();
         switch (page)
         {
-            case "clientAddress"     -> winAddressClient.addElements(vbContent);
-            case "clientAccountData" -> winAccountClient.addElements(vbContent);
-            case "storeAddress"      -> winAddressStore.addElements(vbContent);
-            case "storeAccountData"  -> winAccountStore.addElements(vbContent);
+            case "clientAllAddress"  -> openWinAddressClientMenu();
+            case "clientAccountData" -> openWinClientMenu();
+            case "storeAddress"      -> openWinAddressStoreMenu();
+            case "storeAccountData"  -> openWinStoreMenu();
             // TODO: implementar transicao entre paginas
             case "orderRecord" -> System.out.println("Vai pra pagina de histórioco");
             case "goBack" -> System.out.println("Volta pra outro pagina!");
         }
+    }
+
+    private void openWinClientMenu()
+    {
+        WinAccountClientConstructor win = new WinAccountClientConstructor(vbContent);
+
+        Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
+        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
+    }
+
+    private void openWinAddressClientMenu()
+    {
+        WinAllAddressClientConstructor win = new WinAllAddressClientConstructor(vbContent);
+
+        Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
+        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
+    }
+    private void openWinStoreMenu()
+    {
+        WinAccountStoreConstructor win = new WinAccountStoreConstructor(vbContent);
+
+        Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
+        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
+    }
+
+    private void openWinAddressStoreMenu()
+    {
+        WinAddressStoreConstructor win = new WinAddressStoreConstructor(vbContent);
+
+        Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
+        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
     }
 }

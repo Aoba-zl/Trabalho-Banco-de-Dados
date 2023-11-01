@@ -1,6 +1,11 @@
 package view;
 
 import Utils.Constants;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -13,9 +18,14 @@ import java.util.List;
 
 public class WinAllAddressClientConstructor
 {
+    private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private String action = null;
+
     List<String> addressLst = new ArrayList<String>();
 
-    public void addElements(VBox mainBox)
+    public WinAllAddressClientConstructor(VBox mainBox)
     {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
@@ -29,6 +39,10 @@ public class WinAllAddressClientConstructor
         TableColumn<String, String> colCEP = new TableColumn<>("CEP");
         TableColumn<String, String> colNumber = new TableColumn<>("Número");
         TableColumn<String, String> colComplement = new TableColumn<>("Complemento");
+        colName.setPrefWidth(Constants.WIDTH * 0.1);
+        colCEP.setPrefWidth(Constants.WIDTH * 0.1);
+        colNumber.setPrefWidth(Constants.WIDTH * 0.1);
+        colComplement.setPrefWidth(Constants.WIDTH * 0.25);
         tvAddress.getColumns().addAll(colName, colCEP, colNumber, colComplement);
         tvAddress.setPrefHeight(Constants.HEIGHT * 0.5);
 
@@ -49,5 +63,22 @@ public class WinAllAddressClientConstructor
 
         mainBox.getChildren().addAll(lblTitle, tvAddress,
                 bpButtons);
+
+//        btnEdit.setOnMouseClicked(event -> openEditSelectedAddress());
+//        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
+//        btnNew.setOnMouseClicked(event -> addAddress());
+    }
+
+    StringProperty getMessageMenuPopUp()
+    {
+        return messageMenuPopUp;
+    }
+    BooleanProperty getIsMenuPopupActive()
+    {
+        return isMenuPopupActive;
+    }
+    BooleanProperty getReturnPopUp()
+    {
+        return returnPopUp;
     }
 }
