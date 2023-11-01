@@ -1,13 +1,10 @@
-package View;
+package view;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class WinPurchaseDetailsConstruct  {
     private Button btnBuy= new Button("Comprar");
