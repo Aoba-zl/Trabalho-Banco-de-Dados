@@ -1,43 +1,33 @@
 package model;
 
-import java.util.List;
-
 public class Product
 {
     private String name;
     private double price;
-    private String description;
     private int totalStock;
+    private double shipping;
     private String Category;
+    private String description;
     
-	public String getName() 
+    
+	public String getName()
 	{
 		return name;
 	}
 	
-	public void setName(String name) 
+	public void setName(String name)
 	{
 		this.name = name;
 	}
 	
-	public double getPrice()
+	public double getPrice() 
 	{
 		return price;
 	}
 	
-	public void setPrice(double price)
+	public void setPrice(double price) 
 	{
-
-	}
-	
-	public String getDescription()
-	{
-		return description;
-	}
-	
-	public void setDescription(String description)
-	{
-		this.description = description;
+		this.price = price;
 	}
 	
 	public int getTotalStock()
@@ -50,6 +40,16 @@ public class Product
 		this.totalStock = totalStock;
 	}
 	
+	public double getShipping()
+	{
+		return shipping;
+	}
+	
+	public void setShipping(double shipping) 
+	{
+		this.shipping = shipping;
+	}
+	
 	public String getCategory() 
 	{
 		return Category;
@@ -59,7 +59,18 @@ public class Product
 	{
 		Category = category;
 	}
-
+	
+	public String getDescription() 
+	{
+		return description;
+	}
+	
+	public void setDescription(String description) 
+	{
+		this.description = description;
+	}
+    
+    
     
     
 }
