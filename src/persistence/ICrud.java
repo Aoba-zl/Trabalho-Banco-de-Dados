@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ICrud<T> //optei por não utilizar por motivos de que eu não sei porque de fato iria utilizar isso @_@
 {
-	public boolean insert (T t) throws SQLException;
+	public int insert (T t) throws SQLException;
 	public boolean update (T t) throws SQLException;
 	public boolean delete (T t) throws SQLException;
 	public T consult (T t) throws SQLException;

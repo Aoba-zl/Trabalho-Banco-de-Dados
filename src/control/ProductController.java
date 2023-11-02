@@ -1,7 +1,9 @@
 package control;
 
 import java.sql.SQLException;
+import java.text.Format;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Product;
@@ -16,8 +18,10 @@ public class ProductController
 	TextField tfShipping;
 	TextField tfCategory;
 	TextArea taDescription;
+	TextField tfCod;
+	Label lblMessage;
 	
-	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription) 
+	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage) 
 	{
 		this.tfName = tfName;
 		this.tfPrice = tfPrice;
@@ -25,6 +29,8 @@ public class ProductController
 		this.tfShipping = tfShipping;
 		this.tfCategory = tfCategory;
 		this.taDescription = taDescription;
+		this.lblMessage = lblMessage;
+		this.tfCod = tfCod;
 	}
 	
 	public boolean insert() throws SQLException
@@ -41,7 +47,14 @@ public class ProductController
 		p.setCategory(tfCategory.getText());
 		p.setDescription(taDescription.getText());
 		
-		return pDao.insert(p);
+		int id = pDao.insert(p);
+		
+		if(id != -1)
+		{
+			tfCod.setText(String.valueOf(id));
+			return true;
+		}
+		return false;
 	}
 	
 	

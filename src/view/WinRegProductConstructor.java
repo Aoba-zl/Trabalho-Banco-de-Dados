@@ -134,7 +134,7 @@ public class WinRegProductConstructor
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
 		
-		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc));
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblAccount));
 		
 		
 		imgViewGoBack.setOnMouseClicked(e -> System.out.println("test"));
@@ -144,9 +144,9 @@ public class WinRegProductConstructor
 		
 	}
 	
-	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription)
+	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage)
 	{
-		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription);
+		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, tfCod, lblMessage);
 		
 		try {
 			if(pControll.insert())

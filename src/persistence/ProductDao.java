@@ -2,7 +2,9 @@ package persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import model.Product;
@@ -17,12 +19,13 @@ public class ProductDao implements ICrud<Product>
 	}
 
 	@Override
-	public boolean insert(Product p) throws SQLException
+	public int insert(Product p) throws SQLException //
 	{
+		int id = -1;
 		Connection c = gDao.getConnection();
 		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, ?, ?);";
-		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setString(1, "francisco");
+		PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, "francisco"); //TODO necessário entender como será a entrada do usuário para o banco.
 		ps.setString(2, p.getName());
 		ps.setDouble(3, p.getPrice());
 		ps.setInt(4, p.getTotalStock());
@@ -32,9 +35,21 @@ public class ProductDao implements ICrud<Product>
 		
 		int linha = ps.executeUpdate();
 		
+		
+		if(linha > 0)
+		{
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next())
+			{
+				id = rs.getInt(1);						
+			}
+			
+			rs.close();
+		}
+		
 		ps.close();
 		
-		return linha > 0;
+		return id;
 	}
 
 	@Override
