@@ -1,5 +1,8 @@
 package view;
 
+import java.sql.SQLException;
+
+import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -84,13 +87,15 @@ public class WinRegProductConstructor
 		TextField tfInStock = new TextField();
 		TextField tfShipping = new TextField();
 		TextField tfCategory = new TextField();
-		TextField tfCod = new TextField();
+		TextField tfCod = new TextField(); //é automático pelo banco de dados.
 		tfName.setPrefWidth(225);
 		tfPrice.setPrefWidth(225);
 		tfInStock.setPrefWidth(225);
 		tfShipping.setPrefWidth(225);
 		tfCategory.setPrefWidth(225);
 		tfCod.setPrefWidth(225);
+		tfCod.setEditable(false);
+		tfCod.setStyle("-fx-background-color: #D3D3D3;");
 		
 		Button btnConf = new Button("Confirmar");
 		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -129,6 +134,9 @@ public class WinRegProductConstructor
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
 		
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc));
+		
+		
 		imgViewGoBack.setOnMouseClicked(e -> System.out.println("test"));
 		
 		
@@ -136,5 +144,24 @@ public class WinRegProductConstructor
 		
 	}
 	
-
+	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription)
+	{
+		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription);
+		
+		try {
+			if(pControll.insert())
+			{
+				System.out.println("Deu certo.");
+			}
+			else
+			{
+				System.out.println("Não deu certo.");
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		
+	}
 }
