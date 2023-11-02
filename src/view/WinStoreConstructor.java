@@ -96,9 +96,8 @@ public class WinStoreConstructor
 				vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
 				vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
 				
-				String test = "teste" + j;
 				
-				vbProductInfo.setOnMouseClicked(e -> System.out.println(test));
+				vbProductInfo.setOnMouseClicked(e -> toProductStore());
 				
 				hbProductInfo.getChildren().add(vbProductInfo);
 			}
@@ -129,7 +128,7 @@ public class WinStoreConstructor
 		imgViewGoBack.setOnMouseClicked(e -> toHomePage());
 		lblExit.setOnMouseClicked(e -> toLogin());
 		lblAccount.setOnMouseClicked(e -> toAccount());
-		btnAdd.setOnMouseClicked(e -> toRegProduct());
+		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
 		
 		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, imgViewGoBack);
 		
@@ -146,7 +145,6 @@ public class WinStoreConstructor
 	{
 		Main m = new Main();
 		m.changeScene("login");
-		
 	}
 	
 	private void toAccount()
@@ -159,5 +157,11 @@ public class WinStoreConstructor
 	{
 		Main m = new Main();
 		m.changeScene("regProduct");
+	}
+	
+	private void toProductStore()
+	{
+		Main m = new Main();
+		m.changeScene("productStore");
 	}
 }

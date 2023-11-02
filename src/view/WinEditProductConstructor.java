@@ -128,12 +128,32 @@ public class WinEditProductConstructor
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
-		
-		imgViewGoBack.setOnMouseClicked(e -> System.out.println("test"));
+		//------------mudança de scene---------------
+		lblAccount.setOnMouseClicked(e -> toAccount());
+		lblExit.setOnMouseClicked(e -> toLogin());
+		imgViewGoBack.setOnMouseClicked(e -> toProductStore());
 		
 		
 		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct);
 		
+	}
+	
+	private void toLogin()
+	{
+		Main m = new Main();
+		m.changeScene("login");
+	}
+	
+	private void toProductStore()
+	{
+		Main m = new Main();
+		m.changeScene("productStore");
+	}
+	
+	private void toAccount()
+	{
+		Main m = new Main();
+		m.changeScene("account");
 	}
 	
 

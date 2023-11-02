@@ -104,7 +104,6 @@ public class WinRegProductConstructor
 		Label lblMessage = new Label("teste");
 		lblMessage.setMinHeight(30);
 		lblMessage.setMinWidth(120);
-		lblMessage.setStyle("-fx-border-color: black;");
 		
 		HBox hbName = new HBox();
 		HBox hbPrice = new HBox();
@@ -142,12 +141,31 @@ public class WinRegProductConstructor
 		
 		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage));
 		
-		
+		//------------mudança de scene---------------
 		imgViewGoBack.setOnMouseClicked(e -> toStore());
+		lblExit.setOnMouseClicked(e -> toLogin());
+		lblAccount.setOnMouseClicked(e -> toAccount());
 		
+		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct, hbOption);
 		
-		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct);
-		
+	}
+	
+	private void toLogin() 
+	{
+		Main m = new Main();
+		m.changeScene("login");
+	}
+	
+	private void toAccount()
+	{
+		Main m = new Main();
+		m.changeScene("account");
+	}
+	
+	private void toStore()
+	{
+		Main m = new Main();
+		m.changeScene("store");
 	}
 	
 	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage)
@@ -169,8 +187,4 @@ public class WinRegProductConstructor
 		}
 	}
 	
-	private void toStore()
-	{
-		
-	}
 }

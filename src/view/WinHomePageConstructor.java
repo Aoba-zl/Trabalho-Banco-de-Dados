@@ -76,6 +76,7 @@ public class WinHomePageConstructor
 			hbProductInfo.setPrefHeight(100);
 			for(int j = 0; j < 4; j++)
 			{
+				//TODO será alterado todos os valores para a entrada do list com os produtos.
 				Label lblNameProduct = new Label("nome");
 				Label lblDescProduct = new Label("Adoleta lepetipeticola nescafé com chocola, adoleta puxa o rabo do tatu");
 				Label lblPrice = new Label("Price:");
@@ -102,9 +103,7 @@ public class WinHomePageConstructor
 				vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
 				vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblPrice);
 				
-				String test = "teste" + j;
-				
-				vbProductInfo.setOnMouseClicked(e -> System.out.println(test));
+				vbProductInfo.setOnMouseClicked(e -> toProduct()); //TODO será colocado os parametros para puxar o produto correto
 				
 				hbProductInfo.getChildren().add(vbProductInfo);
 			}
@@ -139,6 +138,19 @@ public class WinHomePageConstructor
 		
 	}
 	
+	private void toAccount() 
+	{
+		Main m = new Main();
+		m.changeScene("account");
+		
+	}
+	
+	private void toProduct() //TODO será colocado os parametros para puxar o produto correto
+	{
+		Main m = new Main();
+		m.changeScene("product");
+	}
+	
 	private void toCartStore()
 	{
 		Main m = new Main();
@@ -150,13 +162,6 @@ public class WinHomePageConstructor
 		{
 			m.changeScene("store");
 		}
-	}
-	
-	private void toAccount() 
-	{
-		Main m = new Main();
-		m.changeScene("account");
-		
 	}
 	
 }

@@ -48,6 +48,9 @@ public class Main extends Application
 			case "homePage":
 				winHomePage.addElements(pWin);
 				break;
+			case "product":
+				System.out.println("Product Client");
+				break;
 			case "cart":
 				System.out.println("carrinho");
 				break;
@@ -56,6 +59,9 @@ public class Main extends Application
 				break;
 			case "regProduct":
 				winRegProduct.addElements(pWin);
+				break;
+			case "productStore":
+				System.out.println("Product Store");
 				break;
 			case "editProduct":
 				winEditProduct.addElements(pWin);
