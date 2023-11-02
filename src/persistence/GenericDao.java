@@ -11,7 +11,7 @@ public class GenericDao
 	public Connection getConnection() throws SQLException
 	{
 		String hostName = "localHost";
-		String dbName = "loja_online";
+		String dbName = "marketplace";
 		String user = "usuarioDB";
 		String password = "123456";
 		
