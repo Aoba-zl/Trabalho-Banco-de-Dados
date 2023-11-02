@@ -33,6 +33,7 @@ public class ProductDao implements ICrud<Product>
 		ps.setString(6, p.getCategory());
 		ps.setString(7, p.getDescription());
 		
+		
 		int linha = ps.executeUpdate();
 		
 		

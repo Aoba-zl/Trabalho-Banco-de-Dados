@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class WinRegProductConstructor 
@@ -100,30 +101,35 @@ public class WinRegProductConstructor
 		Button btnConf = new Button("Confirmar");
 		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 		
+		Label lblMessage = new Label("teste");
+		lblMessage.setMinHeight(30);
+		lblMessage.setMinWidth(120);
+		lblMessage.setStyle("-fx-border-color: black;");
+		
 		HBox hbName = new HBox();
 		HBox hbPrice = new HBox();
 		HBox hbInStock = new HBox();
 		HBox hbShipping = new HBox();
 		HBox hbCategory = new HBox();
 		HBox hbCod = new HBox();
-		HBox hbBtnConf = new HBox();
+		HBox hbBtnConfAndMessage = new HBox();
 		hbName.getChildren().addAll(lblName, tfName);
 		hbPrice.getChildren().addAll(lblPrice, tfPrice);
 		hbInStock.getChildren().addAll(lblInStock, tfInStock);
 		hbShipping.getChildren().addAll(lblShipping, tfShipping);
 		hbCategory.getChildren().addAll(lblCategory, tfCategory);
 		hbCod.getChildren().addAll(lblCod, tfCod);
-		hbBtnConf.getChildren().add(btnConf);
-		hbBtnConf.setStyle("-fx-alignment: bottom-right;");
-		hbBtnConf.setPadding(new Insets(0, 45, 0, 0));
-		hbBtnConf.setMinHeight(50);
+		hbBtnConfAndMessage.getChildren().addAll(lblMessage, btnConf);
+		hbBtnConfAndMessage.setStyle("-fx-alignment: bottom-right; -fx-spacing: 100px");
+		hbBtnConfAndMessage.setPadding(new Insets(0, 45, 0, 0));
+		hbBtnConfAndMessage.setMinHeight(50);
 		
 		VBox vbRegProduct = new VBox(14);
 		vbRegProduct.setPrefWidth(355);
 		vbRegProduct.setPrefHeight(320);
 		vbRegProduct.setLayoutX(250);
 		vbRegProduct.setPadding(new Insets(20, 0, 0, 10));
-		vbRegProduct.getChildren().addAll(hbName, hbPrice, hbInStock, hbShipping, hbCategory, hbCod, hbBtnConf);
+		vbRegProduct.getChildren().addAll(hbName, hbPrice, hbInStock, hbShipping, hbCategory, hbCod, hbBtnConfAndMessage);
 		
 		Pane pProduct = new Pane();
 		pProduct.setPrefHeight(320);
@@ -134,10 +140,10 @@ public class WinRegProductConstructor
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
 		
-		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblAccount));
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage));
 		
 		
-		imgViewGoBack.setOnMouseClicked(e -> System.out.println("test"));
+		imgViewGoBack.setOnMouseClicked(e -> toStore());
 		
 		
 		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct);
@@ -161,7 +167,10 @@ public class WinRegProductConstructor
 		{
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private void toStore()
+	{
 		
 	}
 }

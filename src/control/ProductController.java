@@ -39,6 +39,11 @@ public class ProductController
 		GenericDao gDao = new GenericDao();
 		ProductDao pDao = new ProductDao(gDao);
 		
+		if(checkValues())
+		{
+			return false;
+		}
+		
 		Product p = new Product();
 		p.setName(tfName.getText());
 		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
@@ -54,6 +59,42 @@ public class ProductController
 			tfCod.setText(String.valueOf(id));
 			return true;
 		}
+		return false;
+	}
+
+	private boolean checkValues() 
+	{
+		if(tfName.getText().trim().isBlank())
+		{
+			lblMessage.setText("Nome Inválido");
+			return true;
+		}
+		
+		if(tfPrice.getText().trim().isBlank())
+		{
+			lblMessage.setText("Preço Inválido");
+			return true;
+		}
+		
+		if(tfInStock.getText().trim().isBlank())
+		{
+			lblMessage.setText("Estoque Inválido");
+			return true;
+		}
+		
+		if(tfShipping.getText().trim().isBlank())
+		{
+			lblMessage.setText("Frete Inválido");
+			return true;
+		}
+		
+		if(taDescription.getText().trim().isBlank())
+		{
+			lblMessage.setText("Descrição Inválida");
+			return true;
+		}
+		
+		
 		return false;
 	}
 	
