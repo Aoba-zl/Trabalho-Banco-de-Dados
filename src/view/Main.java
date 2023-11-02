@@ -57,6 +57,12 @@ public class Main extends Application
 			case "regProduct":
 				winRegProduct.addElements(pWin);
 				break;
+			case "editProduct":
+				winEditProduct.addElements(pWin);
+				break;
+			case "account":
+				System.out.println("continha");
+				break;
 		}
 		
 	}

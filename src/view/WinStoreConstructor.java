@@ -126,13 +126,38 @@ public class WinStoreConstructor
 		hbBtnAdd.getChildren().add(btnAdd);
 		
 		//------------mudança de scene---------------
-		
-		
-		
+		imgViewGoBack.setOnMouseClicked(e -> toHomePage());
+		lblExit.setOnMouseClicked(e -> toLogin());
+		lblAccount.setOnMouseClicked(e -> toAccount());
+		btnAdd.setOnMouseClicked(e -> toRegProduct());
 		
 		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, imgViewGoBack);
 		
 	}
 	
 
+	private void toHomePage()
+	{
+		Main m = new Main();
+		m.changeScene("homePage");
+	}
+	
+	private void toLogin() 
+	{
+		Main m = new Main();
+		m.changeScene("login");
+		
+	}
+	
+	private void toAccount()
+	{
+		Main m = new Main();
+		m.changeScene("account");
+	}
+	
+	private void toRegProduct()
+	{
+		Main m = new Main();
+		m.changeScene("regProduct");
+	}
 }

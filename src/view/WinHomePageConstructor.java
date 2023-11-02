@@ -124,7 +124,8 @@ public class WinHomePageConstructor
 		
 		//------------mudança de scene---------------
 		lblExit.setOnMouseClicked(e -> toLogin());
-		lblCartStore.setOnMouseClicked(e -> toCartStore(lblCartStore));
+		lblCartStore.setOnMouseClicked(e -> toCartStore());
+		lblAccount.setOnMouseClicked(e -> toAccount());
 		
 		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct);
 		
@@ -138,7 +139,7 @@ public class WinHomePageConstructor
 		
 	}
 	
-	private void toCartStore(Label lblCartStore)
+	private void toCartStore()
 	{
 		Main m = new Main();
 		if(lblCartStore.getText().equals("Carrinho🛒"))
@@ -149,6 +150,13 @@ public class WinHomePageConstructor
 		{
 			m.changeScene("store");
 		}
+	}
+	
+	private void toAccount() 
+	{
+		Main m = new Main();
+		m.changeScene("account");
+		
 	}
 	
 }
