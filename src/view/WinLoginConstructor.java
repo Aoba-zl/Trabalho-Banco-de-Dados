@@ -1,5 +1,11 @@
 package view;
 
+import java.sql.SQLException;
+
+import control.LoginController;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -79,6 +85,7 @@ public class WinLoginConstructor
 		paneUser.setLayoutY(60);
 		paneUser.getChildren().addAll(vbUser, imgViewStore1, imgViewStore2);
 		
+		
 		//---------------------------------Register---------------------------------------
 		
 		Label lblTypeAc = new Label("Que tipo de conta deseja criar?");
@@ -132,9 +139,20 @@ public class WinLoginConstructor
 	
 	private void signUpUser(TextField tfUserName, TextField tfPassword)
 	{
+		LoginController lc = new LoginController(tfUserName, tfPassword);
+		
 		if(!tfUserName.getText().trim().isEmpty() && !tfPassword.getText().trim().isEmpty())
 		{
-			toHomePage();
+			try 
+			{
+				if(lc.login())
+				{
+					toHomePage();
+				}
+			} catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		{

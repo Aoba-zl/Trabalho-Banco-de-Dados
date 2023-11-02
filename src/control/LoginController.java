@@ -1,10 +1,13 @@
 package control;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.control.TextField;
+import java.sql.SQLException;
 
-public class LoginController implements EventHandler<Event>
+import javafx.scene.control.TextField;
+import model.User;
+import persistence.GenericDao;
+import persistence.UserDao;
+
+public class LoginController
 {
 	private TextField tfUserName;
 	private TextField tfpassword;
@@ -15,10 +18,18 @@ public class LoginController implements EventHandler<Event>
 		this.tfpassword = tfPassword;
 	}
 
-	@Override
-	public void handle(Event event) 
+	
+	public boolean login() throws SQLException
 	{
+		GenericDao gDao = new GenericDao();
+		UserDao uDao = new UserDao(gDao);
+		User u = new User();
+		u.setLogin(this.tfUserName.getText());
+		u.setPassword(this.tfpassword.getText());
 		
+//		return uDao.signInUser(u);
+		
+		return true;
 	}
 	
 	

@@ -1,7 +1,9 @@
 package persistence;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 import model.User;
 
@@ -14,9 +16,19 @@ public class UserDao
 		this.gDao = gDao;
 	}
 	
-	public void signInUser() throws SQLException
+	public boolean signInUser(User u) throws SQLException
 	{
+		Connection c = gDao.getConnection();
+		String sql = "SELECT user_name FROM user_tbl WHERE user_name = ? AND user_password = ?;";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setString(1, u.getLogin());
+		ps.setString(2, u.getPassword());
+		ResultSet rs = ps.executeQuery();
+		System.out.println(u.getLogin());
 		
+		return rs.next();
 	}
+	
+	
 	
 }
