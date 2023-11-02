@@ -23,10 +23,13 @@ public class UserDao
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, u.getLogin());
 		ps.setString(2, u.getPassword());
-		ResultSet rs = ps.executeQuery();
-		System.out.println(u.getLogin());
 		
-		return rs.next();
+		ResultSet rs = ps.executeQuery();
+		boolean result = rs.next();
+		
+		rs.close();
+		ps.close();
+		return result;
 	}
 	
 	
