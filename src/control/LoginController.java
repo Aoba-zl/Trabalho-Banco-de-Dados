@@ -27,9 +27,7 @@ public class LoginController
 		u.setLogin(this.tfUserName.getText());
 		u.setPassword(this.tfpassword.getText());
 		
-//		return uDao.signInUser(u);
-		
-		return true;
+		return uDao.signInUser(u);
 	}
 	
 	
