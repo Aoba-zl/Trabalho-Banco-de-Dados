@@ -139,7 +139,7 @@ public class WinRegProductConstructor
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
 		//TODO quando der insert, deve retornar ao store
-		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage));
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage, pane));
 		
 		//------------mudança de scene---------------
 		imgViewGoBack.setOnMouseClicked(e -> toStore());
@@ -168,18 +168,36 @@ public class WinRegProductConstructor
 		m.changeScene("store");
 	}
 	
-	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage)
+	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage, Pane pane)
 	{
 		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, tfCod, lblMessage);
 		
 		try {
 			if(pControll.insert())
 			{
-				System.out.println("Deu certo.");
-			}
-			else
-			{
-				System.out.println("Não deu certo.");
+				Label concluded = new Label("Cadastro Concluido");
+				concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+				
+				Button btnConfirmed = new Button("Confirmar");
+				btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-font-size: 14px;");
+				
+				VBox vbRegister = new VBox(20);
+				vbRegister.setPrefHeight(130);
+				vbRegister.setPrefWidth(180);
+				vbRegister.setLayoutX(220.5);
+				vbRegister.setLayoutY(156);
+				vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 50px;");
+				vbRegister.getChildren().addAll(concluded, btnConfirmed);
+				
+				Pane pTransp = new Pane();
+				pTransp.setPrefWidth(640);
+				pTransp.setPrefHeight(400);
+				pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+				pTransp.getChildren().add(vbRegister);
+				
+				pane.getChildren().add(pTransp);
+				
+				btnConfirmed.setOnAction(e -> toStore());
 			}
 		} catch (SQLException e) 
 		{
