@@ -74,6 +74,10 @@ public class Main extends Application
 				break;
 			}
 		}
+		else
+		{
+			UserSession.clearSession();
+		}
 	}
 	
 	public static void main(String[] args) 
