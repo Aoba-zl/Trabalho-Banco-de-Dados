@@ -37,7 +37,7 @@ public class Main extends Application
 		stage.show();
 	}
 	
-	void changeScene(String scnStr) //Fiz isso improvizado para ocorrer a mudança de tela
+	void changeScene(String scnStr) //Fiz isso improvisado para ocorrer a mudança de tela
 	{
 		pWin.getChildren().clear();
 		switch(scnStr)
@@ -70,7 +70,6 @@ public class Main extends Application
 				System.out.println("continha");
 				break;
 		}
-		
 	}
 	
 	public static void main(String[] args) 
