@@ -146,7 +146,7 @@ public class WinRegProductConstructor
 		lblExit.setOnMouseClicked(e -> toLogin());
 		lblAccount.setOnMouseClicked(e -> toAccount());
 		
-		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct, hbOption);
+		pane.getChildren().addAll(lblHomePage, pProduct, hbOption, imgViewGoBack);
 		
 	}
 	
