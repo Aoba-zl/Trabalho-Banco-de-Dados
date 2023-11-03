@@ -99,9 +99,9 @@ public class WinRegProductConstructor
 		tfCod.setStyle("-fx-background-color: #D3D3D3;");
 		
 		Button btnConf = new Button("Confirmar");
-		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
 		
-		Label lblMessage = new Label("teste");
+		Label lblMessage = new Label("");
 		lblMessage.setMinHeight(30);
 		lblMessage.setMinWidth(120);
 		
@@ -179,14 +179,14 @@ public class WinRegProductConstructor
 				concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
 				
 				Button btnConfirmed = new Button("Confirmar");
-				btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-font-size: 14px;");
+				btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px; -fx-font-size: 14px;");
 				
 				VBox vbRegister = new VBox(20);
-				vbRegister.setPrefHeight(130);
+				vbRegister.setPrefHeight(100);
 				vbRegister.setPrefWidth(180);
 				vbRegister.setLayoutX(220.5);
 				vbRegister.setLayoutY(156);
-				vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 50px;");
+				vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 30px;");
 				vbRegister.getChildren().addAll(concluded, btnConfirmed);
 				
 				Pane pTransp = new Pane();

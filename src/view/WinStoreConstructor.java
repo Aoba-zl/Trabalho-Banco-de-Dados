@@ -143,7 +143,7 @@ public class WinStoreConstructor
 		spProduct.setContent(vbProduct);
 		
 		Button btnAdd = new Button("Adicionar novo produto");
-		btnAdd.setStyle("-fx-background-color: #B0E57C; -fx-border-color: #99CC00; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+		btnAdd.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
 		
 		HBox hbBtnAdd = new HBox();
 		hbBtnAdd.setStyle("-fx-alignment: center;");
