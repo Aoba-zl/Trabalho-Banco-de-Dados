@@ -2,6 +2,7 @@ package control;
 
 import java.sql.SQLException;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.User;
 import persistence.GenericDao;
@@ -11,11 +12,13 @@ public class LoginController
 {
 	private TextField tfUserName;
 	private TextField tfPassword;
+	private Label lblMessage;
 	
-	public LoginController(TextField tfUserName, TextField tfPassword)
+	public LoginController(TextField tfUserName, TextField tfPassword, Label lblMessage)
 	{
 		this.tfUserName = tfUserName;
 		this.tfPassword = tfPassword;
+		this.lblMessage = lblMessage;
 	}
 
 	
@@ -39,15 +42,12 @@ public class LoginController
 
 	private boolean checkLogin() {
 		
-		if(tfUserName.getText().contains(" "))
+		if(tfUserName.getText().contains(" ") || tfPassword.getText().contains(" "))
 		{
+			lblMessage.setText("Digite sem espaço!");
 			return true;
 		}
 		
-		if(tfPassword.getText().contains(" "))
-		{
-			return true;
-		}
 		
 		return false;
 	}

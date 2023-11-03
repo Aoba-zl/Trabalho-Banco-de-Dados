@@ -42,19 +42,25 @@ public class WinLoginConstructor
 		tfUserName.setPrefWidth(120);
 		tfPassword.setPrefWidth(120);
 		
+		Label lblMessage = new Label();
+		lblMessage.setMinHeight(25);
+		lblMessage.setMinWidth(130);
+		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red;");
+		
 		Button btnEnter = new Button("Entrar");
-		btnEnter.setPrefWidth(75);
+		btnEnter.setPrefWidth(50);
+		btnEnter.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white");
 		
 		HBox hbUser = new HBox(2);
 		HBox hbPassword = new HBox(2);
 		HBox hbLblReg = new HBox(2);
 		HBox hbBtnEnter = new HBox(2);
-		hbBtnEnter.setStyle("-fx-alignment: bottom-right;");
+		hbBtnEnter.setStyle("-fx-alignment: bottom-right; -fx-spacing: 10px;");
 		hbBtnEnter.setPrefHeight(50);
 		hbUser.getChildren().addAll(lblUser, tfUserName);
 		hbPassword.getChildren().addAll(lblPassword, tfPassword);
 		hbLblReg.getChildren().addAll(lblHasRegister, lblCreateRegister);
-		hbBtnEnter.getChildren().add(btnEnter);
+		hbBtnEnter.getChildren().addAll(lblMessage, btnEnter);
 		
 		VBox vbUser = new VBox(4);
 		vbUser.setStyle("-fx-border-width: 2; -fx-border-radius: 10; -fx-border-color: black;");
@@ -113,7 +119,7 @@ public class WinLoginConstructor
 		vbRegister.setLayoutX(220.5);
 		vbRegister.setLayoutY(156);
 		vbRegister.setPadding(new Insets(25, 0, 0, 0));
-		vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK;");
+		vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: black;");
 		vbRegister.getChildren().addAll(hbTypeAc, hbRegister);
 		
 		Pane pTransp = new Pane();
@@ -126,22 +132,22 @@ public class WinLoginConstructor
 		lblCreateRegister.setOnMouseClicked(e -> 
 										{
 											pTransp.setVisible(true);
-											lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: RED;");
+											lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: red;");
 										});
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
 		
 		//------------mudança de scene---------------
-		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword));
+		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword, lblMessage));
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		
 	}
 	
-	private void signUpUser(TextField tfUserName, TextField tfPassword)
+	private void signUpUser(TextField tfUserName, TextField tfPassword, Label lblMessage)
 	{
-		LoginController lc = new LoginController(tfUserName, tfPassword);
+		LoginController lc = new LoginController(tfUserName, tfPassword, lblMessage);
 		
-		if(!tfUserName.getText().trim().isEmpty() && !tfPassword.getText().trim().isEmpty())
+		if(!tfUserName.getText().isEmpty() && !tfPassword.getText().isEmpty())
 		{
 			try 
 			{
@@ -156,7 +162,7 @@ public class WinLoginConstructor
 		}
 		else
 		{
-			System.out.println("Digite todos os valores");
+			lblMessage.setText("Digite todos os valores!");
 		}
 	}
 	
