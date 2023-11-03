@@ -3,8 +3,8 @@ package utils;
 public class UserSession 
 {
 	
-	private static String userName = "matheus"; //usuario ps:deixarei como default apenas para teste.
-	private static String userType = "store"; //tipo de usuario, seja loja ou cliente | ps:deixarei como default apenas para teste.
+	private static String userName; //usuario
+	private static String userType; //tipo de usuario, seja loja ou cliente
 	
 	public static void setUser(String userName, String userType)
 	{

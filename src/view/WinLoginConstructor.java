@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.UserSession;
 
 public class WinLoginConstructor 
 {
@@ -120,7 +121,6 @@ public class WinLoginConstructor
 		pTransp.setPrefHeight(400);
 		pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4)");
 		pTransp.setVisible(false);
-		
 		pTransp.getChildren().add(vbRegister);
 		
 		lblCreateRegister.setOnMouseClicked(e -> 

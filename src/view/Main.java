@@ -2,6 +2,7 @@ package view;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import utils.UserSession;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
@@ -40,8 +41,10 @@ public class Main extends Application
 	void changeScene(String scnStr) //Fiz isso improvisado para ocorrer a mudança de tela
 	{
 		pWin.getChildren().clear();
-		switch(scnStr)
+		if(UserSession.isLoggedIn())
 		{
+			switch(scnStr)
+			{
 			case "login":
 				winLogin.addElements(pWin);
 				break;
@@ -69,6 +72,7 @@ public class Main extends Application
 			case "account":
 				System.out.println("continha");
 				break;
+			}
 		}
 	}
 	
