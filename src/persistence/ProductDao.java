@@ -62,7 +62,6 @@ public class ProductDao
 		//TODO Codigo para update
 		//
 		
-		
 		return id;
 	}
 
