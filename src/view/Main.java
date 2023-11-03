@@ -46,6 +46,7 @@ public class Main extends Application
 			switch(scnStr)
 			{
 			case "login":
+				UserSession.clearSession();
 				winLogin.addElements(pWin);
 				break;
 			case "homePage":
