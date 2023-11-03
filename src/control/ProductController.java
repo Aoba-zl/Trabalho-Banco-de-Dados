@@ -2,6 +2,7 @@ package control;
 
 import java.sql.SQLException;
 import java.text.Format;
+import java.util.List;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -20,6 +21,11 @@ public class ProductController
 	TextArea taDescription;
 	TextField tfCod;
 	Label lblMessage;
+	
+	public ProductController()
+	{
+		
+	}
 	
 	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage) 
 	{
@@ -60,6 +66,24 @@ public class ProductController
 			return true;
 		}
 		return false;
+	}
+	
+	public List<Product> listProduct() throws SQLException
+	{
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
+		List<Product> products = pDao.list();
+		
+//		for(Product p : products)
+//		{
+//			System.out.println(p.getCod());
+//			System.out.print(p.getName());
+//			System.out.print(p.getDescription());
+//			System.out.print(p.getPrice());
+//		}
+		
+		return products;
 	}
 
 	private boolean checkValues() 

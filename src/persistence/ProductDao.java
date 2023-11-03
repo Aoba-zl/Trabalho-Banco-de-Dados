@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import model.Product;
@@ -49,15 +51,22 @@ public class ProductDao implements ICrud<Product>
 		}
 		
 		ps.close();
+		c.close();
 		
 		return id;
 	}
 
 	@Override
-	public boolean update(Product p) throws SQLException 
+	public int update(Product p) throws SQLException 
 	{
+		int id = -1;
 		
-		return true;
+		//
+		//TODO Codigo para update
+		//
+		
+		
+		return id;
 	}
 
 	@Override
@@ -76,8 +85,27 @@ public class ProductDao implements ICrud<Product>
 	@Override
 	public List<Product> list() throws SQLException 
 	{
+		List<Product> products = new ArrayList<Product>();
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id_product, name_product, unity_price, description FROM product;";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next())
+		{
+			Product p = new Product();
+			p.setCod(rs.getInt(1));
+			p.setName(rs.getString(2));
+			p.setPrice(rs.getDouble(3));
+			p.setDescription(rs.getString(4));
+			
+			products.add(p);
+		}
 		
-		return null;
+		rs.close();
+		ps.close();
+		c.close();
+		
+		return products;
 	}
 	
 	

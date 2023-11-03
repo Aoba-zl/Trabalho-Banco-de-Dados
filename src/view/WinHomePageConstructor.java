@@ -1,5 +1,10 @@
 package view;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Product;
 
 public class WinHomePageConstructor 
 {
@@ -63,12 +69,24 @@ public class WinHomePageConstructor
 		hbSearch.setStyle("-fx-spacing: 13px");
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
 		
+		ProductController pControl = new ProductController();
+		List<Product> listProduct = null;
+		
+		try {
+			listProduct = pControl.listProduct();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		int sizeProductRow = listProduct.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
 		
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(276);
 		vbProduct.setMinWidth(586);
 		vbProduct.setMaxWidth(586);
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < (sizeProductRow / 4) + 1; i++)
 		{
 			HBox hbProductInfo = new HBox();
 			hbProductInfo.setPrefWidth(586);
@@ -77,35 +95,44 @@ public class WinHomePageConstructor
 			for(int j = 0; j < 4; j++)
 			{
 				//TODO será alterado todos os valores para a entrada do list com os produtos.
-				Label lblNameProduct = new Label("nome");
-				Label lblDescProduct = new Label("Adoleta lepetipeticola nescafé com chocola, adoleta puxa o rabo do tatu");
-				Label lblPrice = new Label("Price:");
-				lblDescProduct.setPrefHeight(55);
-				lblDescProduct.setWrapText(true);
-				lblDescProduct.setStyle("-fx-alignment: top-left");
+				if(sizeProductColumn > 0)
+				{
+					Product p = listProduct.get(countProduct);
+					int codProduct = p.getCod();
+					Label lblNameProduct = new Label(p.getName());
+					Label lblDescProduct = new Label(p.getDescription());
+					Label lblPrice = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ",") + "R$");
+					lblDescProduct.setPrefHeight(55);
+					lblDescProduct.setWrapText(true);
+					lblDescProduct.setStyle("-fx-alignment: top-left");
+					
+					HBox hbLblNameProduct = new HBox();
+					hbLblNameProduct.setMinHeight(20);
+					hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
+					hbLblNameProduct.getChildren().addAll(lblNameProduct);
+					
+					HBox hbLblDescProduct = new HBox();
+					hbLblDescProduct.setMinHeight(50);
+					hbLblDescProduct.getChildren().add(lblDescProduct);
+					
+					HBox hbLblPrice = new HBox();
+					hbLblPrice.getChildren().add(lblPrice);
+					
+					VBox vbProductInfo = new VBox();
+					vbProductInfo.setPrefWidth(146);
+					vbProductInfo.setPrefHeight(100);
+					vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
+					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
+					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblPrice);
+					
+					vbProductInfo.setOnMouseClicked(e -> toProduct(p.getCod(), p.getName(), p.getDescription(), p.getPrice())); //TODO será colocado os parametros para puxar o produto correto
+					
+					hbProductInfo.getChildren().add(vbProductInfo);
+					
+					sizeProductColumn--;
+					countProduct++;
+				}
 				
-				HBox hbLblNameProduct = new HBox();
-				hbLblNameProduct.setMinHeight(20);
-				hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
-				hbLblNameProduct.getChildren().addAll(lblNameProduct);
-				
-				HBox hbLblDescProduct = new HBox();
-				hbLblDescProduct.setMinHeight(50);
-				hbLblDescProduct.getChildren().add(lblDescProduct);
-				
-				HBox hbLblPrice = new HBox();
-				hbLblPrice.getChildren().add(lblPrice);
-				
-				VBox vbProductInfo = new VBox();
-				vbProductInfo.setPrefWidth(146);
-				vbProductInfo.setPrefHeight(100);
-				vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
-				vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
-				vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblPrice);
-				
-				vbProductInfo.setOnMouseClicked(e -> toProduct()); //TODO será colocado os parametros para puxar o produto correto
-				
-				hbProductInfo.getChildren().add(vbProductInfo);
 			}
 			
 			vbProduct.getChildren().add(hbProductInfo);
@@ -145,8 +172,9 @@ public class WinHomePageConstructor
 		
 	}
 	
-	private void toProduct() //TODO será colocado os parametros para puxar o produto correto
+	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
 	{
+		System.out.println(cod + " " + name + " " + desc + " " + price);
 		Main m = new Main();
 		m.changeScene("product");
 	}

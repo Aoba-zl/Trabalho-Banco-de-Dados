@@ -2,6 +2,7 @@ package model;
 
 public class Product
 {
+	private int cod;
     private String name;
     private double price;
     private int totalStock;
@@ -68,6 +69,16 @@ public class Product
 	public void setDescription(String description) 
 	{
 		this.description = description;
+	}
+
+	public int getCod()
+{
+		return cod;
+	}
+
+	public void setCod(int cod) 
+	{
+		this.cod = cod;
 	}
     
     

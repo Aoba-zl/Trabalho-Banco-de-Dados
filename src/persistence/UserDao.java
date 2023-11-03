@@ -29,6 +29,7 @@ public class UserDao
 		
 		rs.close();
 		ps.close();
+		c.close();
 		return result;
 	}
 	
