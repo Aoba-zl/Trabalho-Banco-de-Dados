@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import model.Product;
+import utils.UserSession;
 
 public class ProductDao implements ICrud<Product>
 {
@@ -23,11 +24,11 @@ public class ProductDao implements ICrud<Product>
 	@Override
 	public int insert(Product p) throws SQLException //
 	{
-		int id = -1;
+		int id = -1; //Retorna -1 para caso tenha dado erro na inserção.
 		Connection c = gDao.getConnection();
 		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, ?, ?);";
-		PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, "francisco"); //TODO necessário entender como será a entrada do usuário para o banco.
+		PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //Statement.RETURN_GENERATED_KEYS é necessário para pegar a PK
+		ps.setString(1, UserSession.getUserName());
 		ps.setString(2, p.getName());
 		ps.setDouble(3, p.getPrice());
 		ps.setInt(4, p.getTotalStock());
@@ -35,13 +36,11 @@ public class ProductDao implements ICrud<Product>
 		ps.setString(6, p.getCategory());
 		ps.setString(7, p.getDescription());
 		
-		
 		int linha = ps.executeUpdate();
-		
 		
 		if(linha > 0)
 		{
-			ResultSet rs = ps.getGeneratedKeys();
+			ResultSet rs = ps.getGeneratedKeys(); //Obtém a PK do produto
 			if(rs.next())
 			{
 				id = rs.getInt(1);						
@@ -72,12 +71,21 @@ public class ProductDao implements ICrud<Product>
 	@Override
 	public boolean delete(Product p) throws SQLException 
 	{
+		
+		//
+		//TODO codigo para delete
+		//
+		
 		return true;
 	}
 
 	@Override
 	public Product consult(Product p) throws SQLException
 	{
+		
+		//
+		//TODO codigo para conulta do produto
+		//
 		
 		return null;
 	}

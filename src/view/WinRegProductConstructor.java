@@ -138,7 +138,7 @@ public class WinRegProductConstructor
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
-		
+		//TODO quando der insert, deve retornar ao store
 		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage));
 		
 		//------------mudança de scene---------------

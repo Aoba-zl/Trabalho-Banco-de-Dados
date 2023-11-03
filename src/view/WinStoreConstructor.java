@@ -53,7 +53,8 @@ public class WinStoreConstructor
 		hbSearch.setStyle("-fx-spacing: 13px");
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
 		
-		
+		//TODO mesma coisa da page inicial, porém há a necessidade para fazer mudanças de acordo com o do lojista.
+		//Antes de fazer isso, é válido primeiro ter o sistema de login para reconhecer o usuário cliente e o lojista.
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(254);
 		vbProduct.setMinWidth(586);

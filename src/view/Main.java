@@ -13,7 +13,7 @@ public class Main extends Application
 	private static Pane pWin;
 	
 	private static WinLoginConstructor winLogin = new WinLoginConstructor();
-	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor("store");
+	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor();
 	private static WinStoreConstructor winStore = new WinStoreConstructor();
 	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
 	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
@@ -37,7 +37,7 @@ public class Main extends Application
 		stage.show();
 	}
 	
-	void changeScene(String scnStr)
+	void changeScene(String scnStr) //Fiz isso improvizado para ocorrer a mudança de tela
 	{
 		pWin.getChildren().clear();
 		switch(scnStr)

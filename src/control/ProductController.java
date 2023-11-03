@@ -75,18 +75,13 @@ public class ProductController
 		
 		List<Product> products = pDao.list();
 		
-//		for(Product p : products)
-//		{
-//			System.out.println(p.getCod());
-//			System.out.print(p.getName());
-//			System.out.print(p.getDescription());
-//			System.out.print(p.getPrice());
-//		}
-		
 		return products;
 	}
-
-	private boolean checkValues() 
+	
+	// \\d+ = apenas numeros
+	// \\.\\d+ = verificação depois da virgula
+	// \\d+(\\.\\d+)? = apenas numeros e casas depois da virgula, após a virgula é opcional "?"
+	private boolean checkValues() //checagem para não enviar valores errados para a DB
 	{
 		if(tfName.getText().trim().isBlank())
 		{
@@ -94,19 +89,19 @@ public class ProductController
 			return true;
 		}
 		
-		if(tfPrice.getText().trim().isBlank())
+		if(tfPrice.getText().trim().isBlank() || !tfPrice.getText().replace(",", ".").matches("\\d+(\\.\\d+)?"))
 		{
 			lblMessage.setText("Preço Inválido");
 			return true;
 		}
 		
-		if(tfInStock.getText().trim().isBlank())
+		if(tfInStock.getText().trim().isBlank() || !tfInStock.getText().matches("\\d+"))
 		{
 			lblMessage.setText("Estoque Inválido");
 			return true;
 		}
 		
-		if(tfShipping.getText().trim().isBlank())
+		if(tfShipping.getText().trim().isBlank() || !tfShipping.getText().replace(",", ".").matches("\\d+(\\.\\d+)?"))
 		{
 			lblMessage.setText("Frete Inválido");
 			return true;

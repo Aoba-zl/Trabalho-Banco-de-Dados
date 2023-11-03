@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 public class WinEditProductConstructor 
 {
-	public void addElements(Pane pane)
+	public void addElements(Pane pane) //necessário ter a tela de produto.
 	{
 		Label lblHomePage = new Label("Editar Produto");
 		lblHomePage.setPrefHeight(35);
