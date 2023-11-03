@@ -78,6 +78,16 @@ public class ProductController
 		return products;
 	}
 	
+	public List<Product> listProductStore() throws SQLException
+	{
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
+		List<Product> products = pDao.listStore();
+		
+		return products;
+	}
+	
 	// \\d+ = apenas numeros
 	// \\.\\d+ = verificação depois da virgula
 	// \\d+(\\.\\d+)? = apenas numeros e casas depois da virgula, após a virgula é opcional "?"

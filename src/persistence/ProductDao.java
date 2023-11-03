@@ -12,7 +12,7 @@ import java.util.List;
 import model.Product;
 import utils.UserSession;
 
-public class ProductDao implements ICrud<Product>
+public class ProductDao
 {
 	GenericDao gDao;
 	
@@ -21,7 +21,6 @@ public class ProductDao implements ICrud<Product>
 		this.gDao = gDao;
 	}
 
-	@Override
 	public int insert(Product p) throws SQLException //
 	{
 		int id = -1; //Retorna -1 para caso tenha dado erro na inserção.
@@ -55,7 +54,6 @@ public class ProductDao implements ICrud<Product>
 		return id;
 	}
 
-	@Override
 	public int update(Product p) throws SQLException 
 	{
 		int id = -1;
@@ -68,7 +66,6 @@ public class ProductDao implements ICrud<Product>
 		return id;
 	}
 
-	@Override
 	public boolean delete(Product p) throws SQLException 
 	{
 		
@@ -79,7 +76,6 @@ public class ProductDao implements ICrud<Product>
 		return true;
 	}
 
-	@Override
 	public Product consult(Product p) throws SQLException
 	{
 		
@@ -90,7 +86,6 @@ public class ProductDao implements ICrud<Product>
 		return null;
 	}
 
-	@Override
 	public List<Product> list() throws SQLException 
 	{
 		List<Product> products = new ArrayList<Product>();
@@ -116,6 +111,31 @@ public class ProductDao implements ICrud<Product>
 		return products;
 	}
 	
+	public List<Product> listStore() throws SQLException 
+	{
+		List<Product> products = new ArrayList<Product>();
+		Connection c = gDao.getConnection();
+		String sql = "SELECT id_product, name_product, unity_price, description FROM product WHERE user_name = ?;";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setString(1, UserSession.getUserName());
+		ResultSet rs = ps.executeQuery();
+		while(rs.next())
+		{
+			Product p = new Product();
+			p.setCod(rs.getInt(1));
+			p.setName(rs.getString(2));
+			p.setPrice(rs.getDouble(3));
+			p.setDescription(rs.getString(4));
+			
+			products.add(p);
+		}
+		
+		rs.close();
+		ps.close();
+		c.close();
+		
+		return products;
+	}
 	
 	
 	

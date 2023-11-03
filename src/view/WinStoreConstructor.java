@@ -1,5 +1,9 @@
 package view;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Product;
 
 public class WinStoreConstructor 
 {
@@ -53,13 +58,25 @@ public class WinStoreConstructor
 		hbSearch.setStyle("-fx-spacing: 13px");
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
 		
-		//TODO mesma coisa da page inicial, porém há a necessidade para fazer mudanças de acordo com o do lojista.
-		//Antes de fazer isso, é válido primeiro ter o sistema de login para reconhecer o usuário cliente e o lojista.
+		ProductController pControl = new ProductController();
+		List<Product> listProduct = null;
+		
+		try {
+			listProduct = pControl.listProductStore();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		int sizeProductRow = listProduct.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
+		
+		
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(254);
 		vbProduct.setMinWidth(586);
 		vbProduct.setMaxWidth(586);
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < (sizeProductRow / 4) + 1; i++)
 		{
 			HBox hbProductInfo = new HBox();
 			hbProductInfo.setPrefWidth(586);
@@ -67,40 +84,50 @@ public class WinStoreConstructor
 			hbProductInfo.setPrefHeight(100);
 			for(int j = 0; j < 4; j++)
 			{
-				Label lblNameProduct = new Label("nome");
-				Label lblDescProduct = new Label("Adoleta lepetipeticola nescafé com chocola, adoleta puxa o rabo do tatu");
-				Label lblQuantityProduct = new Label("Quantidade:");
-				Label lblPriceProduct = new Label("Price:");
-				lblDescProduct.setPrefHeight(35);
-				lblDescProduct.setWrapText(true);
-				lblDescProduct.setStyle("-fx-alignment: top-left");
-				
-				HBox hbLblNameProduct = new HBox();
-				hbLblNameProduct.setMinHeight(35);
-				hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
-				hbLblNameProduct.getChildren().addAll(lblNameProduct);
-				
-				HBox hbLblDescProduct = new HBox();
-				hbLblDescProduct.setMinHeight(35);
-				hbLblDescProduct.getChildren().add(lblDescProduct);
-
-				HBox hbLblQuantityProduct = new HBox();
-				hbLblQuantityProduct.getChildren().add(lblQuantityProduct);
-				
-				HBox hbLblPrice = new HBox();
-				hbLblPrice.getChildren().add(lblPriceProduct);
-				
-				VBox vbProductInfo = new VBox();
-				vbProductInfo.setPrefWidth(146);
-				vbProductInfo.setPrefHeight(100);
-				vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
-				vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
-				vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
-				
-				
-				vbProductInfo.setOnMouseClicked(e -> toProductStore());
-				
-				hbProductInfo.getChildren().add(vbProductInfo);
+				if(sizeProductColumn > 0)
+				{
+					Product p = listProduct.get(countProduct);
+					Label lblNameProduct = new Label(p.getName());
+					Label lblDescProduct = new Label(p.getDescription());
+					Label lblQuantityProduct = new Label("Quantidade:");
+					Label lblPriceProduct = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ","));
+					lblDescProduct.setPrefHeight(35);
+					lblDescProduct.setWrapText(true);
+					lblDescProduct.setStyle("-fx-alignment: top-left");
+					
+					HBox hbLblNameProduct = new HBox();
+					hbLblNameProduct.setMinHeight(35);
+					hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
+					hbLblNameProduct.getChildren().addAll(lblNameProduct);
+					
+					HBox hbLblDescProduct = new HBox();
+					hbLblDescProduct.setMinHeight(35);
+					hbLblDescProduct.getChildren().add(lblDescProduct);
+					
+					HBox hbLblQuantityProduct = new HBox();
+					hbLblQuantityProduct.getChildren().add(lblQuantityProduct);
+					
+					HBox hbLblPrice = new HBox();
+					hbLblPrice.getChildren().add(lblPriceProduct);
+					
+					VBox vbProductInfo = new VBox();
+					vbProductInfo.setPrefWidth(146);
+					vbProductInfo.setPrefHeight(100);
+					vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
+					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
+					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
+					
+					vbProductInfo.setOnMouseClicked(e -> toProductStore());
+					
+					hbProductInfo.getChildren().add(vbProductInfo);
+					
+					sizeProductColumn--;
+					countProduct++;
+				}
+				else
+				{
+					break;
+				}
 			}
 			
 			vbProduct.getChildren().add(hbProductInfo);
