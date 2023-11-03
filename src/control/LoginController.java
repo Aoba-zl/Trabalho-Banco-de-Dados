@@ -10,12 +10,12 @@ import persistence.UserDao;
 public class LoginController
 {
 	private TextField tfUserName;
-	private TextField tfpassword;
+	private TextField tfPassword;
 	
 	public LoginController(TextField tfUserName, TextField tfPassword)
 	{
 		this.tfUserName = tfUserName;
-		this.tfpassword = tfPassword;
+		this.tfPassword = tfPassword;
 	}
 
 	
@@ -24,10 +24,32 @@ public class LoginController
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		User u = new User();
+		
+		if(checkLogin())
+		{
+			return false;
+		}
+		
 		u.setLogin(this.tfUserName.getText());
-		u.setPassword(this.tfpassword.getText());
+		u.setPassword(this.tfPassword.getText());
 		
 		return uDao.signInUser(u);
+	}
+
+
+	private boolean checkLogin() {
+		
+		if(tfUserName.getText().contains(" "))
+		{
+			return true;
+		}
+		
+		if(tfPassword.getText().contains(" "))
+		{
+			return true;
+		}
+		
+		return false;
 	}
 	
 	
