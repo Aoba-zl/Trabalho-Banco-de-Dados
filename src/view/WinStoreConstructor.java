@@ -117,7 +117,7 @@ public class WinStoreConstructor
 					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
 					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
 					
-					vbProductInfo.setOnMouseClicked(e -> toProductStore());
+					vbProductInfo.setOnMouseClicked(e -> toProductStore(p.getCod(), p.getName(), p.getDescription(), p.getPrice()));
 					
 					hbProductInfo.getChildren().add(vbProductInfo);
 					
@@ -187,8 +187,10 @@ public class WinStoreConstructor
 		m.changeScene("regProduct");
 	}
 	
-	private void toProductStore()
+	private void toProductStore(int cod, String name, String description, double price)
 	{
+		System.out.println(cod + " " + name + " " + description + " " + price); //test
+		
 		Main m = new Main();
 		m.changeScene("productStore");
 	}
