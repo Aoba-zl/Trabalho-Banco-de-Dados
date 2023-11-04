@@ -20,7 +20,7 @@ public class UserDao
 	public boolean signInUser(User u) throws SQLException
 	{
 		Connection c = gDao.getConnection();
-		String sql = "SELECT user_name FROM user_tbl WHERE user_name = ? AND user_password = ?;";
+		String sql = "SELECT user_name, permission FROM user_tbl WHERE user_name = ? AND user_password = ?;";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, u.getLogin());
 		ps.setString(2, u.getPassword());
