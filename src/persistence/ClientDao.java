@@ -16,10 +16,6 @@ public class ClientDao
 	
 	public boolean signUpStore() //irá cadastrar, retornará false caso dê algum erro no cadastro
 	{
-		
-		
-		
-		
 		return true;
 	}
 

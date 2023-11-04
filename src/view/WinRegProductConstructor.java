@@ -1,5 +1,8 @@
 package view;
 
+import java.sql.SQLException;
+
+import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class WinRegProductConstructor 
@@ -84,16 +88,22 @@ public class WinRegProductConstructor
 		TextField tfInStock = new TextField();
 		TextField tfShipping = new TextField();
 		TextField tfCategory = new TextField();
-		TextField tfCod = new TextField();
+		TextField tfCod = new TextField(); //é automático pelo banco de dados.
 		tfName.setPrefWidth(225);
 		tfPrice.setPrefWidth(225);
 		tfInStock.setPrefWidth(225);
 		tfShipping.setPrefWidth(225);
 		tfCategory.setPrefWidth(225);
 		tfCod.setPrefWidth(225);
+		tfCod.setEditable(false);
+		tfCod.setStyle("-fx-background-color: #D3D3D3;");
 		
 		Button btnConf = new Button("Confirmar");
-		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-border-color: #ADFF2F; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+		btnConf.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
+		
+		Label lblMessage = new Label("");
+		lblMessage.setMinHeight(30);
+		lblMessage.setMinWidth(120);
 		
 		HBox hbName = new HBox();
 		HBox hbPrice = new HBox();
@@ -101,24 +111,24 @@ public class WinRegProductConstructor
 		HBox hbShipping = new HBox();
 		HBox hbCategory = new HBox();
 		HBox hbCod = new HBox();
-		HBox hbBtnConf = new HBox();
+		HBox hbBtnConfAndMessage = new HBox();
 		hbName.getChildren().addAll(lblName, tfName);
 		hbPrice.getChildren().addAll(lblPrice, tfPrice);
 		hbInStock.getChildren().addAll(lblInStock, tfInStock);
 		hbShipping.getChildren().addAll(lblShipping, tfShipping);
 		hbCategory.getChildren().addAll(lblCategory, tfCategory);
 		hbCod.getChildren().addAll(lblCod, tfCod);
-		hbBtnConf.getChildren().add(btnConf);
-		hbBtnConf.setStyle("-fx-alignment: bottom-right;");
-		hbBtnConf.setPadding(new Insets(0, 45, 0, 0));
-		hbBtnConf.setMinHeight(50);
+		hbBtnConfAndMessage.getChildren().addAll(lblMessage, btnConf);
+		hbBtnConfAndMessage.setStyle("-fx-alignment: bottom-right; -fx-spacing: 100px");
+		hbBtnConfAndMessage.setPadding(new Insets(0, 45, 0, 0));
+		hbBtnConfAndMessage.setMinHeight(50);
 		
 		VBox vbRegProduct = new VBox(14);
 		vbRegProduct.setPrefWidth(355);
 		vbRegProduct.setPrefHeight(320);
 		vbRegProduct.setLayoutX(250);
 		vbRegProduct.setPadding(new Insets(20, 0, 0, 10));
-		vbRegProduct.getChildren().addAll(hbName, hbPrice, hbInStock, hbShipping, hbCategory, hbCod, hbBtnConf);
+		vbRegProduct.getChildren().addAll(hbName, hbPrice, hbInStock, hbShipping, hbCategory, hbCod, hbBtnConfAndMessage);
 		
 		Pane pProduct = new Pane();
 		pProduct.setPrefHeight(320);
@@ -128,13 +138,71 @@ public class WinRegProductConstructor
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
+		//TODO quando der insert, deve retornar ao store
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, tfCod, lblMessage, pane));
 		
-		imgViewGoBack.setOnMouseClicked(e -> System.out.println("test"));
+		//------------mudança de scene---------------
+		imgViewGoBack.setOnMouseClicked(e -> toStore());
+		lblExit.setOnMouseClicked(e -> toLogin());
+		lblAccount.setOnMouseClicked(e -> toAccount());
 		
-		
-		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct);
+		pane.getChildren().addAll(lblHomePage, pProduct, hbOption, imgViewGoBack);
 		
 	}
 	
-
+	private void toLogin() 
+	{
+		Main m = new Main();
+		m.changeScene("login");
+	}
+	
+	private void toAccount()
+	{
+		Main m = new Main();
+		m.changeScene("account");
+	}
+	
+	private void toStore()
+	{
+		Main m = new Main();
+		m.changeScene("store");
+	}
+	
+	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage, Pane pane)
+	{
+		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, tfCod, lblMessage);
+		
+		try {
+			if(pControll.insert())
+			{
+				Label concluded = new Label("Cadastro Concluido");
+				concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+				
+				Button btnConfirmed = new Button("Confirmar");
+				btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px; -fx-font-size: 14px;");
+				
+				VBox vbRegister = new VBox(20);
+				vbRegister.setPrefHeight(100);
+				vbRegister.setPrefWidth(180);
+				vbRegister.setLayoutX(220.5);
+				vbRegister.setLayoutY(156);
+				vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 30px;");
+				vbRegister.getChildren().addAll(concluded, btnConfirmed);
+				
+				Pane pTransp = new Pane();
+				pTransp.setPrefWidth(640);
+				pTransp.setPrefHeight(400);
+				pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+				pTransp.getChildren().add(vbRegister);
+				
+				pane.getChildren().add(pTransp);
+				
+				btnConfirmed.setOnAction(e -> toStore());
+			}
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
 }

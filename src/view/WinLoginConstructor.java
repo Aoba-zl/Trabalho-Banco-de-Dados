@@ -1,5 +1,11 @@
 package view;
 
+import java.sql.SQLException;
+
+import control.LoginController;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.UserSession;
 
 public class WinLoginConstructor 
 {
@@ -35,19 +42,25 @@ public class WinLoginConstructor
 		tfUserName.setPrefWidth(120);
 		tfPassword.setPrefWidth(120);
 		
+		Label lblMessage = new Label();
+		lblMessage.setMinHeight(25);
+		lblMessage.setMinWidth(130);
+		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red;");
+		
 		Button btnEnter = new Button("Entrar");
-		btnEnter.setPrefWidth(75);
+		btnEnter.setPrefWidth(50);
+		btnEnter.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white");
 		
 		HBox hbUser = new HBox(2);
 		HBox hbPassword = new HBox(2);
 		HBox hbLblReg = new HBox(2);
 		HBox hbBtnEnter = new HBox(2);
-		hbBtnEnter.setStyle("-fx-alignment: bottom-right;");
+		hbBtnEnter.setStyle("-fx-alignment: bottom-right; -fx-spacing: 10px;");
 		hbBtnEnter.setPrefHeight(50);
 		hbUser.getChildren().addAll(lblUser, tfUserName);
 		hbPassword.getChildren().addAll(lblPassword, tfPassword);
 		hbLblReg.getChildren().addAll(lblHasRegister, lblCreateRegister);
-		hbBtnEnter.getChildren().add(btnEnter);
+		hbBtnEnter.getChildren().addAll(lblMessage, btnEnter);
 		
 		VBox vbUser = new VBox(4);
 		vbUser.setStyle("-fx-border-width: 2; -fx-border-radius: 10; -fx-border-color: black;");
@@ -58,8 +71,8 @@ public class WinLoginConstructor
 		vbUser.setLayoutX(195);
 		vbUser.setLayoutY(91);
 		
-		Image imgStore1 = new Image(getClass().getResource("image/Store1.jpg").toString());
-		Image imgStore2 = new Image(getClass().getResource("image/Store2.jpg").toString());
+		Image imgStore1 = new Image(getClass().getResource("image/Store1.png").toString());
+		Image imgStore2 = new Image(getClass().getResource("image/Store2.png").toString());
 		ImageView imgViewStore1 = new ImageView(imgStore1);
 		ImageView imgViewStore2 = new ImageView(imgStore2);
 		imgViewStore1.setFitHeight(150);
@@ -78,6 +91,7 @@ public class WinLoginConstructor
 		paneUser.setLayoutX(18);
 		paneUser.setLayoutY(60);
 		paneUser.getChildren().addAll(vbUser, imgViewStore1, imgViewStore2);
+		
 		
 		//---------------------------------Register---------------------------------------
 		
@@ -105,7 +119,7 @@ public class WinLoginConstructor
 		vbRegister.setLayoutX(220.5);
 		vbRegister.setLayoutY(156);
 		vbRegister.setPadding(new Insets(25, 0, 0, 0));
-		vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK;");
+		vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: black;");
 		vbRegister.getChildren().addAll(hbTypeAc, hbRegister);
 		
 		Pane pTransp = new Pane();
@@ -113,32 +127,42 @@ public class WinLoginConstructor
 		pTransp.setPrefHeight(400);
 		pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4)");
 		pTransp.setVisible(false);
-		
 		pTransp.getChildren().add(vbRegister);
 		
 		lblCreateRegister.setOnMouseClicked(e -> 
 										{
 											pTransp.setVisible(true);
-											lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: RED;");
+											lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: red;");
 										});
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
 		
 		//------------mudança de scene---------------
-		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword));
+		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword, lblMessage));
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		
 	}
 	
-	private void signUpUser(TextField tfUserName, TextField tfPassword)
+	private void signUpUser(TextField tfUserName, TextField tfPassword, Label lblMessage)
 	{
-		if(!tfUserName.getText().trim().isEmpty() && !tfPassword.getText().trim().isEmpty())
+		LoginController lc = new LoginController(tfUserName, tfPassword, lblMessage);
+		
+		if(!tfUserName.getText().isEmpty() && !tfPassword.getText().isEmpty())
 		{
-			toHomePage();
+			try 
+			{
+				if(lc.login())
+				{
+					toHomePage();
+				}
+			} catch (SQLException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		{
-			System.out.println("Digite todos os valores");
+			lblMessage.setText("Digite todos os valores!");
 		}
 	}
 	

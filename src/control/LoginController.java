@@ -1,24 +1,55 @@
 package control;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.control.TextField;
+import java.sql.SQLException;
 
-public class LoginController implements EventHandler<Event>
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import model.User;
+import persistence.GenericDao;
+import persistence.UserDao;
+
+public class LoginController
 {
 	private TextField tfUserName;
-	private TextField tfpassword;
+	private TextField tfPassword;
+	private Label lblMessage;
 	
-	public LoginController(TextField tfUserName, TextField tfPassword)
+	public LoginController(TextField tfUserName, TextField tfPassword, Label lblMessage)
 	{
 		this.tfUserName = tfUserName;
-		this.tfpassword = tfPassword;
+		this.tfPassword = tfPassword;
+		this.lblMessage = lblMessage;
 	}
 
-	@Override
-	public void handle(Event event) 
+	
+	public boolean login() throws SQLException
 	{
+		GenericDao gDao = new GenericDao();
+		UserDao uDao = new UserDao(gDao);
+		User u = new User();
 		
+		if(checkLogin())
+		{
+			return false;
+		}
+		
+		u.setLogin(this.tfUserName.getText());
+		u.setPassword(this.tfPassword.getText());
+		
+		return uDao.signInUser(u);
+	}
+
+
+	private boolean checkLogin() {
+		
+		if(tfUserName.getText().contains(" ") || tfPassword.getText().contains(" "))
+		{
+			lblMessage.setText("Digite sem espaço!");
+			return true;
+		}
+		
+		
+		return false;
 	}
 	
 	
