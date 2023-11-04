@@ -1,6 +1,6 @@
 package view;
 
-import Utils.Constants;
+import utils.Constants;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
