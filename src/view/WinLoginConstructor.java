@@ -3,9 +3,6 @@ package view;
 import java.sql.SQLException;
 
 import control.LoginController;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import utils.UserSession;
 
 public class WinLoginConstructor 
 {
@@ -45,7 +41,7 @@ public class WinLoginConstructor
 		Label lblMessage = new Label();
 		lblMessage.setMinHeight(25);
 		lblMessage.setMinWidth(130);
-		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red;");
+		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red; -fx-font-size: 11px");
 		
 		Button btnEnter = new Button("Entrar");
 		btnEnter.setPrefWidth(50);

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import model.Product;
@@ -25,7 +24,7 @@ public class ProductDao
 	{
 		int id = -1; //Retorna -1 para caso tenha dado erro na inserção.
 		Connection c = gDao.getConnection();
-		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, COALESCE(NULLIF(?,''), 'Sem categoria'), ?);";
 		PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //Statement.RETURN_GENERATED_KEYS é necessário para pegar a PK
 		ps.setString(1, UserSession.getUserName());
 		ps.setString(2, p.getName());

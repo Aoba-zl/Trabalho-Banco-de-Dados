@@ -1,10 +1,5 @@
 package persistence;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import model.Client;
-
 public class ClientDao
 {
 	private GenericDao gDao;

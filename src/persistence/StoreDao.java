@@ -1,9 +1,6 @@
 package persistence;
 
-import java.sql.SQLException;
-import java.util.List;
 
-import model.Store;
 
 public class StoreDao
 {

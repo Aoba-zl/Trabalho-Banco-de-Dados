@@ -78,6 +78,7 @@ public class Main extends Application
 		else
 		{
 			UserSession.clearSession();
+			winLogin.addElements(pWin);
 		}
 	}
 	
