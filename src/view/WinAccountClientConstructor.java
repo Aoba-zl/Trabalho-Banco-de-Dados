@@ -11,18 +11,20 @@ import javafx.scene.layout.VBox;
 
 public class WinAccountClientConstructor
 {
-    private TextField tfOtherSex;
-    private TextField tfName;
-    private TextField tfEmail;
-    private TextField tfPhone;
+    private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
     private ToggleGroup group;
     private BorderPane bpButtons;
-    private Button btnDeleteAccount;
-    private Button btnCancelEdit;
+    private Button btnDeleteAccount, btnCancelEdit;
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private String action = null;
+
+    private void setBindings()
+    {
+        // TODO:  definir Bindings
+//        Bindings.bindBidirectional();
+    }
 
     public WinAccountClientConstructor(VBox mainBox)
     {
@@ -47,11 +49,11 @@ public class WinAccountClientConstructor
         Label lblBirthDate = new Label("Data de Nascimento: ");
         Label lblSex       = new Label("Sexo: ");
 
-        TextField tfLogin     = new TextField();
+        tfLogin     = new TextField();
         tfLogin.setDisable(true);
-        TextField tfCpf       = new TextField();
+        tfCpf       = new TextField();
         tfCpf.setDisable(true);
-        TextField tfBirthDate = new TextField();
+        tfBirthDate = new TextField();
         tfBirthDate.setDisable(true);
         tfName      = new TextField();
         tfEmail     = new TextField();

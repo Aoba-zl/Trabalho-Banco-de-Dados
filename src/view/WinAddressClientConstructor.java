@@ -9,8 +9,11 @@ import javafx.scene.layout.VBox;
 public class WinAddressClientConstructor
 {
     private String textBtnEditAccount = "Editar";
-    public void addElements(VBox mainBox)
+    private final VBox mainBox;
+    public WinAddressClientConstructor(VBox mainBox, String[] selectedAddress)
     {
+        // TODO: Carregar endereço para edição
+        this.mainBox = mainBox;
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
                 "-fx-label-padding: 0px 0px 15px 0px");

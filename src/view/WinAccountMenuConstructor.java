@@ -92,7 +92,6 @@ public class WinAccountMenuConstructor
         }
 
         openWinClientMenu();
-//TODO        winAllAddressClient.addElements(vbContent);
 
         allElements.setPrefWidth(Constants.WIDTH);
         bpTitle.setLeft(btnBack);
