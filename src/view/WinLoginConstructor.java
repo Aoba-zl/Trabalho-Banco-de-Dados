@@ -45,7 +45,7 @@ public class WinLoginConstructor
 		Label lblMessage = new Label();
 		lblMessage.setMinHeight(25);
 		lblMessage.setMinWidth(130);
-		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red;");
+		lblMessage.setStyle("-fx-alignment: center-left; -fx-text-fill: red; -fx-font-size: 11px");
 		
 		Button btnEnter = new Button("Entrar");
 		btnEnter.setPrefWidth(50);

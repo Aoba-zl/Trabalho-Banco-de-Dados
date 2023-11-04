@@ -36,7 +36,14 @@ public class LoginController
 		u.setLogin(this.tfUserName.getText());
 		u.setPassword(this.tfPassword.getText());
 		
-		return uDao.signInUser(u);
+		boolean test = uDao.signInUser(u);
+		
+		if(!test)
+		{
+			lblMessage.setText("Usuário ou Senha inválido.");
+		}
+		
+		return test;
 	}
 
 
