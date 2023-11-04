@@ -1,7 +1,6 @@
 package control;
 
 import java.sql.SQLException;
-import java.text.Format;
 import java.util.List;
 
 import javafx.scene.control.Label;
