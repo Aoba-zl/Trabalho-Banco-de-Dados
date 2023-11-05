@@ -11,6 +11,15 @@ public class User
     private String email;
     private String permission;
 
+    public User(String login)
+    {
+    	this.setLogin(login);
+    }
+    
+    public User()
+    {
+    }
+    
     public boolean equals(User user)
 	{
         boolean validacaoLogin = Objects.equals(this.login, user.login);

@@ -1,9 +1,14 @@
 .project
 .classpath
 .idea/
+*.class
+*.classpath
 *.idea
 *.iml
 *.xml
 out/
+module-info.java
+build.fxbuild
+*.jar
 /src/META-INF/MANIFEST.MF
 /bin/

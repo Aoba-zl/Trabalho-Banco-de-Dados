@@ -18,6 +18,7 @@ public class Main extends Application
 	private static WinStoreConstructor winStore = new WinStoreConstructor();
 	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
 	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
+	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
@@ -71,7 +72,7 @@ public class Main extends Application
 				winEditProduct.addElements(pWin);
 				break;
 			case "account":
-				System.out.println("continha");
+				winAccountMenu.addElements(pWin);;
 				break;
 			}
 		}

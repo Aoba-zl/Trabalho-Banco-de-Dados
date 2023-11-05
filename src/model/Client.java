@@ -11,7 +11,18 @@ public class Client extends User
 	private String socialName;
     private String cpf;
     private String sex;
-    private Date dateBirth;
+//    private Date dateBirth;
+    private String dateBirth;
+    
+    public Client(String login)
+    {
+    	this.setLogin(login);
+    }
+
+    public Client()
+    {
+    	super();
+    }
     
 	public List<Order> getOrder() 
 	{
@@ -72,17 +83,13 @@ public class Client extends User
 	{
 		this.sex = sex;
 	}
-	
-	public Date getDateBirth() 
-	{
+
+	public String getDateBirth() {
 		return dateBirth;
 	}
-	
-	public void setDateBirth(Date dateBirth)
-	{
+
+	public void setDateBirth(String dateBirth) {
 		this.dateBirth = dateBirth;
 	}
-    
-    
     
 }
