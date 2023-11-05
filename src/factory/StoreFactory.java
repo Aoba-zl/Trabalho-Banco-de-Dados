@@ -9,6 +9,9 @@ public class StoreFactory
 	{
 		Store newStore = new Store(user.getLogin());
 		
+		newStore.setLogin(user.getLogin());
+		newStore.setEmail(user.getEmail());
+		newStore.setTelephone(user.getTelephone());
 		newStore.setNameStore(storeName);
 		newStore.setCnpj(cnpj);
 		

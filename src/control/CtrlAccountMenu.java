@@ -34,7 +34,25 @@ public class CtrlAccountMenu
     {
     }
 
-//    public String[] getDataClient(String login)
+    public void completeStoreFields(String login)
+    {
+    	GenericDao genericDAO = new GenericDao();
+    	StoreDao storeDao = new StoreDao(genericDAO);
+    	UserDao userDao = new UserDao(genericDAO);
+    	try
+    	{
+    		User user = new User();
+    		user.setLogin(login);
+    		user = userDao.consult(user);
+    		Store store = storeDao.consult(new Store(login));
+    		store.setEmail(user.getEmail());
+    		store.setTelephone(user.getTelephone());
+    		setFields(store);
+    	}catch (Exception e) {
+    		e.printStackTrace();
+		}
+    }
+    
     public void completeClientFields(String login)
     {
     	GenericDao genericDAO = new GenericDao();
@@ -50,10 +68,8 @@ public class CtrlAccountMenu
     		client.setTelephone(user.getTelephone());
     		setFields(client);
     	}catch (Exception e) {
-			// TODO: handle exception
+    		e.printStackTrace();
 		}
-    	
-
     }
 
     public void editAccount(String login)
@@ -98,11 +114,13 @@ public class CtrlAccountMenu
     	
     	try
     	{
+    		String tel = getPhoneValue();
+    		System.out.println(tel);
     		Store currentStore = storeDao.consult(new Store(login));
     		User newUserData = userF.create(login, currentStore.getPassword(), currentStore.getPermission(), 
-    				getEmailValue(), getPhoneValue());
-    		Store newStoreData = storeF.create(newUserData, currentStore.getCnpj(), getNameValue());
-    		userDao.update(newStoreData);
+    				getEmailValue(), tel);
+    		Store newStoreData = storeF.create(newUserData, getNameValue(), currentStore.getCnpj());
+    		userDao.update(newUserData);
     		storeDao.update(newStoreData);
     		setFields(newStoreData);
     	} catch (SQLException e) {

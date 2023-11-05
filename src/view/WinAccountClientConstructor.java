@@ -38,8 +38,6 @@ public class WinAccountClientConstructor
         setEvents();
         setPropertiesConnections();
         control.completeClientFields(userName);
-        System.out.println(sexText.getValue());
-
     }
     
     private void setEvents()
@@ -50,14 +48,14 @@ public class WinAccountClientConstructor
         {
             changeCancelDeleteButtons(btnDeleteAccount);
             setDisableEditableFields(true);
+            action = null;
         });
 
         btnDeleteAccount.setOnMouseClicked(
-                e -> deleteAccount());
+                e -> btnDeleteClicked());
 
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
-            // TODO Chamar Controle
             if (newValue && action == "edit")
             {
                 setDisableEditableFields(true);
@@ -198,7 +196,7 @@ public class WinAccountClientConstructor
         }
     }
 
-    private void deleteAccount()
+    private void btnDeleteClicked()
     {
         returnPopUp.setValue(false);
         action = "delete";
