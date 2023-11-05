@@ -1,9 +1,9 @@
-package controle;
+package control;
 
-import modelo.Carrinho;
-import modelo.Cliente;
-import modelo.Item;
-import modelo.Produto;
+import model.Carrinho;
+import model.Cliente;
+import model.Item;
+import model.Produto;
 
 import java.util.ArrayList;
 import java.util.List;

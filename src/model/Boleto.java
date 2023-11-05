@@ -1,4 +1,4 @@
-package modelo;
+package model;
 public class Boleto extends Pagamento
 {
     private String linhaDigitavel;

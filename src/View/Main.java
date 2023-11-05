@@ -1,6 +1,7 @@
-package View;
+package view;
 
-import Utils.Constants;
+import persistence.GenericDao;
+import utils.Constants;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -15,8 +16,12 @@ public class Main extends Application {
         Scene scene= new Scene(pane, Constants.WIDTH, Constants.HEIGHT);
         WinShoppingCartConstructor winShoppingCartConstructor= new WinShoppingCartConstructor();
         WinPurchaseHistoryConstructor winPurchaseHistoryConstructor= new WinPurchaseHistoryConstructor();
+        WinPurchaseDetailsConstruct winPurchaseDetailsConstruct= new WinPurchaseDetailsConstruct();
+        WinOrderHistoryConstructor winOrderHistoryConstructor= new WinOrderHistoryConstructor();
+        GenericDao genericDao= new GenericDao();
 
-        winPurchaseHistoryConstructor.addElements(pane);
+//        winPurchaseHistoryConstructor.addElements(pane);
+        genericDao.getConnection();
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

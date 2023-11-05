@@ -1,4 +1,4 @@
-package controle;
+package control;
 
 public class CtrlHistoricoPedidos
 {

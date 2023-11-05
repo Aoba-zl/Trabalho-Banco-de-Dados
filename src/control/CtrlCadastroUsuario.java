@@ -1,8 +1,8 @@
-package controle;
+package control;
 
-import modelo.Cliente;
-import modelo.Endereco;
-import modelo.Loja;
+import model.Cliente;
+import model.Endereco;
+import model.Loja;
 
 public class CtrlCadastroUsuario
 {
