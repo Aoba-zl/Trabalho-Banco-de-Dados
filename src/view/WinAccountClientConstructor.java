@@ -1,5 +1,7 @@
 package view;
 
+import control.CtrlAccountMenu;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,30 +10,101 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import utils.UserSession;
 
 public class WinAccountClientConstructor
 {
     private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
+    private StringProperty sexText = new SimpleStringProperty("");
     private ToggleGroup group;
     private BorderPane bpButtons;
-    private Button btnDeleteAccount, btnCancelEdit;
+    private RadioButton rbMale, rbFemale, rbOther;
+    private Button btnDeleteAccount, btnCancelEdit, btnEditAccount;
+    
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private VBox mainBox;
     private String action = null;
-
-    private void setBindings()
-    {
-        // TODO:  definir Bindings
-//        Bindings.bindBidirectional();
-    }
+    private String userName;
+    
+    private CtrlAccountMenu control = new CtrlAccountMenu();
 
     public WinAccountClientConstructor(VBox mainBox)
+    {
+    	this.mainBox = mainBox;
+    	userName = UserSession.getUserName();
+        setElements();
+        setEvents();
+        setPropertiesConnections();
+        control.completeClientFields(userName);
+        System.out.println(sexText.getValue());
+
+    }
+    
+    private void setEvents()
+    {
+        btnEditAccount.setOnMouseClicked(e -> btnEditClicked());
+
+        btnCancelEdit.setOnMouseClicked(e ->
+        {
+            changeCancelDeleteButtons(btnDeleteAccount);
+            setDisableEditableFields(true);
+        });
+
+        btnDeleteAccount.setOnMouseClicked(
+                e -> deleteAccount());
+
+        returnPopUp.addListener(((observable, oldValue, newValue) ->
+        {
+            // TODO Chamar Controle
+            if (newValue && action == "edit")
+            {
+                setDisableEditableFields(true);
+                changeCancelDeleteButtons(btnDeleteAccount);
+                control.editAccount(userName);
+            }
+            else if (newValue && action == "delete")
+            {
+            	control.deleteAccount(userName);
+            }
+            action = null;
+        }));
+        
+        
+        rbMale.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> sexText.setValue("masculino"));
+        rbFemale.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> sexText.setValue("feminino"));
+        rbOther.selectedProperty().addListener((observable, oldValue, newValue) -> 
+        {
+        	tfOtherSex.setVisible(newValue);
+        });
+        
+        sexText.addListener(((observable, oldValue, newValue) ->
+        {
+        	if (newValue != null && newValue.length() > 1)
+        	{
+        		if (newValue.toUpperCase().charAt(0) == 'M')
+        			rbMale.setSelected(true);
+        		else if (newValue.toUpperCase().charAt(0) == 'F')
+        			rbFemale.setSelected(true);
+        		else
+        		{
+        			rbOther.setSelected(true);
+        			tfOtherSex.setText(sexText.getValue());
+        		}
+        	}
+        }
+        ));
+    }
+    
+    private void setElements()
     {
         Label lblTitle = new Label("Dados");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
                 "-fx-label-padding: 0px 0px 15px 0px");
-
+        
         BorderPane bpLogin     = new BorderPane();
         BorderPane bpName      = new BorderPane();
         BorderPane bpCpf       = new BorderPane();
@@ -61,9 +134,10 @@ public class WinAccountClientConstructor
 
         tfOtherSex       = new TextField();
         tfOtherSex.setVisible(false);
-        RadioButton rbMale    = new RadioButton("Masculino");
-        RadioButton rbFemale  = new RadioButton("Feminino");
-        RadioButton rbOther   = new RadioButton("Outro");
+                
+        rbMale    = new RadioButton("Masculino");
+        rbFemale  = new RadioButton("Feminino");
+        rbOther   = new RadioButton("Outro");
         group = new ToggleGroup();
         rbFemale.setToggleGroup(group);
         rbMale.setToggleGroup(group);
@@ -76,7 +150,7 @@ public class WinAccountClientConstructor
         btnDeleteAccount
                 .setStyle( "-fx-background-color: #ff5959; -fx-text-fill: white;" +
                         "-fx-border-color: #ff0000; -fx-border-radius: 8px; -fx-background-radius: 8px;");
-        Button btnEditAccount   = new Button("Editar");
+        btnEditAccount   = new Button("Editar");
         btnEditAccount
                 .setStyle("-fx-border-radius: 8px;-fx-background-radius: 8px");
         btnCancelEdit= new Button("Cancelar");
@@ -101,42 +175,15 @@ public class WinAccountClientConstructor
         bpButtons.setLeft(btnDeleteAccount);
         bpButtons.setRight(btnEditAccount);
 
+        setDisableEditableFields(true);
+        
         mainBox.getChildren().addAll(lblTitle, bpLogin, bpName, bpCpf, bpEmail, bpPhone,
                 bpBirthDate, bpSex, bpButtons);
 
-        setDisableEditableFields(true);
-
-        rbOther.selectedProperty().addListener(
-                        (observable, oldValue, newValue) -> selectRbOtherSex(newValue));
-        btnEditAccount.setOnMouseClicked(e -> btnEditClicked());
-
-        btnCancelEdit.setOnMouseClicked(e ->
-        {
-            changeCancelDeleteButtons(btnDeleteAccount);
-            setDisableEditableFields(true);
-        });
-
-        btnDeleteAccount.setOnMouseClicked(
-                e -> deleteAccount());
-
-        returnPopUp.addListener(((observable, oldValue, newValue) ->
-        {
-            // TODO Chamar Controle
-            if (newValue && action == "edit")
-            {
-                setDisableEditableFields(true);
-                changeCancelDeleteButtons(btnDeleteAccount);
-            }
-            else if (newValue && action == "delete")
-            {
-            }
-            action = null;
-        }));
     }
 
     private void btnEditClicked()
     {
-        // TODO: Completar event Click
         returnPopUp.setValue(false);
         if (action == "edit")
         {
@@ -153,7 +200,6 @@ public class WinAccountClientConstructor
 
     private void deleteAccount()
     {
-        // TODO: implementar deletar Conta
         returnPopUp.setValue(false);
         action = "delete";
         messageMenuPopUp.setValue("Tem certeza de que deseja deletar a conta?");
@@ -165,6 +211,7 @@ public class WinAccountClientConstructor
         tfName.setDisable(isDisable);
         tfEmail.setDisable(isDisable);
         tfPhone.setDisable(isDisable);
+        tfOtherSex.setDisable(isDisable);
         group.getToggles()
                 .forEach(toggle -> ((RadioButton)toggle).setDisable(isDisable));
     }
@@ -174,11 +221,19 @@ public class WinAccountClientConstructor
         bpButtons.setLeft(button);
     }
 
-    private void selectRbOtherSex(boolean isSelected)
+    private void setPropertiesConnections()
     {
-        tfOtherSex.setVisible(isSelected);
+    	Bindings.bindBidirectional(tfLogin.textProperty(),		control.getLoginProperty());
+    	Bindings.bindBidirectional(tfCpf.textProperty(),		control.getCpfCnpjProperty());
+    	Bindings.bindBidirectional(tfBirthDate.textProperty(),	control.getDateBirthProperty());
+    	Bindings.bindBidirectional(sexText,						control.getSexProperty());
+    	Bindings.bindBidirectional(tfName.textProperty(),		control.getNameProperty());
+    	Bindings.bindBidirectional(tfEmail.textProperty(),		control.getEmailProperty());
+    	Bindings.bindBidirectional(tfPhone.textProperty(),		control.getPhoneProperty());
+    	
+    	Bindings.bindBidirectional(tfOtherSex.textProperty(), sexText);
     }
-
+    
     BooleanProperty getIsMenuPopupActive()
     {
         return isMenuPopupActive;

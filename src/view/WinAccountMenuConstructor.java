@@ -1,6 +1,7 @@
 package view;
 
 import utils.Constants;
+import utils.UserSession;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,20 +23,20 @@ public class WinAccountMenuConstructor
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
 
+    // TODO: Arrumar ida e vinda de paginas via property (se possivel);
+    // TODO: login tem que avisar que conta não existe '-'
+    // TODO: Fazer frescurite nos textFields
+    
+    
     private VBox vbContent;
     private Label lblPopUpMessage = new Label();
     private StringProperty messagePopUp = new SimpleStringProperty(null);
     private BooleanProperty isPopupActive = new SimpleBooleanProperty(false);
     private BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
 
-    WinAccountMenuConstructor (String user)
-    {
-        this.user = user;
-        this.user = "client";
-    }
-
     public void addElements(Pane pane)
     {
+    	user = UserSession.getUserType();
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
         setBtnBackImage(btnBack);
@@ -83,15 +84,17 @@ public class WinAccountMenuConstructor
         String addressPage;
         if (user.equalsIgnoreCase("store"))
         {
+        	openWinStoreMenu();
             dataPage = "storeAccountData";
             addressPage = "storeAddress";
 
         } else {
+        	openWinClientMenu();
             dataPage = "clientAccountData";
             addressPage = "clientAllAddress";
         }
 
-        openWinClientMenu();
+        
 
         allElements.setPrefWidth(Constants.WIDTH);
         bpTitle.setLeft(btnBack);
@@ -211,10 +214,17 @@ public class WinAccountMenuConstructor
             case "storeAccountData"  -> openWinStoreMenu();
             // TODO: implementar transicao entre paginas
             case "orderRecord" -> System.out.println("Vai pra pagina de histórioco");
-            case "goBack" -> System.out.println("Volta pra outro pagina!");
+            case "goBack" -> toPreviousPage();
         }
     }
 
+	private void toPreviousPage() 
+	{
+		Main m = new Main();
+		m.changeScene("homePage");
+		
+	}
+    
     private void openWinClientMenu()
     {
         WinAccountClientConstructor win = new WinAccountClientConstructor(vbContent);
