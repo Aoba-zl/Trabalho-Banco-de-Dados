@@ -1,6 +1,7 @@
 package view;
 
 import utils.Constants;
+import utils.UserSession;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,29 +17,66 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+import control.CtrlAddressMenu;
+
 public class WinAllAddressClientConstructor
 {
+	private TableView<String[]> tvAddress;
+	private Button btnDelete, btnEdit, btnNew;
     private String[] selectedAddress;
-    private Button btnDelete, btnEdit, btnNew;
+    private List<String[]> addressLst;
+    private ObservableList<String[]> observableAddressList;
+    
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final VBox mainBox;
+    private String action = null;
+    private String userName;
+    
+    private CtrlAddressMenu control = new CtrlAddressMenu();
 
     public WinAllAddressClientConstructor(VBox mainBox)
     {
         this.mainBox = mainBox;
-        // TODO: preencher lista de endereços ao instanciar classe
-//        List<String[]> addressLst = ctrl.getFillerAddress();
-        List<String[]> addressLst = null;
-        ObservableList<String[]> observableAddressList = FXCollections.observableArrayList(addressLst);
+        userName = UserSession.getUserName();
+        
+        addressLst = control.getAddressList(userName);
+        observableAddressList = FXCollections.observableArrayList(addressLst);
+        
+        setElements();
+        setEvents();
+    }
+    
+    private void setEvents()
+    {
+    	// TODO: dar ação aos botoes
+    	tvAddress.setOnMouseClicked(
+                e -> {
+                    String[] selectedData = tvAddress.getSelectionModel().getSelectedItem();
+                    if (selectedData != null)
+                    {
+                        selectedAddress = selectedData;
+                        setDisableButtons(false);
+                    }
+                    else
+                        System.out.println("NULL");
+                }
+        );
+        btnEdit.setOnMouseClicked(event -> openEditSelectedAddress(selectedAddress));
+//        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
+//        btnNew.setOnMouseClicked(event -> addAddress());
+    }
+    
+    private void setElements()
+    {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
                 "-fx-label-padding: 0px 0px 15px 0px");
 
         BorderPane bpButtons = new BorderPane();
 
-        TableView <String[]> tvAddress = new TableView<>();
+        tvAddress = new TableView<>();
 
         TableColumn<String[], String> colName = new TableColumn<>("Nome");
         TableColumn<String[], String> colCEP = new TableColumn<>("CEP");
@@ -74,33 +112,13 @@ public class WinAllAddressClientConstructor
         colComplement.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
         tvAddress.getItems().addAll(observableAddressList);
 
-        mainBox.getChildren().addAll(lblTitle, tvAddress,
-                bpButtons);
-
-
-        tvAddress.setOnMouseClicked(
-                e -> {
-                    String[] selectedData = tvAddress.getSelectionModel().getSelectedItem();
-                    if (selectedData != null)
-                    {
-                        selectedAddress = selectedData;
-                        setDisableButtons(false);
-                    }
-                    else
-                        System.out.println("NULL");
-                }
-        );
-        btnEdit.setOnMouseClicked(event -> openEditSelectedAddress(selectedAddress));
-//        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
-//        btnNew.setOnMouseClicked(event -> addAddress());
+        mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
     }
-
+    
     private void openEditSelectedAddress(String[] address)
     {
         mainBox.getChildren().clear();
         WinAddressClientConstructor win = new WinAddressClientConstructor(mainBox, address);
-
-
     }
 
     StringProperty getMessageMenuPopUp()

@@ -12,9 +12,6 @@ import persistence.UserDao;
 import utils.UserSession;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 import factory.ClientFactory;
 import factory.StoreFactory;
@@ -29,10 +26,6 @@ public class CtrlAccountMenu
 	private StringProperty phone = new SimpleStringProperty("");
     private StringProperty dateBirth = new SimpleStringProperty("");
     private StringProperty sex = new SimpleStringProperty("");
-
-    public CtrlAccountMenu()
-    {
-    }
 
     public void completeStoreFields(String login)
     {
@@ -114,11 +107,9 @@ public class CtrlAccountMenu
     	
     	try
     	{
-    		String tel = getPhoneValue();
-    		System.out.println(tel);
     		Store currentStore = storeDao.consult(new Store(login));
     		User newUserData = userF.create(login, currentStore.getPassword(), currentStore.getPermission(), 
-    				getEmailValue(), tel);
+    				getEmailValue(), getPhoneValue());
     		Store newStoreData = storeF.create(newUserData, getNameValue(), currentStore.getCnpj());
     		userDao.update(newUserData);
     		storeDao.update(newStoreData);
