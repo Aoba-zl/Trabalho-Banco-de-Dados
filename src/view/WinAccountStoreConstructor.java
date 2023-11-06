@@ -175,16 +175,7 @@ public class WinAccountStoreConstructor
         bpButtons.setLeft(button);
     }
     
-    StringProperty getMessageMenuPopUp()
-    {
-        return messageMenuPopUp;
-    }
-    BooleanProperty getIsMenuPopupActive()
-    {
-        return isMenuPopupActive;
-    }
-    BooleanProperty getReturnPopUp()
-    {
-        return returnPopUp;
-    }
+    StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
+    BooleanProperty getIsMenuPopupActive() { return isMenuPopupActive; }
+    BooleanProperty getReturnPopUp() { return returnPopUp; }
 }

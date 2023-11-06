@@ -1,5 +1,7 @@
 package view;
 
+import javafx.beans.binding.Bindings;
+import utils.AddressColumnDataModel;
 import utils.Constants;
 import utils.UserSession;
 import javafx.beans.property.BooleanProperty;
@@ -21,15 +23,18 @@ import control.CtrlAddressMenu;
 
 public class WinAllAddressClientConstructor
 {
-	private TableView<String[]> tvAddress;
+	private TableView<AddressColumnDataModel> tvAddress;
 	private Button btnDelete, btnEdit, btnNew;
+    private Label lblTitle;
+    private BorderPane bpButtons;
     private String[] selectedAddress;
-    private List<String[]> addressLst;
-    private ObservableList<String[]> observableAddressList;
+    private AddressColumnDataModel selectedDataModel;
+    private ObservableList<AddressColumnDataModel> observableAddressList = FXCollections.observableArrayList();
     
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private final BooleanProperty editionMode = new SimpleBooleanProperty(false);
     private final VBox mainBox;
     private String action = null;
     private String userName;
@@ -41,47 +46,113 @@ public class WinAllAddressClientConstructor
         this.mainBox = mainBox;
         userName = UserSession.getUserName();
         
-        addressLst = control.getAddressList(userName);
-        observableAddressList = FXCollections.observableArrayList(addressLst);
-        
         setElements();
+        mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
         setEvents();
+
+        updateAddressLst();
     }
     
     private void setEvents()
     {
-    	// TODO: dar ação aos botoes
     	tvAddress.setOnMouseClicked(
                 e -> {
-                    String[] selectedData = tvAddress.getSelectionModel().getSelectedItem();
-                    if (selectedData != null)
+                    selectedDataModel = tvAddress.getSelectionModel().getSelectedItem();
+                    if (selectedDataModel != null)
                     {
-                        selectedAddress = selectedData;
+                        String[] strSelectedData = selectedDataModel.toVetString();
+                        selectedAddress = strSelectedData;
                         setDisableButtons(false);
                     }
-                    else
-                        System.out.println("NULL");
                 }
         );
+
+        editionMode.addListener((observable, oldValue, newValue) ->
+        {
+            if (!newValue)
+            {
+                mainBox.getChildren().clear();
+                mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
+                setDisableButtons(true);
+                tvAddress.getSelectionModel().clearSelection();
+                updateAddressLst();
+            }
+        });
+
+        returnPopUp.addListener(((observable, oldValue, newValue) ->
+        {
+            System.out.println("B:" + newValue + ", " + action);
+            if (newValue && action == "delete")
+            {
+                control.deleteAddress(selectedAddress, userName);
+                openPopUp("Deletado com Sucesso");
+                setDisableButtons(true);
+                tvAddress.getSelectionModel().clearSelection();
+                updateAddressLst();
+                System.out.println("AAA");
+            }
+            action = "";
+        }));
+
         btnEdit.setOnMouseClicked(event -> openEditSelectedAddress(selectedAddress));
-//        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
-//        btnNew.setOnMouseClicked(event -> addAddress());
+        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
+        btnNew.setOnMouseClicked(event -> System.out.println("Vai pra pagina de criação de endereços"));
     }
-    
+
+    private void updateAddressLst()
+    {
+        List<String[]> dataBaseAddresTable = control.getAddressList(userName);
+        tvAddress.getItems().clear();
+        observableAddressList.clear();
+
+        for (String[] row : dataBaseAddresTable)
+        {
+            String comp = row[3];
+            if (comp == null || comp.isEmpty() || comp.equals("null"))
+                comp = "  ";
+            observableAddressList.add(new AddressColumnDataModel(row[0], row[1], row[2], comp));
+        }
+        tvAddress.getItems().addAll(observableAddressList);
+    }
+
+    private void deleteSelectedAddress()
+    {
+        returnPopUp.setValue(false);
+        String msg = "Deve haver ao menos 1 endereço!";
+        if (observableAddressList.size() > 1)
+        {
+            action = "delete";
+            msg = "Tem certeza de que quer deleter o endereço?";
+        }
+        openPopUp(msg);
+    }
+
+    private void openPopUp(String message)
+    {
+        messageMenuPopUp.setValue(message);
+        isMenuPopupActive.setValue(true);
+    }
+
     private void setElements()
     {
-        Label lblTitle = new Label("Endereço");
+        lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
                 "-fx-label-padding: 0px 0px 15px 0px");
 
-        BorderPane bpButtons = new BorderPane();
+        bpButtons = new BorderPane();
 
         tvAddress = new TableView<>();
 
-        TableColumn<String[], String> colName = new TableColumn<>("Nome");
-        TableColumn<String[], String> colCEP = new TableColumn<>("CEP");
-        TableColumn<String[], String> colNumber = new TableColumn<>("Número");
-        TableColumn<String[], String> colComplement = new TableColumn<>("Complemento");
+        TableColumn<AddressColumnDataModel, String> colName = new TableColumn<>("Nome");
+        TableColumn<AddressColumnDataModel, String> colCEP = new TableColumn<>("CEP");
+        TableColumn<AddressColumnDataModel, String> colNumber = new TableColumn<>("Número");
+        TableColumn<AddressColumnDataModel, String> colComplement = new TableColumn<>("Complemento");
+
+        colName.setCellValueFactory(data -> data.getValue().column1Property());
+        colCEP.setCellValueFactory(data -> data.getValue().column2Property());
+        colNumber.setCellValueFactory(data -> data.getValue().column3Property());
+        colComplement.setCellValueFactory(data -> data.getValue().column4Property());
+
         colName.setPrefWidth(Constants.WIDTH * 0.1);
         colCEP.setPrefWidth(Constants.WIDTH * 0.1);
         colNumber.setPrefWidth(Constants.WIDTH * 0.1);
@@ -106,19 +177,17 @@ public class WinAllAddressClientConstructor
         bpButtons.setRight(btnNew);
 
         tvAddress.getColumns().addAll(colName, colCEP, colNumber, colComplement);
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
-        colCEP.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
-        colNumber.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
-        colComplement.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[3]));
-        tvAddress.getItems().addAll(observableAddressList);
-
-        mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
     }
     
     private void openEditSelectedAddress(String[] address)
     {
+        editionMode.setValue(true);
         mainBox.getChildren().clear();
         WinAddressClientConstructor win = new WinAddressClientConstructor(mainBox, address);
+        Bindings.bindBidirectional(editionMode, win.getEditionMode());
+        Bindings.bindBidirectional(messageMenuPopUp, win.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isMenuPopupActive, win.getIsMenuPopupActive());
+        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
     }
 
     StringProperty getMessageMenuPopUp()
@@ -138,6 +207,5 @@ public class WinAllAddressClientConstructor
     {
         btnDelete.setDisable(isDisable);
         btnEdit.setDisable(isDisable);
-        btnNew.setDisable(isDisable);
     }
 }

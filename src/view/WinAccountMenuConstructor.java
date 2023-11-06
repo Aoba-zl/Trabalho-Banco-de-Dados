@@ -213,9 +213,9 @@ public class WinAccountMenuConstructor
             case "clientAccountData" -> openWinClientMenu();
             case "storeAddress"      -> openWinAddressStoreMenu();
             case "storeAccountData"  -> openWinStoreMenu();
-            // TODO: implementar transicao entre paginas
-            case "orderRecord" -> System.out.println("Vai pra pagina de histórioco");
             case "goBack" -> toPreviousPage();
+            // TODO: implementar transicao para pagina de histórico
+            case "orderRecord" -> System.out.println("Vai pra pagina de histórioco");
         }
     }
 

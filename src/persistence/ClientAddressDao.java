@@ -32,7 +32,7 @@ public class ClientAddressDao implements CrudDao<ClientAddress>
 		ps.setString(1, login);
 		ps.setString(2, address.getName());
 		ps.setString(3, address.getCep());
-		ps.setString(4, address.getState());
+		ps.setString(4, address.getEstate());
 		ps.setString(5, address.getCity());
 		ps.setString(6, address.getNeighborhood());
 		ps.setString(7, address.getStreet());
@@ -54,7 +54,7 @@ public class ClientAddressDao implements CrudDao<ClientAddress>
 				+ "WHERE user_name = ? AND cep = ? AND number = ?";
 		PreparedStatement ps = connection.prepareStatement(querySql);
 		ps.setString(1, address.getName());
-		ps.setString(2, address.getState());
+		ps.setString(2, address.getEstate());
 		ps.setString(3, address.getCity());
 		ps.setString(4, address.getNeighborhood());
 		ps.setString(5, address.getStreet());
@@ -76,6 +76,8 @@ public class ClientAddressDao implements CrudDao<ClientAddress>
 		String querySql = "DELETE address WHERE user_name = ? AND cep = ? AND number = ?";
 		PreparedStatement ps = connection.prepareStatement(querySql);
 		ps.setString(1, login);
+		ps.setString(2, address.getCep());
+		ps.setInt   (3, address.getDoorNumber());
 
 		ps.execute();
 		
@@ -101,7 +103,7 @@ public class ClientAddressDao implements CrudDao<ClientAddress>
 		{
 			address.setName(result.getString("address_name"));
 			address.setCep(result.getString("cep"));
-			address.setState(result.getString("state"));
+			address.setEstate(result.getString("state"));
 			address.setCity(result.getString("city"));
 			address.setNeighborhood(result.getString("neighborhood"));
 			address.setStreet(result.getString("street"));
@@ -131,7 +133,7 @@ public class ClientAddressDao implements CrudDao<ClientAddress>
 
 			address.setName(result.getString("address_name"));
 			address.setCep(result.getString("cep"));
-			address.setState(result.getString("state"));
+			address.setEstate(result.getString("state"));
 			address.setCity(result.getString("city"));
 			address.setNeighborhood(result.getString("neighborhood"));
 			address.setStreet(result.getString("street"));

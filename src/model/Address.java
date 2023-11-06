@@ -2,7 +2,7 @@ package model;
 public class Address
 {
 	private String cep;
-	private String state;
+	private String estate;
 	private String city;
 	private String neighborhood;
 	private String Street;
@@ -15,11 +15,11 @@ public class Address
 	public void setCep(String cep) {
 		this.cep = cep;
 	}
-	public String getState() {
-		return state;
+	public String getEstate() {
+		return estate;
 	}
-	public void setState(String state) {
-		this.state = state;
+	public void setEstate(String estate) {
+		this.estate = estate;
 	}
 	public String getCity() {
 		return city;
