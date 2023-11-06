@@ -1,6 +1,9 @@
 package view;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 import utils.UserSession;
 import javafx.scene.Scene;
@@ -12,6 +15,8 @@ public class Main extends Application
 	private Stage stage;
 	private static Scene scn;
 	private static Pane pWin;
+
+	private StringProperty currentWindow = new SimpleStringProperty(null);
 	
 	private static WinLoginConstructor winLogin = new WinLoginConstructor();
 	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor();
@@ -19,7 +24,12 @@ public class Main extends Application
 	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
 	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
 	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
-	
+
+	private void setPropertiesConnections()
+	{
+		Bindings.bindBidirectional(currentWindow, winAccountMenu.getCurrentWindow());
+	}
+
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
 	{
@@ -30,7 +40,10 @@ public class Main extends Application
 		pWin.setPrefHeight(400);
 		
 		winLogin.addElements(pWin);
-		
+
+		currentWindow.addListener((observable, oldValue, newValue) -> changeScene(newValue));
+		setPropertiesConnections();
+
 		scn = new Scene(pWin);
 		
 		stage.setScene(scn);
@@ -39,7 +52,7 @@ public class Main extends Application
 		stage.show();
 	}
 	
-	void changeScene(String scnStr) //Fiz isso improvisado para ocorrer a mudança de tela
+	void changeScene(String scnStr)
 	{
 		pWin.getChildren().clear();
 		if(UserSession.isLoggedIn())

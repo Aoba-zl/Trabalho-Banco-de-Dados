@@ -22,6 +22,7 @@ public class WinAccountMenuConstructor
     String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
+    private StringProperty currentWindow = new SimpleStringProperty(null);
 
     // TODO: Arrumar ida e vinda de paginas via property (se possivel);
     // TODO: login tem que avisar que conta não existe '-'
@@ -220,9 +221,7 @@ public class WinAccountMenuConstructor
 
 	private void toPreviousPage() 
 	{
-		Main m = new Main();
-		m.changeScene("homePage");
-		
+        currentWindow.setValue("homePage");
 	}
     
     private void openWinClientMenu()
@@ -249,6 +248,11 @@ public class WinAccountMenuConstructor
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
+    }
+
+    public StringProperty getCurrentWindow()
+    {
+        return currentWindow;
     }
 
     private void openWinAddressStoreMenu()
