@@ -1,35 +1,90 @@
 package view;
 
-import persistence.GenericDao;
-import utils.Constants;
 import javafx.application.Application;
+import javafx.stage.Stage;
+import utils.UserSession;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Pane pane= new Pane();
-        pane.setPrefWidth(Constants.WIDTH);
-        pane.setPrefHeight(Constants.HEIGHT);
-        Scene scene= new Scene(pane, Constants.WIDTH, Constants.HEIGHT);
-        WinShoppingCartConstructor winShoppingCartConstructor= new WinShoppingCartConstructor();
-        WinPurchaseHistoryConstructor winPurchaseHistoryConstructor= new WinPurchaseHistoryConstructor();
-        WinPurchaseDetailsConstruct winPurchaseDetailsConstruct= new WinPurchaseDetailsConstruct();
-        WinOrderHistoryConstructor winOrderHistoryConstructor= new WinOrderHistoryConstructor();
-        GenericDao genericDao= new GenericDao();
 
-//        winPurchaseHistoryConstructor.addElements(pane);
-        genericDao.getConnection();
-
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Loja Online");
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
+public class Main extends Application 
+{
+	private Stage stage;
+	private static Scene scn;
+	private static Pane pWin;
+	
+	private static WinLoginConstructor winLogin = new WinLoginConstructor();
+	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor();
+	private static WinStoreConstructor winStore = new WinStoreConstructor();
+	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
+	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
+	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
+	
+	@Override
+	public void start(Stage PrimaryStage) throws Exception 
+	{
+		stage = PrimaryStage;
+		
+		pWin = new Pane();
+		pWin.setPrefWidth(640);
+		pWin.setPrefHeight(400);
+		
+		winLogin.addElements(pWin);
+		
+		scn = new Scene(pWin);
+		
+		stage.setScene(scn);
+		stage.setResizable(false);
+		stage.setTitle("Loja Online");
+		stage.show();
+	}
+	
+	void changeScene(String scnStr) //Fiz isso improvisado para ocorrer a mudança de tela
+	{
+		pWin.getChildren().clear();
+		if(UserSession.isLoggedIn())
+		{
+			switch(scnStr)
+			{
+			case "login":
+				UserSession.clearSession();
+				winLogin.addElements(pWin);
+				break;
+			case "homePage":
+				winHomePage.addElements(pWin);
+				break;
+			case "product":
+				System.out.println("Product Client");
+				break;
+			case "cart":
+				System.out.println("carrinho");
+				break;
+			case "store":
+				winStore.addElements(pWin);
+				break;
+			case "regProduct":
+				winRegProduct.addElements(pWin);
+				break;
+			case "productStore":
+				System.out.println("Product Store");
+				break;
+			case "editProduct":
+				winEditProduct.addElements(pWin);
+				break;
+			case "account":
+				winAccountMenu.addElements(pWin);;
+				break;
+			}
+		}
+		else
+		{
+			UserSession.clearSession();
+			winLogin.addElements(pWin);
+		}
+	}
+	
+	public static void main(String[] args) 
+	{
+		launch(args);
+	}
 }

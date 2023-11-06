@@ -1,15 +1,5 @@
 package model;
-public class Pix extends Pagamento
+public class Pix extends Payment
 {
-    private String chave;
-
-    public String getChave()
-	{
-        return chave;
-    }
-
-    public void setChave(String chave)
-	{
-        this.chave = chave;
-    }
+    private String key;
 }

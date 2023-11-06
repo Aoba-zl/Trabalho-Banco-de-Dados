@@ -2,42 +2,51 @@ package model;
 
 public class Item
 {
-	private int quantidade;
+	private int quantity;
     private double subTotal;
-    private Produto produto;
+    private Product product;
+    
+    
+    
+	public Item(Product product, int quantity) {
+		this.quantity = quantity;
+		this.product = product;
+		this.updateSubTotal();
+	}
 
-    public Item(Produto produto, int quantidade)
-    {
-        this.quantidade = quantidade;
-        this.produto = produto;
-        this.atualizarSubTotal();
-    }
-
-    public int getQuantidade()
+	public int getQuantity()
 	{
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade)
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) 
 	{
-        this.quantidade = quantidade;
-        this.atualizarSubTotal();
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
-
-    public double getSubTotal()
+		this.quantity = quantity;
+	}
+	
+	public double getSubTotal() 
 	{
-        return subTotal;
-    }
-    private void atualizarSubTotal ()
-    {
-        subTotal = produto.getPreco() * quantidade;
-    }
+		return subTotal;
+	}
+	
+	public void setSubTotal(double subTotal)
+	{
+		this.subTotal = subTotal;
+	}
+	
+	public Product getProduct()
+	{
+		return product;
+	}
+	
+	public void setProduct(Product product)
+	{
+		this.product = product;
+	}
+	
+	private void updateSubTotal() 
+	{
+		subTotal = product.getPrice() * quantity;
+	}
+	
 }
