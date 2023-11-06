@@ -6,7 +6,6 @@ public class User
 {
 	private String login;
     private String password;
-    //TODO: Falta definir isso ainda, pq pode começar com 0 e ser str, ou não poder começar com 0 e ser int
     private String telephone;
     private String email;
     private String permission;
