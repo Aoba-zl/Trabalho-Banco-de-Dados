@@ -1,0 +1,16 @@
+package utils;
+
+public enum SceneName 
+{
+	LOGIN,
+	HOME_PAGE,
+	ACCOUNT_MENU,
+	CART,
+	CONSULT_PRODUCT,
+	STORE,
+	REG_PRODUCT,
+	ALTER_PRODUCT,
+	EDIT_PRODUCT
+	
+
+}

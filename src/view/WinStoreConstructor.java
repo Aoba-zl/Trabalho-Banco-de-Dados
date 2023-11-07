@@ -3,6 +3,7 @@ package view;
 import java.sql.SQLException;
 import java.util.List;
 
+import control.ChangeSceneController;
 import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -15,11 +16,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.Product;
+import utils.SceneName;
 
 public class WinStoreConstructor 
 {
+	private Pane pWin;
+	
 	public void addElements(Pane pane)
 	{
+		pWin = pane;
+		
 		Label lblHomePage = new Label("Sua Loja");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -165,33 +171,33 @@ public class WinStoreConstructor
 
 	private void toHomePage()
 	{
-		Main m = new Main();
-		m.changeScene("homePage");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.HOME_PAGE, pWin);
 	}
 	
 	private void toLogin() 
 	{
-		Main m = new Main();
-		m.changeScene("login");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		Main m = new Main();
-		m.changeScene("account");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toRegProduct()
 	{
-		Main m = new Main();
-		m.changeScene("regProduct");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.REG_PRODUCT, pWin);
 	}
 	
 	private void toProductStore(int cod, String name, String description, double price)
 	{
 		System.out.println(cod + " " + name + " " + description + " " + price); //test
 		
-		Main m = new Main();
-		m.changeScene("productStore");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 }
