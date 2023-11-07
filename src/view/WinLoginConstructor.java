@@ -2,6 +2,7 @@ package view;
 
 import java.sql.SQLException;
 
+import control.ChangeSceneController;
 import control.LoginController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -12,11 +13,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 
 public class WinLoginConstructor 
 {
+	private Pane pWin;
+	
 	public void addElements (Pane pane)
 	{
+		this.pWin = pane;
+		
 		Label lblLogin = new Label("Login");
 		lblLogin.setPrefHeight(35);
 		lblLogin.setPrefWidth(640);
@@ -164,8 +170,10 @@ public class WinLoginConstructor
 	
 	private void toHomePage()
 	{
-		Main m = new Main();
-		m.changeScene("homePage");
+//		Main m = new Main();
+//		m.changeScene("homePage");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 }

@@ -1,7 +1,9 @@
 package view;
 
 import utils.Constants;
+import utils.SceneName;
 import utils.UserSession;
+import control.ChangeSceneController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,6 +21,8 @@ import javafx.scene.layout.VBox;
 
 public class WinAccountMenuConstructor
 {
+	private Pane pWin;
+	
     String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
@@ -36,6 +40,8 @@ public class WinAccountMenuConstructor
 
     public void addElements(Pane pane)
     {
+    	pWin = pane;
+    	
     	user = UserSession.getUserType();
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
@@ -220,8 +226,8 @@ public class WinAccountMenuConstructor
 
 	private void toPreviousPage() 
 	{
-		Main m = new Main();
-		m.changeScene("homePage");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.HOME_PAGE, this.pWin);
 		
 	}
     

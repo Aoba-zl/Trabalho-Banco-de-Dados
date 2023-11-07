@@ -2,6 +2,7 @@ package view;
 
 import java.sql.SQLException;
 
+import control.ChangeSceneController;
 import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,11 +14,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 
 public class WinRegProductConstructor 
 {
+	private Pane pWin;
+	
 	public void addElements(Pane pane)
 	{
+		this.pWin = pane;
+		
 		Label lblHomePage = new Label("Cadastro de Produto");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -151,20 +157,20 @@ public class WinRegProductConstructor
 	
 	private void toLogin() 
 	{
-		Main m = new Main();
-		m.changeScene("login");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		Main m = new Main();
-		m.changeScene("account");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toStore()
 	{
-		Main m = new Main();
-		m.changeScene("store");
+		ChangeSceneController scnController = new ChangeSceneController();
+		scnController.changeScene(SceneName.STORE, pWin);
 	}
 	
 	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage, Pane pane)
