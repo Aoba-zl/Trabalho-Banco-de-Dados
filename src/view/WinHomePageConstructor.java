@@ -161,35 +161,31 @@ public class WinHomePageConstructor
 
 	private void toLogin() 
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.LOGIN, pWin);
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 		
 	}
 	
 	private void toAccount() 
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 		
 	}
 	
 	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
 	{
 		System.out.println(cod + " " + name + " " + desc + " " + price);
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.CONSULT_PRODUCT, pWin);
+		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, pWin);
 	}
 	
 	private void toCartStore(Label lblCartStore)
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
 		if(lblCartStore.getText().equals("Carrinho🛒"))
 		{
-			scnController.changeScene(SceneName.CART, pWin);
+			ChangeSceneController.changeScene(SceneName.CART, pWin);
 		}
 		else
 		{
-			scnController.changeScene(SceneName.STORE, pWin);
+			ChangeSceneController.changeScene(SceneName.STORE, pWin);
 		}
 	}
 	

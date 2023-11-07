@@ -146,20 +146,17 @@ public class WinEditProductConstructor
 	
 	private void toLogin()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.LOGIN, pWin);
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toProductStore()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 

@@ -171,33 +171,28 @@ public class WinStoreConstructor
 
 	private void toHomePage()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.HOME_PAGE, pWin);
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
 	}
 	
 	private void toLogin() 
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.LOGIN, pWin);
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toRegProduct()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.REG_PRODUCT, pWin);
+		ChangeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
 	}
 	
 	private void toProductStore(int cod, String name, String description, double price)
 	{
 		System.out.println(cod + " " + name + " " + description + " " + price); //test
 		
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 }
