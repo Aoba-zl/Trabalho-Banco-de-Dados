@@ -170,8 +170,7 @@ public class WinLoginConstructor
 	
 	private void toHomePage()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 }

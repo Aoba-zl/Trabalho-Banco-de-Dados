@@ -11,9 +11,9 @@ public class Main extends Application
 {
 	private Stage stage;
 	private Scene scn;
-	private Pane pWin;
+	private static Pane pWin;
 	
-	private WinLoginConstructor winLogin = new WinLoginConstructor();
+	private static WinLoginConstructor winLogin = new WinLoginConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 

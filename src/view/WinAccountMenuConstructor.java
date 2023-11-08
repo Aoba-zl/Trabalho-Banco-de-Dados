@@ -226,8 +226,8 @@ public class WinAccountMenuConstructor
 
 	private void toPreviousPage() 
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 		
 	}
     

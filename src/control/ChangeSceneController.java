@@ -12,14 +12,14 @@ import view.WinStoreConstructor;
 
 public class ChangeSceneController
 {
-	private WinLoginConstructor winLogin = new WinLoginConstructor();
-	private WinHomePageConstructor winHomePage = new WinHomePageConstructor();
-	private WinStoreConstructor winStore = new WinStoreConstructor();
-	private WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
-	private WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
-	private WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
+	private static WinLoginConstructor winLogin = new WinLoginConstructor();
+	private static WinHomePageConstructor winHomePage = new WinHomePageConstructor();
+	private static WinStoreConstructor winStore = new WinStoreConstructor();
+	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
+	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
+	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
 	
-	public void changeScene(SceneName sceneName, Pane pWin)
+	public static void changeScene(SceneName sceneName, Pane pWin)
 	{
 		pWin.getChildren().clear();
 		if(UserSession.isLoggedIn())

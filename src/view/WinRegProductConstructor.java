@@ -157,20 +157,17 @@ public class WinRegProductConstructor
 	
 	private void toLogin() 
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.LOGIN, pWin);
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toStore()
 	{
-		ChangeSceneController scnController = new ChangeSceneController();
-		scnController.changeScene(SceneName.STORE, pWin);
+		ChangeSceneController.changeScene(SceneName.STORE, pWin);
 	}
 	
 	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage, Pane pane)
