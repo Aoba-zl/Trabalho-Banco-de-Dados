@@ -170,9 +170,7 @@ public class WinLoginConstructor
 	
 	private void toHomePage()
 	{
-		// TODO: Voltar pra Holme page
-//		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 }
