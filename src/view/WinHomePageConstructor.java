@@ -3,6 +3,7 @@ package view;
 import java.sql.SQLException;
 import java.util.List;
 
+import control.ChangeSceneController;
 import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,12 +14,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.Product;
+import utils.SceneName;
 import utils.UserSession;
 
 public class WinHomePageConstructor 
 {
+	private Pane pWin;
+	
 	public void addElements(Pane pane)
 	{
+		this.pWin = pane;
+		
 		Label lblHomePage = new Label("Página Inicial");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -155,35 +161,31 @@ public class WinHomePageConstructor
 
 	private void toLogin() 
 	{
-		Main m = new Main();
-		m.changeScene("login");
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 		
 	}
 	
 	private void toAccount() 
 	{
-		Main m = new Main();
-		m.changeScene("account");
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 		
 	}
 	
 	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
 	{
 		System.out.println(cod + " " + name + " " + desc + " " + price);
-		Main m = new Main();
-		m.changeScene("product");
+		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, pWin);
 	}
 	
 	private void toCartStore(Label lblCartStore)
 	{
-		Main m = new Main();
 		if(lblCartStore.getText().equals("Carrinho🛒"))
 		{
-			m.changeScene("cart");
+			ChangeSceneController.changeScene(SceneName.CART, pWin);
 		}
 		else
 		{
-			m.changeScene("store");
+			ChangeSceneController.changeScene(SceneName.STORE, pWin);
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,11 +11,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 
 public class WinEditProductConstructor 
 {
+	private Pane pWin;
+	
 	public void addElements(Pane pane) //necessário ter a tela de produto.
 	{
+		this.pWin = pane;
+		
 		Label lblHomePage = new Label("Editar Produto");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -140,20 +146,17 @@ public class WinEditProductConstructor
 	
 	private void toLogin()
 	{
-		Main m = new Main();
-		m.changeScene("login");
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toProductStore()
 	{
-		Main m = new Main();
-		m.changeScene("productStore");
+		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 	
 	private void toAccount()
 	{
-		Main m = new Main();
-		m.changeScene("account");
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 

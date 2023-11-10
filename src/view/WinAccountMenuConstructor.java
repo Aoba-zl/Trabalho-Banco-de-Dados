@@ -1,7 +1,9 @@
 package view;
 
 import utils.Constants;
+import utils.SceneName;
 import utils.UserSession;
+import control.ChangeSceneController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,10 +21,11 @@ import javafx.scene.layout.VBox;
 
 public class WinAccountMenuConstructor
 {
+	private Pane pWin;
+
     String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
-    private StringProperty currentWindow = new SimpleStringProperty(null);
 
     // TODO: Arrumar ida e vinda de paginas via property (se possivel);
     // TODO: login tem que avisar que conta não existe '-'
@@ -37,6 +40,8 @@ public class WinAccountMenuConstructor
 
     public void addElements(Pane pane)
     {
+    	pWin = pane;
+
     	user = UserSession.getUserType();
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
@@ -221,7 +226,9 @@ public class WinAccountMenuConstructor
 
 	private void toPreviousPage() 
 	{
-        currentWindow.setValue("homePage");
+
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		
 	}
     
     private void openWinClientMenu()
@@ -248,11 +255,6 @@ public class WinAccountMenuConstructor
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
-    }
-
-    public StringProperty getCurrentWindow()
-    {
-        return currentWindow;
     }
 
     private void openWinAddressStoreMenu()
