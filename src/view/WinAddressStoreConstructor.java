@@ -10,14 +10,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class WinAddressStoreConstructor
+public class WinAddressStoreConstructor implements GerericAccountMenuWinInterface
 {
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private String action = null;
 
-    public WinAddressStoreConstructor(VBox mainBox)
+    @Override
+    public void addElements(VBox mainBox)
     {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +

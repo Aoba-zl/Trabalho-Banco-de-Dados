@@ -21,7 +21,7 @@ import java.util.List;
 
 import control.CtrlAddressMenu;
 
-public class WinAllAddressClientConstructor
+public class WinAllAddressClientConstructor implements GerericAccountMenuWinInterface
 {
 	private TableView<AddressColumnDataModel> tvAddress;
 	private Button btnDelete, btnEdit, btnNew;
@@ -35,13 +35,14 @@ public class WinAllAddressClientConstructor
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final BooleanProperty editionMode = new SimpleBooleanProperty(false);
-    private final VBox mainBox;
+    private VBox mainBox;
     private String action = null;
     private String userName;
     
     private CtrlAddressMenu control = new CtrlAddressMenu();
 
-    public WinAllAddressClientConstructor(VBox mainBox)
+    @Override
+    public void addElements(VBox mainBox)
     {
         this.mainBox = mainBox;
         userName = UserSession.getUserName();

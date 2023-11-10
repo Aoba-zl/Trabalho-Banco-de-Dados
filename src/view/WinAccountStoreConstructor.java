@@ -15,7 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utils.UserSession;
 
-public class WinAccountStoreConstructor
+public class WinAccountStoreConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfName, tfCnpj, tfEmail, tfPhone;
     private Button btnDeleteAccount, btnEditAccount, btnCancelEdit;
@@ -30,7 +30,8 @@ public class WinAccountStoreConstructor
     
     private CtrlAccountMenu control = new CtrlAccountMenu();
 
-    public WinAccountStoreConstructor(VBox mainBox)
+    @Override
+    public void addElements(VBox mainBox)
     {
         this.mainBox = mainBox;
         userName = UserSession.getUserName();

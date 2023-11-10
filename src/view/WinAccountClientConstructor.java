@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utils.UserSession;
 
-public class WinAccountClientConstructor
+public class WinAccountClientConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
     private StringProperty sexText = new SimpleStringProperty("");
@@ -30,7 +30,8 @@ public class WinAccountClientConstructor
     
     private CtrlAccountMenu control = new CtrlAccountMenu();
 
-    public WinAccountClientConstructor(VBox mainBox)
+    @Override
+    public void addElements(VBox mainBox)
     {
     	this.mainBox = mainBox;
     	userName = UserSession.getUserName();

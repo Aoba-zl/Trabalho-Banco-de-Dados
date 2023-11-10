@@ -2,6 +2,7 @@ package view;
 
 import utils.Constants;
 import utils.SceneName;
+import utils.SubAccountWindows;
 import utils.UserSession;
 import control.ChangeSceneController;
 import javafx.beans.binding.Bindings;
@@ -19,6 +20,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class WinAccountMenuConstructor
 {
 	private Pane pWin;
@@ -26,17 +31,14 @@ public class WinAccountMenuConstructor
     String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
-
-    // TODO: Arrumar ida e vinda de paginas via property (se possivel);
-    // TODO: login tem que avisar que conta não existe '-'
     // TODO: Fazer frescurite nos textFields
-    
-    
     private VBox vbContent;
     private Label lblPopUpMessage = new Label();
     private StringProperty messagePopUp = new SimpleStringProperty(null);
     private BooleanProperty isPopupActive = new SimpleBooleanProperty(false);
     private BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+
+    private HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
 
     public void addElements(Pane pane)
     {
@@ -95,12 +97,12 @@ public class WinAccountMenuConstructor
             addressPage = "storeAddress";
 
         } else {
-        	openWinClientMenu();
+            //TODO: coloquei endereço só pra teste
+//        	openWinClientMenu();
+            openWinAddressClientMenu();
             dataPage = "clientAccountData";
             addressPage = "clientAllAddress";
         }
-
-        
 
         allElements.setPrefWidth(Constants.WIDTH);
         bpTitle.setLeft(btnBack);
@@ -226,15 +228,23 @@ public class WinAccountMenuConstructor
 
 	private void toPreviousPage() 
 	{
-
 		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
-		
 	}
     
     private void openWinClientMenu()
     {
-        WinAccountClientConstructor win = new WinAccountClientConstructor(vbContent);
+        WinAccountClientConstructor win;
+        SubAccountWindows key = SubAccountWindows.CLIENT_ACCOUNT;
 
+        if (subWindowns.containsKey(key))
+            win = (WinAccountClientConstructor) subWindowns.get(key);
+        else
+        {
+            win = new WinAccountClientConstructor();
+            subWindowns.put(key, win);
+        }
+
+        win.addElements(vbContent);
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
@@ -242,16 +252,36 @@ public class WinAccountMenuConstructor
 
     private void openWinAddressClientMenu()
     {
-        WinAllAddressClientConstructor win = new WinAllAddressClientConstructor(vbContent);
+        WinAllAddressClientConstructor win;
+        SubAccountWindows key = SubAccountWindows.CLIENT_ALL_ADDRES;
 
+        if (subWindowns.containsKey(key))
+            win = (WinAllAddressClientConstructor) subWindowns.get(key);
+        else
+        {
+            win = new WinAllAddressClientConstructor();
+            subWindowns.put(key, win);
+        }
+
+        win.addElements(vbContent);
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
     }
     private void openWinStoreMenu()
     {
-        WinAccountStoreConstructor win = new WinAccountStoreConstructor(vbContent);
+        WinAccountStoreConstructor win;
+        SubAccountWindows key = SubAccountWindows.STORE_ACCOUNT;
 
+        if (subWindowns.containsKey(key))
+            win = (WinAccountStoreConstructor) subWindowns.get(key);
+        else
+        {
+            win = new WinAccountStoreConstructor();
+            subWindowns.put(key, win);
+        }
+
+        win.addElements(vbContent);
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
@@ -259,8 +289,19 @@ public class WinAccountMenuConstructor
 
     private void openWinAddressStoreMenu()
     {
-        WinAddressStoreConstructor win = new WinAddressStoreConstructor(vbContent);
+        WinAddressStoreConstructor win;
+        SubAccountWindows key = SubAccountWindows.STORE_ADDRESS;
 
+        if (subWindowns.containsKey(key))
+            win = (WinAddressStoreConstructor) subWindowns.get(key);
+
+        else
+        {
+            win = new WinAddressStoreConstructor();
+            subWindowns.put(key, win);
+        }
+
+        win.addElements(vbContent);
         Bindings.bindBidirectional(messagePopUp, win.getMessageMenuPopUp());
         Bindings.bindBidirectional(isPopupActive, win.getIsMenuPopupActive());
         Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
