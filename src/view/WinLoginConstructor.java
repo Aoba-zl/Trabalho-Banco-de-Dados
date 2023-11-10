@@ -15,10 +15,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 
-public class WinLoginConstructor 
+public class WinLoginConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-	
+
+	@Override
 	public void addElements (Pane pane)
 	{
 		this.pWin = pane;

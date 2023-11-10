@@ -14,7 +14,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 
-public class WinAlterProductConstructor {
+public class WinAlterProductConstructor implements GenericWindownInterface
+{
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
 	public void addElements(Pane pane) {

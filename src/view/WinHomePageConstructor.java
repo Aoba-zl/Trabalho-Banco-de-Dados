@@ -17,10 +17,11 @@ import model.Product;
 import utils.SceneName;
 import utils.UserSession;
 
-public class WinHomePageConstructor 
+public class WinHomePageConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-	
+
+	@Override
 	public void addElements(Pane pane)
 	{
 		this.pWin = pane;

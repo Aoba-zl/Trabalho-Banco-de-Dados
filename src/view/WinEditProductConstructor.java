@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 
-public class WinEditProductConstructor 
+public class WinEditProductConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 	

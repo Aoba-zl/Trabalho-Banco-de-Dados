@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 
-public class WinRegProductConstructor 
+public class WinRegProductConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 	

@@ -18,10 +18,11 @@ import javafx.scene.layout.VBox;
 import model.Product;
 import utils.SceneName;
 
-public class WinStoreConstructor 
+public class WinStoreConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-	
+
+	@Override
 	public void addElements(Pane pane)
 	{
 		pWin = pane;
