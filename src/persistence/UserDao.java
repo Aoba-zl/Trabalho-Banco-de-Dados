@@ -80,7 +80,8 @@ public class UserDao implements CrudDao<User>
 		String querySql = "DELETE user_tbl WHERE user_name = ?";
 		PreparedStatement ps = connection.prepareStatement(querySql);
 		ps.setString(1, u.getLogin());		
-		
+
+		ps.execute();
 		ps.close();
 		connection.close();
 	}

@@ -119,21 +119,18 @@ public class AccountMenuController
 		}
     }
 
-    public void deleteAccount(String login)
+    public void deleteAccount(String login) throws SQLException
     {
     	String userType = UserSession.getUserType();
-    	System.out.printf("Editando um \"%s\"\n", userType);
-    	// TODO: função interditada por ser mt complexa
+    	// TODO: função semi-interditada por ser mt complexa
 //    	if (userType.equals("client"))
 //    		deleteClientAccount(login);
-//    	else
-//    		deleteStoreAccount(login);
-    	
+
     	if (userType.equals("client"))
     		System.out.println("Apagando Cliente");
     	else
-    		System.out.println("Apagando Cliente");
-    	
+    		deleteStoreAccount(login);
+
     }
     
     private void deleteClientAccount(String login)
@@ -152,11 +149,17 @@ public class AccountMenuController
 		}
     }
     
-    private void deleteStoreAccount(String login)
+    private void deleteStoreAccount(String login) throws SQLException
     {
+		AddressMenuController addressMenuController = new AddressMenuController();
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	StoreDao storeDao = new StoreDao(genericDAO);
+
+		addressMenuController.deleteStoreAddress(login);
+		storeDao.delete(new Store(login));
+		userDao.delete(new User(login));
+
     }
     
     private void setFields(User user)
