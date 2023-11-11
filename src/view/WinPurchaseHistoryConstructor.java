@@ -4,10 +4,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import model.Order;
 
 
 public class WinPurchaseHistoryConstructor {
@@ -16,7 +18,7 @@ public class WinPurchaseHistoryConstructor {
     private TextField tfSearch= new TextField();
     Label lblTitle= new Label("Histórico de Compra");
 
-
+    // TODO fazer o metodo bindings
     public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
@@ -40,7 +42,7 @@ public class WinPurchaseHistoryConstructor {
         tfSearch.relocate(115, 50);
 
         lblTitle.setMinSize(150, 25);
-        lblTitle.relocate(210, 10);
+        lblTitle.relocate(220, 10);
         lblTitle.setFont(Font.font(20));
 
         TableView tbPurchaseHistory= new TableView<>(); // colocar o objeto depois
@@ -74,59 +76,30 @@ public class WinPurchaseHistoryConstructor {
 
     public BorderPane subWindow(){
         Pane panePurchaseStatus= new Pane();
-        GridPane gridPurchaseStatus = new GridPane();
         panePurchaseStatus.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px");
-        panePurchaseStatus.setMaxHeight(320);
-        panePurchaseStatus.setMaxWidth(315);
-        gridPurchaseStatus.relocate(5, 20);
+        panePurchaseStatus.setMaxHeight(315);
+        panePurchaseStatus.setMaxWidth(560);
+
 
 
         Label lblTittle= new Label("Status Compra");
-        Label lblProductName= new Label("Nome:");
-        Label lblShop= new Label("Loja:");
-        Label lblProductValue= new Label("Valor do Produto:");
-        Label lblPortage= new Label("Frete:");
-        Label lblTotalValue= new Label("Valor Total:");
-        Label lblFormPayment= new Label("Forma de Pagamento:");
-        Label lblStatus= new Label("Status:");
-        lblTittle.setFont(Font.font(20));
-        lblTittle.relocate(90, 5);
+        lblTittle.relocate(225, 5);
+        lblTittle.setFont(Font.font(17));
 
 
-        TextField tfProductName= new TextField();
-        TextField tfShop= new TextField();
-        TextField tfProductValue= new TextField();
-        TextField tfPortage= new TextField();
-        TextField tfTotalValue= new TextField();
-        TextField tfFormPayment= new TextField();
-        TextField tfStatus= new TextField();
+        TableView<Order> tableStatus= new TableView<>();
+        tableStatus.setMinWidth(550);
+        tableStatus.setMaxHeight(250);
+        tableStatus.relocate(5, 30);
+
 
         Button btnCancel= new Button("Cancelar Compra");
         Button btnReturnPurchaseStatus= new Button("Voltar");
-        btnCancel.relocate(160, 285);
+        btnCancel.relocate(400, 285);
         btnReturnPurchaseStatus.relocate(60, 285);
 
-        gridPurchaseStatus.setVgap(10);
-        gridPurchaseStatus.setHgap(10);
 
-        gridPurchaseStatus.add(lblTittle, 1, 1);
-        gridPurchaseStatus.add(lblProductName, 1, 2);
-        gridPurchaseStatus.add(tfProductName, 2, 2);
-        gridPurchaseStatus.add(lblShop, 1, 3);
-        gridPurchaseStatus.add(tfShop, 2, 3);
-        gridPurchaseStatus.add(lblProductValue, 1, 4);
-        gridPurchaseStatus.add(tfProductValue, 2, 4);
-        gridPurchaseStatus.add(lblPortage, 1, 5);
-        gridPurchaseStatus.add(tfPortage, 2, 5);
-        gridPurchaseStatus.add(lblTotalValue, 1, 6);
-        gridPurchaseStatus.add(tfTotalValue, 2, 6);
-        gridPurchaseStatus.add(lblFormPayment, 1, 7);
-        gridPurchaseStatus.add(tfFormPayment, 2, 7);
-        gridPurchaseStatus.add(lblStatus, 1, 8);
-        gridPurchaseStatus.add(tfStatus, 2, 8);
-
-
-        panePurchaseStatus.getChildren().addAll(lblTittle, gridPurchaseStatus, btnCancel, btnReturnPurchaseStatus);
+        panePurchaseStatus.getChildren().addAll(lblTittle, tableStatus, btnCancel, btnReturnPurchaseStatus);
 
 
         BorderPane paneTransp = new BorderPane();
@@ -141,6 +114,12 @@ public class WinPurchaseHistoryConstructor {
 
 
         return paneTransp;
+    }
+
+    public void populateTable(){
+        // TODO fazer a populateTable do historico de pedidos
+        TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
+        columnProductName.setCellValueFactory(new PropertyValueFactory<Order, String>("nomeProduto"));
     }
 
     private void setBtnBackImage(Button btnBack) {
