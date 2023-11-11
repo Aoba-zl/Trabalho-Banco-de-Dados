@@ -6,11 +6,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import model.ClientAddress;
 import utils.UserSession;
 
 public class WinAddressClientConstructor
@@ -24,12 +27,13 @@ public class WinAddressClientConstructor
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final BooleanProperty editionMode = new SimpleBooleanProperty(true);
+    private StringProperty action = new SimpleStringProperty(null);
     private final VBox mainBox;
     private String userName;
     private AddressMenuController control = new AddressMenuController();
-    private String[] selectedAddress;
+    private ClientAddress selectedAddress;
 
-    public WinAddressClientConstructor(VBox mainBox, String[] selectedAddress)
+    public WinAddressClientConstructor(VBox mainBox, ClientAddress selectedAddress)
     {
         this.mainBox = mainBox;
         this.selectedAddress = selectedAddress;
@@ -40,7 +44,7 @@ public class WinAddressClientConstructor
         setEvents();
         setPropertiesConnections();
 
-        control.fillFields(this.selectedAddress, userName);
+        control.fillFields(this.selectedAddress);
     }
 
     private void setPropertiesConnections()
@@ -68,9 +72,26 @@ public class WinAddressClientConstructor
         {
             if (newValue)
             {
-                control.editAddress(selectedAddress, userName);
-                openPopUp("Editado com Sucesso");
-                editionMode.setValue(false);
+                if (action.getValue() == "edit")
+                {
+                    ClientAddress newaddr = control.editClientAddress(selectedAddress, userName);
+                    if (newaddr == null)
+                        openPopUp("Houve um erro inesperado.\nPor favor, tente novamente");
+                    else
+                    {
+                        selectedAddress.setName(newaddr.getName());
+                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                        selectedAddress.setStreet(newaddr.getStreet());
+                        selectedAddress.setEstate(newaddr.getEstate());
+                        selectedAddress.setCity(newaddr.getCity());
+                        selectedAddress.setCep(newaddr.getCep());
+                        selectedAddress.setComplement(newaddr.getComplement());
+                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+
+                        openPopUp("Editado com Sucesso");
+                        editionMode.setValue(false);
+                    }
+                }
             }
         }));
     }
@@ -150,7 +171,8 @@ public class WinAddressClientConstructor
     }
 
     StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
-    BooleanProperty getIsMenuPopupActive() { return isMenuPopupActive; }
-    BooleanProperty getReturnPopUp() { return returnPopUp; }
-    BooleanProperty getEditionMode() { return editionMode; }
+    BooleanProperty isMenuPopupActiveProperty() { return isMenuPopupActive; }
+    BooleanProperty returnPopUpProperty() { return returnPopUp; }
+    BooleanProperty editionModeProperty() { return editionMode; }
+    StringProperty actionProperty() { return action; }
 }

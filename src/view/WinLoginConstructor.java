@@ -171,7 +171,9 @@ public class WinLoginConstructor implements GenericWindownInterface
 	
 	private void toHomePage()
 	{
-		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		// TODO: Voltar pra Holme page apos os testes
+//		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 	
 }
