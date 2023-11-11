@@ -1,5 +1,7 @@
 package view;
 
+import control.AddressMenuController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,16 +11,56 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import utils.UserSession;
 
 public class WinAddressStoreConstructor implements GerericAccountMenuWinInterface
 {
+    private TextField tfCep, tfEstateCity, tfNeighborhood, tfStreet, tfNumber, tfComplement;
+    private Button btnEditAddress, btnCancel;
+
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
-    private String action = null;
+    private AddressMenuController control = new AddressMenuController();
+
+    private VBox mainBox;
+    private boolean editMode = false;
+    private String userLogin;
 
     @Override
     public void addElements(VBox mainBox)
+    {
+        this.mainBox = mainBox;
+        userLogin = UserSession.getUserName();
+
+        setElements();
+        setEvents();
+        setPropertiesConnections();
+        control.fillStoreAddressFields(userLogin);
+    }
+
+    private void setEvents()
+    {
+        btnCancel.setOnMouseClicked(event ->
+        {
+            editMode = false;
+            setEnableEditableElements(false);
+        });
+        btnEditAddress.setOnMouseClicked(event -> btnEditClicked());
+        returnPopUp.addListener(((observable, oldValue, newValue) ->
+        {
+            if (newValue)
+            {
+                openPopUp("Endereço editado com sucesso!");
+                control.editStoreAddress(userLogin);
+                control.fillStoreAddressFields(userLogin);
+                editMode = false;
+                setEnableEditableElements(false);
+            }
+        }));
+    }
+
+    private void setElements()
     {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
@@ -39,21 +81,28 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
         Label lblNumber       = new Label("Numero da Porta:");
         Label lblComplement   = new Label("Complemento:");
 
-        TextField tfCep          = new TextField();
-        TextField tfEstateCity   = new TextField();
-        tfEstateCity.setDisable(true);
-        TextField tfNeighborhood = new TextField();
-        TextField tfStreet       = new TextField();
-        TextField tfNumber       = new TextField();
-        TextField tfComplement   = new TextField();
+        tfCep          = new TextField();
+        tfEstateCity   = new TextField();
+        tfNeighborhood = new TextField();
+        tfStreet       = new TextField();
+        tfNumber       = new TextField();
+        tfComplement   = new TextField();
 
-        Button btnEditAddress = new Button("Editar");
+        tfComplement.setDisable(true);
+        tfEstateCity.setDisable(true);
+        tfCep.setDisable(true);
+        tfNeighborhood.setDisable(true);
+        tfStreet.setDisable(true);
+        tfNumber.setDisable(true);
+
+        btnEditAddress = new Button("Editar");
         btnEditAddress
                 .setStyle("-fx-border-radius: 8px;-fx-background-radius: 8px");
-        Button btnCancel   = new Button("Cancelar");
+        btnCancel   = new Button("Cancelar");
         btnCancel
                 .setStyle( "-fx-background-color: #fd7171; -fx-text-fill: white;" +
                         "-fx-border-radius: 8px; -fx-background-radius: 8px;");
+        btnCancel.setVisible(false);
 
         bpCep.setLeft(lblCep);
         bpCep.setRight(tfCep);
@@ -73,6 +122,37 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
 
         mainBox.getChildren().addAll(lblTitle, bpCep, bpEstateCity, bpNeighborhood,
                 bpStreet, bpNumber, bpComplemet, bpButtons);
+    }
+
+    private void setPropertiesConnections()
+    {
+        Bindings.bindBidirectional(tfComplement.textProperty(), control.getComplementProperty());
+        Bindings.bindBidirectional(tfCep.textProperty(), control.getCepProperty());
+        Bindings.bindBidirectional(tfNumber.textProperty(), control.getNumberProperty());
+        Bindings.bindBidirectional(tfStreet.textProperty(), control.getStreetProperty());
+        Bindings.bindBidirectional(tfNeighborhood.textProperty(), control.getNeighborhoodProperty());
+        Bindings.bindBidirectional(tfEstateCity.textProperty(), control.getCityEstateProperty());
+    }
+
+    private void btnEditClicked()
+    {
+        returnPopUp.setValue(false);
+        if (editMode)
+            openPopUp("Tem certeza de que deseja editar?");
+        editMode = true;
+        setEnableEditableElements(true);
+    }
+
+    private void openPopUp(String message)
+    {
+        messageMenuPopUp.setValue(message);
+        isMenuPopupActive.setValue(true);
+    }
+
+    private void setEnableEditableElements(boolean isEnable)
+    {
+        tfComplement.setDisable(!isEnable);
+        btnCancel.setVisible(isEnable);
     }
 
     StringProperty getMessageMenuPopUp()

@@ -1,7 +1,6 @@
 package control;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +10,7 @@ import javafx.collections.ObservableList;
 import model.Address;
 import model.Client;
 import model.ClientAddress;
+import model.Store;
 import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
@@ -48,7 +48,7 @@ public class AddressMenuController
 		return null;
 	}
 	
-	public void fillFields(ClientAddress addressCli)
+	public void fillClientAddressFields(ClientAddress addressCli)
 	{
 		name.setValue(addressCli.getName());
 		cep.setValue(addressCli.getCep());
@@ -61,13 +61,49 @@ public class AddressMenuController
 		cityEstate.setValue(city + " ("+ estate +")");
 	}
 
-	private Address editStoreAddress(ClientAddress address, String login)
+	public void fillStoreAddressFields(String login)
 	{
-		//TODO: Continuar a implementação
 		GenericDao genericDAO = new GenericDao();
-		AddressDao addressDao = new AddressDao(genericDAO, new Client(login));
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
 
-		return null;
+		try
+		{
+			Address newaddr = addrD.consult(new Address());
+			cep.setValue(newaddr.getCep());
+			street.setValue(newaddr.getStreet());
+			neighborhood.setValue(newaddr.getNeighborhood());
+			number.setValue(String.valueOf(newaddr.getDoorNumber()));
+
+			String strComp = newaddr.getComplement();
+			String strCity = newaddr.getCity();
+			String strEstate = newaddr.getEstate();
+			if (strComp == null)
+				strComp = " ";
+			complement.setValue(strComp);
+			cityEstate.setValue(strCity + " (" + strEstate + ")");
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void editStoreAddress(String login)
+	{
+		GenericDao genericDAO = new GenericDao();
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
+
+		try
+		{
+			Address currentAddress = addrD.consult(new Address());
+			Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
+					currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
+			addrD.update(address);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)

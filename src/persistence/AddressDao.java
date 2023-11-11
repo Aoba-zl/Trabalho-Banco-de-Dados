@@ -1,24 +1,25 @@
 package persistence;
 
 import model.Address;
-import model.Client;
+import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class AddressDao implements CrudDao<Address>
 {
     private GenericDao gDao;
-    private Client client;
+    private User user;
     private String login;
 
-    public AddressDao(GenericDao gDao, Client client)
+    public AddressDao(GenericDao gDao, User user)
     {
         this.gDao = gDao;
-        this.client = client;
-        this.login = this.client.getLogin();
+        this.user = user;
+        this.login = this.user.getLogin();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class AddressDao implements CrudDao<Address>
     public void update(Address address) throws SQLException
     {
         Connection connection = gDao.getConnection();
-        String querySql = "UPDATE address SET state = ?, city = ?, neighborhood = ?, "
+        String querySql = "UPDATE store_address  SET state = ?, city = ?, neighborhood = ?, "
                 + "street = ?, complement = ?"
                 + "WHERE user_name = ? AND cep = ? AND number = ?";
         PreparedStatement ps = connection.prepareStatement(querySql);
@@ -65,11 +66,10 @@ public class AddressDao implements CrudDao<Address>
     @Override
     public void delete(Address address) throws SQLException
     {
-        //TODO: Continuar a implementação
         Connection connection = gDao.getConnection();
-        String querySql = "";
+        String querySql = "DELETE store_address WHERE user_name = ?";
         PreparedStatement ps = connection.prepareStatement(querySql);
-//        ps.setString(1, login);
+        ps.setString(1, login);
 
         ps.execute();
         ps.close();
@@ -79,20 +79,32 @@ public class AddressDao implements CrudDao<Address>
     public Address consult(Address address) throws SQLException
     {
         Connection connection = gDao.getConnection();
-        String querySql = "";
+        String querySql = "SELECT * FROM store_address WHERE user_name = ?";
         PreparedStatement ps = connection.prepareStatement(querySql);
-//        ps.setString(1, login);
+        ps.setString(1, login);
+        ResultSet result = ps.executeQuery();
+
+        if (result.next())
+        {
+            address.setCep(result.getString("cep"));
+            address.setComplement(result.getString("complement"));
+            address.setDoorNumber(result.getInt("number"));
+            address.setCity(result.getString("city"));
+            address.setEstate(result.getString("state"));
+            address.setNeighborhood(result.getString("neighborhood"));
+            address.setStreet(result.getString("street"));
+        }
 
         ps.execute();
         ps.close();
         connection.close();
 
-        return null;
+        return address;
     }
     @Override
     public List<Address> list() throws SQLException
     {
-
+        // Vai ficar sem list pq é nunca é usado
         return null;
     }
 }
