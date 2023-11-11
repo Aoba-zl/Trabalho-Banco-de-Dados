@@ -24,7 +24,6 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private AddressMenuController control = new AddressMenuController();
-    private String action = null;
 
     private VBox mainBox;
     private boolean editMode = false;
@@ -50,30 +49,27 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
             setEnableEditableElements(false);
         });
         btnEditAddress.setOnMouseClicked(event -> btnEditClicked());
+
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
             if (newValue)
             {
-                if(action.equals("edit"))
+                String msg = "Endereço editado com sucesso!";
+                try {
+                    control.editStoreAddress(userLogin);
+                    editMode = false;
+                    setEnableEditableElements(false);
+                }
+                catch (SQLException sqlException)
                 {
-                    String msg = "Endereço editado com sucesso!";
-                    try {
-                        control.editStoreAddress(userLogin);
-                        editMode = false;
-                        setEnableEditableElements(false);
-                    }
-                    catch (SQLException sqlException)
-                    {
-                        msg = "Houve um erro inesperado.\nPor favor, tente novamente";
-                        sqlException.printStackTrace();
-                    }
-                    finally
-                    {
-                        openPopUp(msg);
-                    }
+                    msg = "Houve um erro inesperado.\nPor favor, tente novamente";
+                    sqlException.printStackTrace();
+                }
+                finally
+                {
+                    openPopUp(msg);
                 }
             }
-            action = null;
         }));
     }
 
@@ -153,7 +149,6 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
 
     private void btnEditClicked()
     {
-        action = "edit";
         returnPopUp.setValue(false);
         if (editMode)
             openPopUp("Tem certeza de que deseja editar?");
