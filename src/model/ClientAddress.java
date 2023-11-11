@@ -4,6 +4,22 @@ public class ClientAddress extends Address
 {
 	private String name;
 
+	public ClientAddress(Address address, String name)
+	{
+		this.setCep(address.getCep());
+		this.setEstate(address.getEstate());
+		this.setCity(address.getCity());
+		this.setStreet(address.getStreet());
+		this.setNeighborhood(address.getNeighborhood());
+		this.setDoorNumber(address.getDoorNumber());
+		this.setComplement(address.getComplement());
+		this.setName(name);
+	}
+	public ClientAddress()
+	{
+		super();
+	}
+
 	public String getName() {
 		return name;
 	}
