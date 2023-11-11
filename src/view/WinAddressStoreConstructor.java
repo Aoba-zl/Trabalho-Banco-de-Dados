@@ -13,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import utils.UserSession;
 
+import java.sql.SQLException;
+
 public class WinAddressStoreConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfCep, tfEstateCity, tfNeighborhood, tfStreet, tfNumber, tfComplement;
@@ -22,6 +24,7 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private AddressMenuController control = new AddressMenuController();
+    private String action = null;
 
     private VBox mainBox;
     private boolean editMode = false;
@@ -51,12 +54,26 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
         {
             if (newValue)
             {
-                openPopUp("Endereço editado com sucesso!");
-                control.editStoreAddress(userLogin);
-                control.fillStoreAddressFields(userLogin);
-                editMode = false;
-                setEnableEditableElements(false);
+                if(action.equals("edit"))
+                {
+                    String msg = "Endereço editado com sucesso!";
+                    try {
+                        control.editStoreAddress(userLogin);
+                        editMode = false;
+                        setEnableEditableElements(false);
+                    }
+                    catch (SQLException sqlException)
+                    {
+                        msg = "Houve um erro inesperado.\nPor favor, tente novamente";
+                        sqlException.printStackTrace();
+                    }
+                    finally
+                    {
+                        openPopUp(msg);
+                    }
+                }
             }
+            action = null;
         }));
     }
 
@@ -136,6 +153,7 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
 
     private void btnEditClicked()
     {
+        action = "edit";
         returnPopUp.setValue(false);
         if (editMode)
             openPopUp("Tem certeza de que deseja editar?");

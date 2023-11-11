@@ -88,22 +88,15 @@ public class AddressMenuController
 		}
 	}
 
-	public void editStoreAddress(String login)
+	public void editStoreAddress(String login) throws SQLException
 	{
 		GenericDao genericDAO = new GenericDao();
 		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
 
-		try
-		{
-			Address currentAddress = addrD.consult(new Address());
-			Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-					currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
-			addrD.update(address);
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		Address currentAddress = addrD.consult(new Address());
+		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
+				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
+		addrD.update(address);
 	}
 
 	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)
