@@ -1,6 +1,6 @@
 package view;
 
-import control.CtrlAddressMenu;
+import control.AddressMenuController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +26,7 @@ public class WinAddressClientConstructor
     private final BooleanProperty editionMode = new SimpleBooleanProperty(true);
     private final VBox mainBox;
     private String userName;
-    private CtrlAddressMenu control = new CtrlAddressMenu();
+    private AddressMenuController control = new AddressMenuController();
     private String[] selectedAddress;
 
     public WinAddressClientConstructor(VBox mainBox, String[] selectedAddress)

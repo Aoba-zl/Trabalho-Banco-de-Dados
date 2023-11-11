@@ -1,6 +1,6 @@
 package view;
 
-import control.CtrlAccountMenu;
+import control.AccountMenuController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -8,10 +8,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utils.UserSession;
 
@@ -28,7 +26,7 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
     private String action = null;
     private String userName;
     
-    private CtrlAccountMenu control = new CtrlAccountMenu();
+    private AccountMenuController control = new AccountMenuController();
 
     @Override
     public void addElements(VBox mainBox)

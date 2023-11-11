@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-import control.CtrlAddressMenu;
+import control.AddressMenuController;
 
 public class WinAllAddressClientConstructor implements GerericAccountMenuWinInterface
 {
@@ -39,7 +39,7 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
     private String action = null;
     private String userName;
     
-    private CtrlAddressMenu control = new CtrlAddressMenu();
+    private AddressMenuController control = new AddressMenuController();
 
     @Override
     public void addElements(VBox mainBox)

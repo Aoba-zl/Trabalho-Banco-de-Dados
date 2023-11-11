@@ -17,7 +17,7 @@ import factory.ClientFactory;
 import factory.StoreFactory;
 import factory.UserFactory;
 
-public class CtrlAccountMenu
+public class AccountMenuController
 {
 	private StringProperty login = new SimpleStringProperty("");
 	private StringProperty name = new SimpleStringProperty("");

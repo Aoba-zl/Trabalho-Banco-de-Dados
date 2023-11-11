@@ -6,7 +6,6 @@ import java.util.List;
 
 import factory.AddressFactory;
 import factory.ClientAddressFactory;
-import factory.UserFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import model.Address;
@@ -15,10 +14,9 @@ import model.ClientAddress;
 import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
-import persistence.UserDao;
 import utils.UserSession;
 
-public class CtrlAddressMenu
+public class AddressMenuController
 {
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty cep = new SimpleStringProperty();

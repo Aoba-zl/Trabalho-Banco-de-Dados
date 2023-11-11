@@ -1,6 +1,6 @@
 package view;
 
-import control.CtrlAccountMenu;
+import control.AccountMenuController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,7 +28,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
     private String action = null;
     private String userName;
     
-    private CtrlAccountMenu control = new CtrlAccountMenu();
+    private AccountMenuController control = new AccountMenuController();
 
     @Override
     public void addElements(VBox mainBox)
