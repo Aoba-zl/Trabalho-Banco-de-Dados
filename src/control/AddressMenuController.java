@@ -121,16 +121,7 @@ public class AddressMenuController
 		return null;
 	}
 
-	public boolean deleteAddress(ClientAddress address, String login)
-	{
-		String userType = UserSession.getUserType();
-		if (userType.equals("client"))
-			return deleteClientAddress(address, login);
-		else
-			return deleteStoreAddress(address, login);
-	}
-
-	private boolean deleteClientAddress(ClientAddress address, String login)
+	public boolean deleteClientAddress(ClientAddress address, String login)
 	{
 		GenericDao genericDAO = new GenericDao();
 		ClientAddressDao clientAddressDao = new ClientAddressDao(genericDAO, new Client(login));
@@ -148,9 +139,12 @@ public class AddressMenuController
 		return false;
 	}
 
-	private boolean deleteStoreAddress(ClientAddress address, String login)
+	public void deleteStoreAddress(String login) throws SQLException
 	{
-		return false;
+		GenericDao genericDAO = new GenericDao();
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
+
+		addrD.delete(new Address());
 	}
 
 	public StringProperty getNameProperty() { return name; }

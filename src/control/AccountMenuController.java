@@ -2,7 +2,9 @@ package control;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import model.Client;
+import model.ClientAddress;
 import model.User;
 import model.Store;
 import persistence.ClientDao;
@@ -12,6 +14,7 @@ import persistence.UserDao;
 import utils.UserSession;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import factory.ClientFactory;
 import factory.StoreFactory;
@@ -122,12 +125,8 @@ public class AccountMenuController
     public void deleteAccount(String login) throws SQLException
     {
     	String userType = UserSession.getUserType();
-    	// TODO: função semi-interditada por ser mt complexa
-//    	if (userType.equals("client"))
-//    		deleteClientAccount(login);
-
     	if (userType.equals("client"))
-    		System.out.println("Apagando Cliente");
+    		deleteClientAccount(login);
     	else
     		deleteStoreAccount(login);
 
@@ -135,15 +134,19 @@ public class AccountMenuController
     
     private void deleteClientAccount(String login)
     {
-    	// TODO: apagar TODOS os endereços de cliente + carrinho + pedidos
+    	// TODO: apagar carrinho + pedidos
+		AddressMenuController controller = new AddressMenuController();
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	ClientDao clientDao = new ClientDao(genericDAO);
 
     	try
     	{
-    		userDao.delete(new User(login));
+			ObservableList<ClientAddress> allAddress = controller.getAddressList(login);
+			for (ClientAddress addr : allAddress)
+				controller.deleteClientAddress(addr, login);
     		clientDao.delete(new Client(login));
+			userDao.delete(new User(login));
     	} catch (SQLException e) {
 			e.printStackTrace();
 		}

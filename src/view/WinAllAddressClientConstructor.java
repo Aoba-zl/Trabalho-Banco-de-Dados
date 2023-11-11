@@ -73,7 +73,7 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
             {
                 if (action.getValue() == "delete")
                 {
-                    boolean deleteStatus = control.deleteAddress(selectedAddress, userName);
+                    boolean deleteStatus = control.deleteClientAddress(selectedAddress, userName);
                     if (!deleteStatus)
                         openPopUp("Houve um erro inesperado.\nPor favor, tente novamente");
                     else
