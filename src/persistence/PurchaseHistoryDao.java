@@ -52,7 +52,7 @@ public class PurchaseHistoryDao {
             itemList.add(item);
 
             Payment payment= new Payment();
-            payment.setDate(rs.getDate(3));
+            payment.setDate(rs.getDate(3).toLocalDate());
             payment.setStatus(rs.getString(4));
 
             order.setItems(itemList);

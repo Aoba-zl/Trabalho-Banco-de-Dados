@@ -21,6 +21,7 @@ import model.Order;
 import model.Product;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
@@ -87,6 +88,7 @@ public class WinPurchaseHistoryConstructor {
 
 
         tableHistory.setMinWidth(550);
+        tableHistory.setMaxWidth(550);
         tableHistory.setMaxHeight(250);
         tableHistory.relocate(45, 90);
 
@@ -219,11 +221,11 @@ public class WinPurchaseHistoryConstructor {
             return new ReadOnlyStringWrapper("");
         });
 
-        TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Pagamento");
+        TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Entrega");
         columnPaymentDate.setCellValueFactory(itemData -> {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    Date dt = itemData.getValue().getPayment().getDate();
-                    String dataStr = dtf.format(dt.toInstant());
+                    LocalDate dt = itemData.getValue().getPayment().getDate();
+                    String dataStr = dtf.format(dt);
                     return new ReadOnlyStringWrapper(dataStr);
                 }
         );
@@ -232,6 +234,15 @@ public class WinPurchaseHistoryConstructor {
         columnStatus.setCellValueFactory(itemData -> {
             return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
         });
+
+        columnIdProduct.setMinWidth(60);
+        columnProductName.setMinWidth(200);
+        columnPaymentDate.setMinWidth(160);
+        columnStatus.setMinWidth(128);
+        columnIdProduct.setStyle("-fx-alignment: CENTER;");
+        columnProductName.setStyle("-fx-alignment: CENTER;");
+        columnPaymentDate.setStyle("-fx-alignment: CENTER;");
+        columnStatus.setStyle("-fx-alignment: CENTER;");
 
 
         tableHistory.getColumns().addAll(columnIdProduct, columnProductName, columnPaymentDate, columnStatus);
