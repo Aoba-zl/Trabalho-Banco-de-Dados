@@ -14,6 +14,9 @@ public class Item
 		this.updateSubTotal();
 	}
 
+	public Item(){
+	}
+
 	public int getQuantity()
 	{
 		return quantity;
