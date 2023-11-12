@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
+import utils.UserSession;
 
 public class WinLoginConstructor implements GenericWindownInterface
 {
@@ -102,11 +103,11 @@ public class WinLoginConstructor implements GenericWindownInterface
 		lblTypeAc.setStyle("-fx-font-size: 13px;");
 		
 		Button btnRegisterClient = new Button("Cliente");
-		Button btnRegisterSeller = new Button("Lojista");
+		Button btnRegisterStore = new Button("Lojista");
 		btnRegisterClient.setPrefWidth(75);
 		btnRegisterClient.setPrefHeight(30);
-		btnRegisterSeller.setPrefWidth(75);
-		btnRegisterSeller.setPrefHeight(30);
+		btnRegisterStore.setPrefWidth(75);
+		btnRegisterStore.setPrefHeight(30);
 		
 		HBox hbTypeAc = new HBox();
 		hbTypeAc.setStyle("-fx-alignment: center");
@@ -114,7 +115,7 @@ public class WinLoginConstructor implements GenericWindownInterface
 		
 		HBox hbRegister = new HBox();
 		hbRegister.setStyle("-fx-alignment: center; -fx-spacing: 20px;");
-		hbRegister.getChildren().addAll(btnRegisterClient, btnRegisterSeller);
+		hbRegister.getChildren().addAll(btnRegisterClient, btnRegisterStore);
 		
 		VBox vbRegister = new VBox(20);
 		vbRegister.setPrefHeight(130);
@@ -138,6 +139,10 @@ public class WinLoginConstructor implements GenericWindownInterface
 											lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: red;");
 										});
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
+		
+		btnRegisterClient.setOnAction(e -> toRegClient());
+		
+		btnRegisterStore.setOnAction(e -> toRegStore());
 		
 		//------------mudança de scene---------------
 		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword, lblMessage));
@@ -172,6 +177,18 @@ public class WinLoginConstructor implements GenericWindownInterface
 	private void toHomePage()
 	{
 		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+	}
+	
+	private void toRegClient()
+	{
+		UserSession.setUser("register", null);;
+		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
+	}
+	
+	private void toRegStore()
+	{
+		UserSession.setUser("register", null);
+		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
 }

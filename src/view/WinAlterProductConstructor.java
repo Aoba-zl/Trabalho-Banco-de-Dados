@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,26 +13,19 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 
 
 public class WinAlterProductConstructor implements GenericWindownInterface
 {
+	Pane pWin;
+	
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
-	public void addElements(Pane pane) {
+	public void addElements(Pane pane) 
+	{
+		this.pWin = pane;
 		
-		Label lblExit = new Label("Sair ❌");
-		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		Label lblAccount = new Label("Conta");
-		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		
-		// ----- Menu Bar ----- //
-		HBox hbOption = new HBox();
-		hbOption.setPrefWidth(640);
-		hbOption.setPrefHeight(30);
-		hbOption.setPadding(new Insets(5, 10, 0, 0));
-		hbOption.setStyle("-fx-alignment: top-right; -fx-spacing: 15px;");
-		hbOption.getChildren().addAll(lblExit, lblAccount);
 		// ----- Creating General Bord ----- //
 		Pane paneConsult = new Pane();
 		paneConsult.setStyle("-fx-border-width: 2; -fx-border-radius: 10; -fx-border-color: black;");
@@ -117,21 +111,19 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating GoBack Button ----- //
 			
-			Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
-			ImageView imgViewGoBack = new ImageView(imgGoBack);
-			imgViewGoBack.setFitWidth(24);
-			imgViewGoBack.setFitHeight(24);
-			imgViewGoBack.setStyle("-fx-cursor: hand");
-			imgViewGoBack.setPickOnBounds(true);
-			imgViewGoBack.relocate(4, 4);
+			Button btnReturn = new Button();
+			setBtnBackImage(btnReturn);
+			setOverButtonStyle(btnReturn);
+			btnReturn.relocate(4, 4);
+			
 			// ----- Creating Buttons ----- //
 			
-			Button btnBuy = new Button("Excluir");
-			btnBuy.relocate(482, 360);
-			btnBuy.setPrefWidth(140);
-			Button btnAddCart = new Button("Editar");
-			btnAddCart.relocate(291, 360);
-			btnAddCart.setPrefWidth(140);
+			Button btnDelete = new Button("Excluir");
+			btnDelete.relocate(482, 360);
+			btnDelete.setPrefWidth(140);
+			Button btnEdit = new Button("Editar");
+			btnEdit.relocate(291, 360);
+			btnEdit.setPrefWidth(140);
 			
 			// ----- Creating Label ----- //
 			
@@ -152,9 +144,14 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 		// ----- Add to pane ----- //
 			
-		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,imgViewGoBack,fpCategory);
-		paneConsult.getChildren().addAll(paneInfo,btnAddCart,btnBuy,lbDescription,txDescription);
-		pane.getChildren().addAll(paneConsult,hbOption);
+		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,btnReturn,fpCategory);
+		paneConsult.getChildren().addAll(paneInfo,btnEdit,btnDelete,lbDescription,txDescription);
+		
+		//ChangeScene
+		btnReturn.setOnAction(e -> toStore());
+		btnEdit.setOnAction(e -> toEditProduct());
+		
+		pane.getChildren().addAll(paneConsult);
 	}
 	
 	public void addCategory (String categoria) {
@@ -171,4 +168,40 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		tf.setPrefWidth(206);
 		tf.setStyle("-fx-font-size: 12px;");
 	}
+	
+	private void toStore()
+	{
+		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+	}
+	
+	private void toEditProduct()
+	{
+		ChangeSceneController.changeScene(SceneName.EDIT_PRODUCT, this.pWin);
+	}
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 }

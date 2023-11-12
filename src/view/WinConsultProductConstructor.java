@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,13 +13,19 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 
 
 public class WinConsultProductConstructor implements GenericWindownInterface
 {
+	Pane pWin;
+	
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
-	public void addElements(Pane pane) {
+	public void addElements(Pane pane) 
+	{
+		this.pWin = pane;
+		
 		// ----- Creating General Bord ----- //
 		Pane paneConsult = new Pane();
 		paneConsult.setStyle("-fx-border-width: 2; -fx-border-radius: 10; -fx-border-color: black;");
@@ -123,13 +130,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating GoBack Button ----- //
 			
-			Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
-			ImageView imgViewGoBack = new ImageView(imgGoBack);
-			imgViewGoBack.setFitWidth(24);
-			imgViewGoBack.setFitHeight(24);
-			imgViewGoBack.setStyle("-fx-cursor: hand");
-			imgViewGoBack.setPickOnBounds(true);
-			imgViewGoBack.relocate(4, 4);
+			Button btnReturn = new Button();
+			setBtnBackImage(btnReturn);
+			setOverButtonStyle(btnReturn);
+			btnReturn.relocate(4, 4);
+			
 			// ----- Creating Buttons ----- //
 			
 			Button btnBuy = new Button("Comprar");
@@ -158,8 +163,14 @@ public class WinConsultProductConstructor implements GenericWindownInterface
 			
 		// ----- Add to pane ----- //
 			
-		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,imgViewGoBack,fpCategory);
+		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,btnReturn,fpCategory);
 		paneConsult.getChildren().addAll(paneInfo,btnAddCart,btnBuy,lbDescription,txDescription);
+		
+		//ChangeScene
+		btnReturn.setOnAction(e -> toHomePage());
+		btnAddCart.setOnAction(e -> toCart()); //Deixei dessa forma, sinta-se a vontade para fazer do jeito que quiser
+		btnBuy.setOnMouseClicked(e -> toDetails());
+		
 		pane.getChildren().addAll(paneConsult);
 	}
 	
@@ -181,4 +192,45 @@ public class WinConsultProductConstructor implements GenericWindownInterface
 		quant = quant+num;
 		txQuantity.setText(quant+"");
 	}
+	
+	private void toHomePage()
+	{
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+	}
+	
+	private void toCart()
+	{
+		ChangeSceneController.changeScene(SceneName.CART, this.pWin);
+	}
+	
+	private void toDetails() //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
+	{
+		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+	}
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 }

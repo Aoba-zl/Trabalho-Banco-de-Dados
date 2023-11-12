@@ -7,13 +7,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
 
-public class WinOrderHistoryConstructor {
+public class WinOrderHistoryConstructor implements GenericWindownInterface
+{
     private Button btnSearch= new Button("\uD83D\uDD0D");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Pedidos");
 
 
-    public void addElements(Pane pane) throws Exception {
+    public void addElements(Pane pane){
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");

@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -12,12 +13,18 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
+import utils.UserSession;
 
-public class WinRegClientInfoConstructor 
+public class WinRegClientInfoConstructor implements GenericWindownInterface
 {
+	Pane pWin;
+	
     private ToggleGroup group;
 	public void addElements(Pane pane)
 	{
+		this.pWin = pane;
+		
 		Label lblHomePage = new Label("Cadastro de Cliente");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -110,6 +117,10 @@ public class WinRegClientInfoConstructor
 		
 		paneCli.getChildren().addAll(hbClient,tfSex,hbSex,lblSex,lblDescription,lblWarning);
 		
+		//ChangeScene
+		btnBack.setOnAction(e -> toLogin());
+		btnNext.setOnAction(e -> toClientAddress());
+		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
 		
 	}
@@ -126,5 +137,16 @@ public class WinRegClientInfoConstructor
 			lb.setVisible(false);
 			tf.setVisible(false);
 		}
+	}
+	
+	private void toLogin()
+	{
+		UserSession.clearSession();
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	}
+	
+	private void toClientAddress()
+	{
+		ChangeSceneController.changeScene(SceneName.REG_CLIENT_ADDRESS, this.pWin);
 	}
 }

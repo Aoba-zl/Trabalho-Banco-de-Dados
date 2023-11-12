@@ -1,12 +1,17 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import utils.SceneName;
 
-public class WinShoppingCartConstructor {
+public class WinShoppingCartConstructor implements GenericWindownInterface
+{
+	Pane pWin;
+	
     private Label lblTittle= new Label("Carrinho");
     private Label lblTotalPrice= new Label("Total:");
     private Label lblQuantity= new Label("Quantidade:");
@@ -15,7 +20,10 @@ public class WinShoppingCartConstructor {
     private Button btnPlaceOrder= new Button("Realizar Pedido");
     private TextField tfQuantity= new TextField();
 
-    public void addElements(Pane pane){
+    public void addElements(Pane pane)
+    {
+    	this.pWin = pane;
+    	
         Button btnReturn= new Button();
         Button btnAccount= new Button("Conta");
         Button btnQuit= new Button("Sair❌");
@@ -59,8 +67,13 @@ public class WinShoppingCartConstructor {
         tbShoppingCart.setMaxHeight(250);
         tbShoppingCart.relocate(30, 60);
         tbShoppingCart.getColumns().addAll(columnName, columnDesciption, columnProductValue);
-
-
+        
+        //ChangeScene
+        btnReturn.setOnAction(e -> toHome());
+        btnAccount.setOnAction(e -> toAccount());
+        btnQuit.setOnAction(e -> toLogin());
+        btnPlaceOrder.setOnAction(e -> toDetails());
+        
         pane.getChildren().addAll(tbShoppingCart, btnAccount,btnQuit,btnReturn,btnRemove, btnSelectAll, btnPlaceOrder,lblQuantity, lblTittle, lblTotalPrice, tfQuantity);
 
     }
@@ -85,5 +98,24 @@ public class WinShoppingCartConstructor {
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
     }
+    
+    private void toLogin() 
+	{
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	}
+	
+	private void toAccount() 
+	{
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+	}
 
+    private void toHome()
+    {
+    	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+    }
+    
+    private void toDetails() 
+    {
+		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+	}
 }

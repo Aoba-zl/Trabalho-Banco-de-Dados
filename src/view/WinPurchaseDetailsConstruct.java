@@ -1,12 +1,17 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import utils.SceneName;
 
-public class WinPurchaseDetailsConstruct  {
+public class WinPurchaseDetailsConstruct implements GenericWindownInterface
+{
+	Pane pWin;
+	
     private Button btnBuy= new Button("Comprar");
     private Label lblTittle= new Label("Detalhes da Compra");
     private Label lblTotalPurchaseValue= new Label("Total:");
@@ -14,7 +19,10 @@ public class WinPurchaseDetailsConstruct  {
     private Label lblPaymentMethod= new Label("Método de Pagamento:");
 
 
-    public void addElements(Pane pane) {
+    public void addElements(Pane pane) 
+    {
+    	this.pWin = pane;
+    	
         Button btnReturn= new Button();
         btnBuy.relocate(500, 330);
         btnBuy.setPrefHeight(40);
@@ -55,7 +63,10 @@ public class WinPurchaseDetailsConstruct  {
         tbProducts.relocate(40, 70);
         tbProducts.getColumns().addAll(columnId, columnName, columnStoreName, columnProductValue);
 
-
+        //ChangeScene
+        
+        btnReturn.setOnAction(e -> toCart());
+        
         pane.getChildren().addAll(tbProducts, btnBuy, btnReturn, lblPaymentMethod,lblPortage,lblTotalPurchaseValue,lblTittle, cbPaymentMethod);
 
     }
@@ -80,5 +91,10 @@ public class WinPurchaseDetailsConstruct  {
         button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
+    }
+    
+    private void toCart()
+    {
+    	ChangeSceneController.changeScene(SceneName.CART, pWin);
     }
 }

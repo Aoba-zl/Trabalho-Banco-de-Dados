@@ -10,7 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 
-public class WinPurchaseHistoryConstructor {
+public class WinPurchaseHistoryConstructor implements GenericWindownInterface
+{
     private Button btnSearch= new Button("Buscar");
     private Button btnSeePurchase= new Button("Ver Compra");
     private TextField tfSearch= new TextField();

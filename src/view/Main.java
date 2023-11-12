@@ -16,7 +16,7 @@ public class Main extends Application
 	private static WinLoginConstructor winLogin = new WinLoginConstructor();
 
 	@Override
-	public void start(Stage PrimaryStage) throws Exception 
+	public void start(Stage PrimaryStage)
 	{
 		stage = PrimaryStage;
 		
