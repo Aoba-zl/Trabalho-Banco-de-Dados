@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,11 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
+import utils.UserSession;
 
-public class WinRegClientAddressConstructor 
+public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
+	Pane pWin;
+	
     public void addElements(Pane pane)
 	{
+    	this.pWin = pane;
+    	
 		Label lblHomePage = new Label("Cadastro de Cliente");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -88,6 +95,10 @@ public class WinRegClientAddressConstructor
 		
 		paneCli.getChildren().addAll(hbClient,lblDescription,lblWarning);
 		
+		//ChangeScene
+		btnBack.setOnAction(e -> toClientInfo());
+		btnNext.setOnAction(e -> toLogin());
+		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
 		
 	}
@@ -96,4 +107,16 @@ public class WinRegClientAddressConstructor
 		label.setAlignment(Pos.CENTER_RIGHT);
 		label.setStyle("-fx-font-size: 13px;");
 	}
+	
+	private void toClientInfo()
+	{
+		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
+	}
+	
+	private void toLogin()
+	{
+		UserSession.clearSession();
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	}
+	
 }

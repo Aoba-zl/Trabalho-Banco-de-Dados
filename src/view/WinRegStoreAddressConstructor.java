@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,12 +8,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
+import utils.UserSession;
 
 
 
-public class WinRegStoreAddressConstructor {
-
-	public void addElements(Pane pane) {
+public class WinRegStoreAddressConstructor implements GenericWindownInterface
+{
+	Pane pWin;
+	
+	public void addElements(Pane pane) 
+	{
+		this.pWin = pane;
+		
 		Label lblHomePage = new Label("Cadastro de Loja");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
@@ -81,6 +89,10 @@ public class WinRegStoreAddressConstructor {
 
 		paneCli.getChildren().addAll(hbClient, lblDescription, lblWarning);
 
+		//ChangeScene
+		btnBack.setOnAction(e -> toStoreInfo());
+		btnNext.setOnAction(e -> toLogin());
+		
 		pane.getChildren().addAll(lblHomePage, paneCli, btnBack, btnNext);
 
 	}
@@ -94,5 +106,16 @@ public class WinRegStoreAddressConstructor {
 	private void setAlignment(TextField tf) {
 		tf.setPrefWidth(170);
 		tf.setStyle("-fx-font-size: 12px;");
+	}
+	
+	private void toStoreInfo()
+	{
+		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
+	}
+	
+	private void toLogin()
+	{
+		UserSession.clearSession();
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 }
