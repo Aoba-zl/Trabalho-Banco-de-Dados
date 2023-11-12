@@ -1,8 +1,6 @@
 package persistence;
 
-import model.Client;
-import model.Payment;
-import model.Product;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,10 +13,22 @@ public class PurchaseHistoryDao {
 
     GenericDao genericDao;
 
-    public List listPurchaseHistory(Client client) throws SQLException{
-        List history= new ArrayList();
+    public PurchaseHistoryDao(GenericDao genericDao) {
+        this.genericDao= genericDao;
+    }
+
+    public List<Order> listPurchaseHistory(Client client) throws SQLException{
+        List<Order> history= new ArrayList<>();
         Connection connection= genericDao.getConnection();
-        String sql= "select prod.id_product, prod.name_product, pay.date_pay, pay.status\n" +
+        String sql= "select prod.id_product,\n" +
+                "       prod.name_product,\n" +
+                "       pay.date_pay as Data_de_entrega,\n" +
+                "       case when (getdate() + 1 = pay.date_pay)\n" +
+                "           then\n" +
+                "                'Chega amanhã'\n" +
+                "           else\n" +
+                "                'A caminho'\n" +
+                "           end as status\n" +
                 "from payment pay, product prod, order_product order_prod, order_tbl order_tb,\n" +
                 "     client cli\n" +
                 "where prod.id_product = order_prod.id_product\n" +
@@ -30,9 +40,30 @@ public class PurchaseHistoryDao {
         ps.setString(1, client.getLogin());
         ResultSet rs= ps.executeQuery();
         while (rs.next()){
+            Order order= new Order();
 
+            Product product= new Product();
+            product.setCod(rs.getInt(1));
+            product.setName(rs.getString(2));
+
+            Item item= new Item(product, 1);
+            item.setProduct(product);
+            List<Item> itemList= new ArrayList<>();
+            itemList.add(item);
+
+            Payment payment= new Payment();
+            payment.setDate(rs.getDate(3));
+            payment.setStatus(rs.getString(4));
+
+            order.setItems(itemList);
+            order.setPayment(payment);
+
+            history.add(order);
         }
         connection.close();
+        rs.close();
+        ps.close();
+
         return history;
     }
 

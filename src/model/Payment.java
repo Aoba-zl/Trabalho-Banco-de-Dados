@@ -9,5 +9,27 @@ public class Payment
     private Currency totalPay;
     private String status;
 
-    
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Currency getTotalPay() {
+        return totalPay;
+    }
+
+    public void setTotalPay(Currency totalPay) {
+        this.totalPay = totalPay;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

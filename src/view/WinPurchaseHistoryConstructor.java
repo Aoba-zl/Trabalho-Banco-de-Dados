@@ -1,5 +1,8 @@
 package view;
 
+import control.OrderHistoryController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,16 +12,47 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 import model.Order;
+
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 
 
 public class WinPurchaseHistoryConstructor {
-    private Button btnSearch= new Button("Buscar");
-    private Button btnSeePurchase= new Button("Ver Compra");
-    private TextField tfSearch= new TextField();
-    Label lblTitle= new Label("Histórico de Compra");
+    private final Button btnSearch= new Button("🔍");
+    private final Button btnSeePurchase= new Button("Ver Compra");
+    private final TextField tfSearch= new TextField();
+    private final Label lblTitle= new Label("Histórico de Compra");
+
+    OrderHistoryController controllerOrder= new OrderHistoryController();
+    private final TableView<Order> tableHistory= new TableView<>();
 
     // TODO fazer o metodo bindings
+
+    private final TextField tfProductName= new TextField();
+    private final TextField tfShop= new TextField();
+    private final TextField tfProductPrice = new TextField();
+    private final TextField tfPortage= new TextField();
+    private final TextField tfQuantity= new TextField();
+    private final TextField tfTotalValue= new TextField();
+    private final TextField tfMethodPayment = new TextField();
+    private final TextField tfStatus= new TextField();
+
+    public void bindings(){
+        Bindings.bindBidirectional(tfSearch.textProperty(), controllerOrder.searchProperty());
+        Bindings.bindBidirectional(tfProductName.textProperty(), controllerOrder.nameProductProperty());
+        Bindings.bindBidirectional(tfShop.textProperty(), controllerOrder.nameStoreProperty());
+        Bindings.bindBidirectional(tfProductPrice.textProperty(), controllerOrder.priceProductProperty(), new NumberStringConverter());
+        Bindings.bindBidirectional(tfPortage.textProperty(), controllerOrder.portageProperty());
+        Bindings.bindBidirectional(tfQuantity.textProperty(), controllerOrder.quantityProperty(), new NumberStringConverter());
+        Bindings.bindBidirectional(tfTotalValue.textProperty(), controllerOrder.totalValueProperty());
+        Bindings.bindBidirectional(tfMethodPayment.textProperty(), controllerOrder.methodPaymentProperty());
+        Bindings.bindBidirectional(tfStatus.textProperty(), controllerOrder.statusProperty());
+    }
     public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
@@ -27,7 +61,7 @@ public class WinPurchaseHistoryConstructor {
         btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
-        btnSearch.relocate(520, 50);
+        btnSearch.relocate(510, 50);
         btnSeePurchase.relocate(480, 350);
         setBtnBackImage(btnReturn);
         String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
@@ -45,61 +79,97 @@ public class WinPurchaseHistoryConstructor {
         lblTitle.relocate(220, 10);
         lblTitle.setFont(Font.font(20));
 
-        TableView tbPurchaseHistory= new TableView<>(); // colocar o objeto depois
-        TableColumn columnId= new TableColumn<>("ID");
-        TableColumn columnName= new TableColumn("Nome");
-        TableColumn columnPurchaseDate= new TableColumn("Data da Compra");
-        TableColumn columnStatus= new TableColumn("Status");
-        columnId.setMinWidth(60);
-        columnName.setMinWidth(200);
-        columnPurchaseDate.setMinWidth(160);
-        columnStatus.setMinWidth(140);
-        tbPurchaseHistory.setMinWidth(550);
-        tbPurchaseHistory.setMaxHeight(250);
-        tbPurchaseHistory.relocate(30, 90);
-        tbPurchaseHistory.getColumns().addAll(columnId,columnName,columnPurchaseDate,columnStatus);
+
+        tableHistory.setMinWidth(550);
+        tableHistory.setMaxHeight(250);
+        tableHistory.relocate(45, 90);
 
 
 
         // ---------------------Events---------------------------
 
         btnSeePurchase.setOnMouseClicked(event -> {
-            pane.getChildren().add(subWindow());
+            pane.getChildren().add(subWindowStatus());
         });
 
 
         // ----------------------------------------------------
 
-        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tbPurchaseHistory);
+        tableHistory.setItems(controllerOrder.getListHistory());
+
+        bindings();
+        populateTable();
+        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tableHistory);
 
     }
 
-    public BorderPane subWindow(){
+    public BorderPane subWindowStatus(){
         Pane panePurchaseStatus= new Pane();
+        GridPane gridPurchaseStatus = new GridPane();
         panePurchaseStatus.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px");
-        panePurchaseStatus.setMaxHeight(315);
-        panePurchaseStatus.setMaxWidth(560);
-
-
+        panePurchaseStatus.setMaxHeight(350);
+        panePurchaseStatus.setMaxWidth(315);
+        gridPurchaseStatus.relocate(5, 20);
 
         Label lblTittle= new Label("Status Compra");
-        lblTittle.relocate(225, 5);
-        lblTittle.setFont(Font.font(17));
+        Label lblProductName= new Label("Nome:");
+        Label lblShop= new Label("Loja:");
+        Label lblProductValue= new Label("Valor do Produto:");
+        Label lblPortage= new Label("Frete:");
+        Label lblQuantity= new Label("Quantidade:");
+        Label lblTotalValue= new Label("Valor Total:");
+        Label lblFormPayment= new Label("Forma de Pagamento:");
+        Label lblStatus= new Label("Status");
+        lblTittle.setFont(Font.font(20));
+        lblProductName.setFont(Font.font(14));
+        lblShop.setFont(Font.font(14));
+        lblProductValue.setFont(Font.font(14));
+        lblPortage.setFont(Font.font(14));
+        lblQuantity.setFont(Font.font(14));
+        lblTotalValue.setFont(Font.font(14));
+        lblFormPayment.setFont(Font.font(14));
+        lblStatus.setFont(Font.font(14));
+        lblTittle.relocate(90, 5);
 
 
-        TableView<Order> tableStatus= new TableView<>();
-        tableStatus.setMinWidth(550);
-        tableStatus.setMaxHeight(250);
-        tableStatus.relocate(5, 30);
+
+        tfProductName.setEditable(false);
+        tfShop.setEditable(false);
+        tfProductPrice.setEditable(false);
+        tfPortage.setEditable(false);
+        tfQuantity.setEditable(false);
+        tfTotalValue.setEditable(false);
+        tfMethodPayment.setEditable(false);
+        tfStatus.setEditable(false);
+        tfQuantity.setMaxWidth(35);
 
 
-        Button btnCancel= new Button("Cancelar Compra");
         Button btnReturnPurchaseStatus= new Button("Voltar");
-        btnCancel.relocate(400, 285);
-        btnReturnPurchaseStatus.relocate(60, 285);
+        btnReturnPurchaseStatus.relocate(30, 318);
+
+        gridPurchaseStatus.setVgap(10);
+        gridPurchaseStatus.setHgap(10);
+
+        gridPurchaseStatus.add(lblTittle, 1, 1);
+        gridPurchaseStatus.add(lblProductName, 1, 2);
+        gridPurchaseStatus.add(tfProductName, 2, 2);
+        gridPurchaseStatus.add(lblShop, 1, 3);
+        gridPurchaseStatus.add(tfShop, 2, 3);
+        gridPurchaseStatus.add(lblProductValue, 1, 4);
+        gridPurchaseStatus.add(tfProductPrice, 2, 4);
+        gridPurchaseStatus.add(lblPortage, 1, 5);
+        gridPurchaseStatus.add(tfPortage, 2, 5);
+        gridPurchaseStatus.add(lblQuantity, 1, 6);
+        gridPurchaseStatus.add(tfQuantity, 2, 6);
+        gridPurchaseStatus.add(lblTotalValue, 1, 7);
+        gridPurchaseStatus.add(tfTotalValue, 2, 7);
+        gridPurchaseStatus.add(lblFormPayment, 1, 8);
+        gridPurchaseStatus.add(tfMethodPayment, 2, 8);
+        gridPurchaseStatus.add(lblStatus, 1, 9);
+        gridPurchaseStatus.add(tfStatus, 2, 9);
 
 
-        panePurchaseStatus.getChildren().addAll(lblTittle, tableStatus, btnCancel, btnReturnPurchaseStatus);
+        panePurchaseStatus.getChildren().addAll(lblTittle, gridPurchaseStatus, btnReturnPurchaseStatus);
 
 
         BorderPane paneTransp = new BorderPane();
@@ -116,10 +186,43 @@ public class WinPurchaseHistoryConstructor {
         return paneTransp;
     }
 
+    @SuppressWarnings("unchecked")
     public void populateTable(){
         // TODO fazer a populateTable do historico de pedidos
+        TableColumn<Order, Integer> columnIdProduct= new TableColumn<>("ID");
+        columnIdProduct.setCellValueFactory(new PropertyValueFactory<Order, Integer>("idProduct"));
+
         TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
-        columnProductName.setCellValueFactory(new PropertyValueFactory<Order, String>("nomeProduto"));
+        columnProductName.setCellValueFactory(new PropertyValueFactory<Order, String>("nameProduct"));
+
+        TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Pagamento");
+        columnPaymentDate.setCellValueFactory(
+                itemData -> {
+                    DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    Date dt= itemData.getValue().getPayment().getDate();
+                    String dataString= dtf.format((TemporalAccessor) dt);
+                    return new ReadOnlyStringWrapper(dataString);
+                }
+        );
+
+        TableColumn<Order, String> columnStatus = new TableColumn<>("Status");
+        columnStatus.setCellValueFactory(
+                itemData -> {
+                    return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
+                }
+        );
+
+
+        tableHistory.getColumns().addAll(columnIdProduct, columnProductName, columnPaymentDate, columnStatus);
+        tableHistory.getSelectionModel().selectedItemProperty().addListener(
+                (obs, antigo, novo) -> {
+                    try {
+                        controllerOrder.populateWinHistory();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
     }
 
     private void setBtnBackImage(Button btnBack) {
