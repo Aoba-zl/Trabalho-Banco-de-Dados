@@ -31,13 +31,10 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		Label lblAccount = new Label("Conta");
 		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
 		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		
-		Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
-		ImageView imgViewGoBack = new ImageView(imgGoBack);
-		imgViewGoBack.setFitWidth(24);
-		imgViewGoBack.setFitHeight(24);
-		imgViewGoBack.setStyle("-fx-cursor: hand");
-		imgViewGoBack.setPickOnBounds(true);
+
+		Button btnReturn = new Button();
+		setBtnBackImage(btnReturn);
+		setOverButtonStyle(btnReturn);
 		
 		HBox hbOption = new HBox();
 		hbOption.setPrefWidth(640);
@@ -137,10 +134,10 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		//------------mudança de scene---------------
 		lblAccount.setOnMouseClicked(e -> toAccount());
 		lblExit.setOnMouseClicked(e -> toLogin());
-		imgViewGoBack.setOnMouseClicked(e -> toProductStore());
+		btnReturn.setOnAction(e -> toProductStore());
 		
 		
-		pane.getChildren().addAll(imgViewGoBack, lblHomePage, pProduct);
+		pane.getChildren().addAll(btnReturn, lblHomePage, pProduct);
 		
 	}
 	
@@ -158,6 +155,32 @@ public class WinEditProductConstructor implements GenericWindownInterface
 	{
 		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 	
 
 }

@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,27 +35,31 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		lblHomePage.setLayoutY(25);
 		
 		
-		Label lblExit = new Label("Sair❌");
-		Label lblAccount = new Label("Conta");
-		Label lblCartStore;
+		Button btnQuit = new Button("Sair❌");
+		Button btnAccount = new Button("Conta");
+		Button btnReturn = new Button();
+		Button btnCartStore;
+		setBtnBackImage(btnReturn);
+		setOverButtonStyle(btnQuit);
+		setOverButtonStyle(btnAccount);
+		setOverButtonStyle(btnReturn);
 		if(UserSession.getUserType().contains("client"))
         {
-        	lblCartStore = new Label("Carrinho🛒");
+        	btnCartStore = new Button("Carrinho🛒");
         }
         else
         {
-        	lblCartStore = new Label("Loja🏬");        	
+        	btnCartStore = new Button("Loja🏬");        	
         }
-		lblCartStore.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
+		setOverButtonStyle(btnCartStore);
+		
 		
 		HBox hbOption = new HBox();
 		hbOption.setPrefWidth(640);
 		hbOption.setPrefHeight(30);
 		hbOption.setPadding(new Insets(0, 15, 0, 0));
 		hbOption.setStyle("-fx-alignment: top-right; -fx-spacing: 15px;");
-		hbOption.getChildren().addAll(lblCartStore, lblExit, lblAccount);
+		hbOption.getChildren().addAll(btnCartStore, btnQuit, btnAccount);
 		
 		TextField tfSearch = new TextField();
 		tfSearch.setPromptText("Buscar item");
@@ -151,9 +157,9 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		
 		
 		//------------mudança de scene---------------
-		lblExit.setOnMouseClicked(e -> toLogin());
-		lblCartStore.setOnMouseClicked(e -> toCartStore(lblCartStore));
-		lblAccount.setOnMouseClicked(e -> toAccount());
+		btnQuit.setOnAction(e -> toLogin());
+		btnCartStore.setOnAction(e -> toCartStore(btnCartStore));
+		btnAccount.setOnAction(e -> toAccount());
 		
 		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct);
 		
@@ -162,32 +168,56 @@ public class WinHomePageConstructor implements GenericWindownInterface
 
 	private void toLogin() 
 	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
-		
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	
 	private void toAccount() 
 	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
-		
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 	
 	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
-	{
+	{ //Só avisando que o professor disse que ensinaria um jeito melhor do que enviar os parametros dessa forma.
 		System.out.println(cod + " " + name + " " + desc + " " + price);
-		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, pWin);
+		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
 	}
 	
-	private void toCartStore(Label lblCartStore)
+	private void toCartStore(Button btnCartStore)
 	{
-		if(lblCartStore.getText().equals("Carrinho🛒"))
+		if(btnCartStore.getText().equals("Carrinho🛒"))
 		{
-			ChangeSceneController.changeScene(SceneName.CART, pWin);
+			ChangeSceneController.changeScene(SceneName.CART, this.pWin);
 		}
 		else
 		{
-			ChangeSceneController.changeScene(SceneName.STORE, pWin);
+			ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
 		}
 	}
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 	
 }

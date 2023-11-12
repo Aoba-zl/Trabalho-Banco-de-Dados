@@ -33,24 +33,20 @@ public class WinStoreConstructor implements GenericWindownInterface
 		lblHomePage.setStyle("-fx-font-size: 24px; -fx-alignment: center; -fx-font-weight: bold");
 		lblHomePage.setLayoutY(25);
 		
-		Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
-		ImageView imgViewGoBack = new ImageView(imgGoBack);
-		imgViewGoBack.setFitWidth(24);
-		imgViewGoBack.setFitHeight(24);
-		imgViewGoBack.setStyle("-fx-cursor: hand");
-		imgViewGoBack.setPickOnBounds(true);
-		
-		Label lblExit = new Label("Sair❌");
-		Label lblAccount = new Label("Conta");
-		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
+		Button btnQuit = new Button("Sair❌");
+		Button btnAccount = new Button("Conta");
+		Button btnReturn = new Button();
+		setBtnBackImage(btnReturn);
+		setOverButtonStyle(btnQuit);
+		setOverButtonStyle(btnAccount);
+		setOverButtonStyle(btnReturn);
 		
 		HBox hbOption = new HBox();
 		hbOption.setPrefWidth(640);
 		hbOption.setPrefHeight(30);
 		hbOption.setPadding(new Insets(0, 15, 0, 0));
 		hbOption.setStyle("-fx-alignment: top-right; -fx-spacing: 15px;");
-		hbOption.getChildren().addAll(lblExit, lblAccount);
+		hbOption.getChildren().addAll(btnQuit, btnAccount);
 		
 		TextField tfSearch = new TextField();
 		tfSearch.setPromptText("Buscar item");
@@ -160,12 +156,12 @@ public class WinStoreConstructor implements GenericWindownInterface
 		hbBtnAdd.getChildren().add(btnAdd);
 		
 		//------------mudança de scene---------------
-		imgViewGoBack.setOnMouseClicked(e -> toHomePage());
-		lblExit.setOnMouseClicked(e -> toLogin());
-		lblAccount.setOnMouseClicked(e -> toAccount());
+		btnReturn.setOnAction(e -> toHomePage());
+		btnQuit.setOnAction(e -> toLogin());
+		btnAccount.setOnAction(e -> toAccount());
 		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
 		
-		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, imgViewGoBack);
+		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, btnReturn);
 		
 	}
 	
@@ -196,4 +192,30 @@ public class WinStoreConstructor implements GenericWindownInterface
 		
 		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
+
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 }
