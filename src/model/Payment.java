@@ -1,5 +1,6 @@
 package model;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.Date;
 
@@ -8,6 +9,8 @@ public class Payment
 	private Date date;
     private Currency totalPay;
     private String status;
+
+//    DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Date getDate() {
         return date;

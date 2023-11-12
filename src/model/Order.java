@@ -1,5 +1,7 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.Currency;
 import java.util.List;
 
@@ -31,4 +33,5 @@ public class Order {
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
+
 }

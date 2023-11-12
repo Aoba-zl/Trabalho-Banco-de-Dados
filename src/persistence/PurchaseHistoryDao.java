@@ -46,7 +46,7 @@ public class PurchaseHistoryDao {
             product.setCod(rs.getInt(1));
             product.setName(rs.getString(2));
 
-            Item item= new Item(product, 1);
+            Item item= new Item();
             item.setProduct(product);
             List<Item> itemList= new ArrayList<>();
             itemList.add(item);

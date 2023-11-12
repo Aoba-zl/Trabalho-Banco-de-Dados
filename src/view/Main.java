@@ -1,5 +1,6 @@
 package view;
 
+import control.OrderHistoryController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import utils.UserSession;
@@ -19,6 +20,8 @@ public class Main extends Application
 	private static WinRegProductConstructor winRegProduct = new WinRegProductConstructor();
 	private static WinEditProductConstructor winEditProduct = new WinEditProductConstructor();
 	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
+
+	private static WinPurchaseHistoryConstructor winPurchaseHistory= new WinPurchaseHistoryConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
@@ -28,8 +31,13 @@ public class Main extends Application
 		pWin = new Pane();
 		pWin.setPrefWidth(640);
 		pWin.setPrefHeight(400);
-		
-		winLogin.addElements(pWin);
+
+		// teste Luan -----------------------------------------
+
+
+		winPurchaseHistory.addElements(pWin);
+
+		// -----------------------------------------------------------
 		
 		scn = new Scene(pWin);
 		

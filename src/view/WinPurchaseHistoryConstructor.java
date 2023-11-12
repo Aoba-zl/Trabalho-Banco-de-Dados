@@ -3,6 +3,8 @@ package view;
 import control.OrderHistoryController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,33 +16,36 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
+import model.Item;
 import model.Order;
+import model.Product;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
+import java.util.List;
 
 
 public class WinPurchaseHistoryConstructor {
-    private final Button btnSearch= new Button("🔍");
-    private final Button btnSeePurchase= new Button("Ver Compra");
-    private final TextField tfSearch= new TextField();
-    private final Label lblTitle= new Label("Histórico de Compra");
+    private Button btnSearch= new Button("🔍");
+    private Button btnSeePurchase= new Button("Ver Compra");
+    private TextField tfSearch= new TextField();
+    private Label lblTitle= new Label("Histórico de Compra");
 
     OrderHistoryController controllerOrder= new OrderHistoryController();
-    private final TableView<Order> tableHistory= new TableView<>();
+    private TableView<Order> tableHistory= new TableView<>();
 
     // TODO fazer o metodo bindings
 
-    private final TextField tfProductName= new TextField();
-    private final TextField tfShop= new TextField();
-    private final TextField tfProductPrice = new TextField();
-    private final TextField tfPortage= new TextField();
-    private final TextField tfQuantity= new TextField();
-    private final TextField tfTotalValue= new TextField();
-    private final TextField tfMethodPayment = new TextField();
-    private final TextField tfStatus= new TextField();
+    private TextField tfProductName= new TextField();
+    private TextField tfShop= new TextField();
+    private TextField tfProductPrice = new TextField();
+    private TextField tfPortage= new TextField();
+    private TextField tfQuantity= new TextField();
+    private TextField tfTotalValue= new TextField();
+    private TextField tfMethodPayment = new TextField();
+    private TextField tfStatus= new TextField();
 
     public void bindings(){
         Bindings.bindBidirectional(tfSearch.textProperty(), controllerOrder.searchProperty());
@@ -52,8 +57,9 @@ public class WinPurchaseHistoryConstructor {
         Bindings.bindBidirectional(tfTotalValue.textProperty(), controllerOrder.totalValueProperty());
         Bindings.bindBidirectional(tfMethodPayment.textProperty(), controllerOrder.methodPaymentProperty());
         Bindings.bindBidirectional(tfStatus.textProperty(), controllerOrder.statusProperty());
+
     }
-    public void addElements(Pane pane) {
+    public void addElements(Pane pane) throws SQLException {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
@@ -95,10 +101,10 @@ public class WinPurchaseHistoryConstructor {
 
         // ----------------------------------------------------
 
-        tableHistory.setItems(controllerOrder.getListHistory());
 
         bindings();
         populateTable();
+        tableHistory.setItems(controllerOrder.getListHistory());
         pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tableHistory);
 
     }
@@ -187,42 +193,49 @@ public class WinPurchaseHistoryConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public void populateTable(){
+    public void populateTable() throws SQLException {
         // TODO fazer a populateTable do historico de pedidos
-        TableColumn<Order, Integer> columnIdProduct= new TableColumn<>("ID");
-        columnIdProduct.setCellValueFactory(new PropertyValueFactory<Order, Integer>("idProduct"));
+        TableColumn<Order, String> columnIdProduct= new TableColumn<>("ID");
+        columnIdProduct.setCellValueFactory(itemData -> {
+            List<Item> items = itemData.getValue().getItems();
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                Product product = item.getProduct();
+                String idProduct = String.valueOf(product.getCod());
+                return new ReadOnlyStringWrapper(idProduct);
+            }
+            return new ReadOnlyStringWrapper("");
+        });
 
         TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
-        columnProductName.setCellValueFactory(new PropertyValueFactory<Order, String>("nameProduct"));
+        columnProductName.setCellValueFactory(itemData -> {
+            List<Item> items = itemData.getValue().getItems();
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                Product product = item.getProduct();
+                String nameProduct = String.valueOf(product.getName());
+                return new ReadOnlyStringWrapper(nameProduct);
+            }
+            return new ReadOnlyStringWrapper("");
+        });
 
         TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Pagamento");
-        columnPaymentDate.setCellValueFactory(
-                itemData -> {
-                    DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    Date dt= itemData.getValue().getPayment().getDate();
-                    String dataString= dtf.format((TemporalAccessor) dt);
-                    return new ReadOnlyStringWrapper(dataString);
+        columnPaymentDate.setCellValueFactory(itemData -> {
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    Date dt = itemData.getValue().getPayment().getDate();
+                    String dataStr = dtf.format(dt.toInstant());
+                    return new ReadOnlyStringWrapper(dataStr);
                 }
         );
 
         TableColumn<Order, String> columnStatus = new TableColumn<>("Status");
-        columnStatus.setCellValueFactory(
-                itemData -> {
-                    return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
-                }
-        );
+        columnStatus.setCellValueFactory(itemData -> {
+            return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
+        });
 
 
         tableHistory.getColumns().addAll(columnIdProduct, columnProductName, columnPaymentDate, columnStatus);
-        tableHistory.getSelectionModel().selectedItemProperty().addListener(
-                (obs, antigo, novo) -> {
-                    try {
-                        controllerOrder.populateWinHistory();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
+        controllerOrder.populateWinHistory();
     }
 
     private void setBtnBackImage(Button btnBack) {
