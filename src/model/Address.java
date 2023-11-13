@@ -9,6 +9,22 @@ public class Address
     private int doorNumber;
     private String complement;
 
+	public Address(String cep, String estate, String city, String street,
+                          String neighborhood, String doorNmbr, String complement)
+	{
+		this.setCep(cep);
+		this.setEstate(estate);
+		this.setCity(city);
+		this.setStreet(street);
+		this.setNeighborhood(neighborhood);
+		this.setDoorNumber(Integer.parseInt(doorNmbr));
+		this.setComplement(complement);
+	}
+	public Address()
+	{
+		super();
+	}
+
 	public String getCep() {
 		return cep;
 	}

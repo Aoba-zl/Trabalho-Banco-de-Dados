@@ -1,24 +1,22 @@
 package control;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import factory.AddressFactory;
-import factory.ClientAddressFactory;
-import factory.UserFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Address;
 import model.Client;
 import model.ClientAddress;
+import model.Store;
 import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
-import persistence.UserDao;
 import utils.UserSession;
 
-public class CtrlAddressMenu
+public class AddressMenuController
 {
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty cep = new SimpleStringProperty();
@@ -29,18 +27,19 @@ public class CtrlAddressMenu
 	private final StringProperty complement = new SimpleStringProperty();
 
 
-	public List<String[]> getAddressList(String login)
+	public ObservableList<ClientAddress> getAddressList(String login)
 	{
-		List<String[]> allAddressStr;
-		
+		ObservableList<ClientAddress> allAddressStr = FXCollections.observableArrayList();
+
 		GenericDao genericDAO = new GenericDao();
     	ClientAddressDao cAddressDao = new ClientAddressDao(genericDAO,
     			new Client(login));
     	
     	try
     	{
-    		List<ClientAddress> allAddress = cAddressDao.list();
-    		allAddressStr = convertAddress(allAddress);
+			List<ClientAddress> list = cAddressDao.list();
+			for (ClientAddress address: list)
+				allAddressStr.add(address);
     		return allAddressStr;
     	} catch (SQLException e) {
 			e.printStackTrace();
@@ -49,21 +48,8 @@ public class CtrlAddressMenu
 		return null;
 	}
 	
-	private List<String[]> convertAddress(List<ClientAddress> allAddress)
+	public void fillClientAddressFields(ClientAddress addressCli)
 	{
-		List<String[]> allAddressStr = new ArrayList<>();
-		
-		for (ClientAddress address : allAddress)
-		{
-			String[] addressStr = address.toString().split(";");
-			allAddressStr.add(addressStr);
-		}
-		return allAddressStr;
-	}
-
-	public void fillFields(String[] address, String login)
-	{
-		ClientAddress addressCli = getAddress(address, login);
 		name.setValue(addressCli.getName());
 		cep.setValue(addressCli.getCep());
 		neighborhood.setValue(addressCli.getNeighborhood());
@@ -75,32 +61,49 @@ public class CtrlAddressMenu
 		cityEstate.setValue(city + " ("+ estate +")");
 	}
 
-	public void editAddress(String[] strAddress, String login)
+	public void fillStoreAddressFields(String login)
 	{
-		String userType = UserSession.getUserType();
-		if (userType.equals("client"))
-			editClientAddress(strAddress, login);
-    	else
-			editStoreAddress(strAddress, login);
-	}
-
-	private void editStoreAddress(String[] strAddress, String login)
-	{
-		//TODO: Continuar a implementação
 		GenericDao genericDAO = new GenericDao();
-		AddressDao addressDao = new AddressDao(genericDAO, new Client(login));
-		AddressFactory addressF = new AddressFactory();
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
+
+		try
+		{
+			Address newaddr = addrD.consult(new Address());
+			cep.setValue(newaddr.getCep());
+			street.setValue(newaddr.getStreet());
+			neighborhood.setValue(newaddr.getNeighborhood());
+			number.setValue(String.valueOf(newaddr.getDoorNumber()));
+
+			String strComp = newaddr.getComplement();
+			String strCity = newaddr.getCity();
+			String strEstate = newaddr.getEstate();
+			if (strComp == null)
+				strComp = " ";
+			complement.setValue(strComp);
+			cityEstate.setValue(strCity + " (" + strEstate + ")");
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	private void editClientAddress(String[] strAddress, String login)
+	public void editStoreAddress(String login) throws SQLException
 	{
-		AddressFactory addressF = new AddressFactory();
-		ClientAddressFactory clientAddressF = new ClientAddressFactory();
+		GenericDao genericDAO = new GenericDao();
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
 
-		ClientAddress currentAddress = getAddress(strAddress, login);
-		Address address = addressF.creat(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
+		Address currentAddress = addrD.consult(new Address());
+		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
 				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
-		ClientAddress newAddress = clientAddressF.creat(address, getNameText());
+		addrD.update(address);
+	}
+
+	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)
+	{
+		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
+				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
+		ClientAddress newAddress = new ClientAddress(address, getNameText());
 
 		GenericDao genericDAO = new GenericDao();
 		ClientAddressDao clientAddressDao = new ClientAddressDao(genericDAO, new Client(login));
@@ -108,61 +111,40 @@ public class CtrlAddressMenu
 		try
 		{
 			clientAddressDao.update(newAddress);
+			return newAddress;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
+
+		return null;
 	}
 
-	public void deleteAddress(String[] strAddress, String login)
-	{
-		String userType = UserSession.getUserType();
-		if (userType.equals("client"))
-			deleteClientAddress(strAddress, login);
-		else
-			deleteStoreAddress(strAddress, login);
-	}
-
-	public void deleteClientAddress(String[] strAddress, String login)
+	public boolean deleteClientAddress(ClientAddress address, String login)
 	{
 		GenericDao genericDAO = new GenericDao();
 		ClientAddressDao clientAddressDao = new ClientAddressDao(genericDAO, new Client(login));
 
 		try
 		{
-			ClientAddress currentAddress = getAddress(strAddress, login);
+			ClientAddress currentAddress = clientAddressDao.consult(address);
 			clientAddressDao.delete(currentAddress);
+			return true;
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
+		return false;
 	}
 
-	public void deleteStoreAddress(String[] strAddress, String login)
-	{
-	}
-
-	private ClientAddress getAddress(String[] address, String login)
+	public void deleteStoreAddress(String login) throws SQLException
 	{
 		GenericDao genericDAO = new GenericDao();
-		ClientAddressDao cAddressDao = new ClientAddressDao(genericDAO,
-				new Client(login));
-		ClientAddress addressCli = null;
-		try
-		{
-			addressCli = new ClientAddress();
-			addressCli.setCep(address[1]);
-			addressCli.setDoorNumber(Integer.parseInt(address[2]));
-			addressCli = cAddressDao.consult(addressCli);
+		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
 
-		}catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-		return addressCli;
+		addrD.delete(new Address());
 	}
 
 	public StringProperty getNameProperty() { return name; }

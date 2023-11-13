@@ -1,13 +1,10 @@
 package view;
 
 import javafx.beans.binding.Bindings;
-import utils.AddressColumnDataModel;
+import javafx.beans.property.*;
+import model.ClientAddress;
 import utils.Constants;
 import utils.UserSession;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -17,54 +14,45 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
-
-import control.CtrlAddressMenu;
+import control.AddressMenuController;
 
 public class WinAllAddressClientConstructor implements GerericAccountMenuWinInterface
 {
-	private TableView<AddressColumnDataModel> tvAddress;
+	private TableView<ClientAddress> tvAddress;
 	private Button btnDelete, btnEdit, btnNew;
     private Label lblTitle;
     private BorderPane bpButtons;
-    private String[] selectedAddress;
-    private AddressColumnDataModel selectedDataModel;
-    private ObservableList<AddressColumnDataModel> observableAddressList = FXCollections.observableArrayList();
+    private static ClientAddress selectedAddress;
+    private ObservableList<ClientAddress> observableAddressList = FXCollections.observableArrayList();
     
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final BooleanProperty editionMode = new SimpleBooleanProperty(false);
+    private StringProperty action = new SimpleStringProperty(null);
     private VBox mainBox;
-    private String action = null;
     private String userName;
     
-    private CtrlAddressMenu control = new CtrlAddressMenu();
+    private AddressMenuController control = new AddressMenuController();
 
     @Override
     public void addElements(VBox mainBox)
     {
         this.mainBox = mainBox;
         userName = UserSession.getUserName();
-        
+
+        observableAddressList = control.getAddressList(userName);
         setElements();
         mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
         setEvents();
-
-        updateAddressLst();
     }
     
     private void setEvents()
     {
     	tvAddress.setOnMouseClicked(
                 e -> {
-                    selectedDataModel = tvAddress.getSelectionModel().getSelectedItem();
-                    if (selectedDataModel != null)
-                    {
-                        String[] strSelectedData = selectedDataModel.toVetString();
-                        selectedAddress = strSelectedData;
-                        setDisableButtons(false);
-                    }
+                    selectedAddress = tvAddress.getSelectionModel().getSelectedItem();
+                    setDisableButtons(false);
                 }
         );
 
@@ -76,44 +64,46 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
                 mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
                 setDisableButtons(true);
                 tvAddress.getSelectionModel().clearSelection();
-                updateAddressLst();
             }
         });
 
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
-            System.out.println("B:" + newValue + ", " + action);
-            if (newValue && action == "delete")
+            if (newValue)
             {
-                control.deleteAddress(selectedAddress, userName);
-                openPopUp("Deletado com Sucesso");
-                setDisableButtons(true);
-                tvAddress.getSelectionModel().clearSelection();
-                updateAddressLst();
-                System.out.println("AAA");
+                if (action.getValue() == "delete")
+                {
+                    boolean deleteStatus = control.deleteClientAddress(selectedAddress, userName);
+                    if (!deleteStatus)
+                        openPopUp("Houve um erro inesperado.\nPor favor, tente novamente");
+                    else
+                    {
+                        openPopUp("Deletado com Sucesso");
+                        observableAddressList.remove(selectedAddress);
+                        setDisableButtons(true);
+                        tvAddress.getSelectionModel().clearSelection();
+                    }
+                }
+                if (action.getValue() == "edit")
+                {
+                    int i = observableAddressList.indexOf(selectedAddress);
+                    observableAddressList.set(i, selectedAddress);
+                }
             }
-            action = "";
+            action.setValue(null);
         }));
 
-        btnEdit.setOnMouseClicked(event -> openEditSelectedAddress(selectedAddress));
-        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
-        btnNew.setOnMouseClicked(event -> System.out.println("Vai pra pagina de criação de endereços"));
-    }
-
-    private void updateAddressLst()
-    {
-        List<String[]> dataBaseAddresTable = control.getAddressList(userName);
-        tvAddress.getItems().clear();
-        observableAddressList.clear();
-
-        for (String[] row : dataBaseAddresTable)
+        btnEdit.setOnMouseClicked(event ->
         {
-            String comp = row[3];
-            if (comp == null || comp.isEmpty() || comp.equals("null"))
-                comp = "  ";
-            observableAddressList.add(new AddressColumnDataModel(row[0], row[1], row[2], comp));
-        }
-        tvAddress.getItems().addAll(observableAddressList);
+            openEditSelectedAddress(selectedAddress);
+            action.setValue("edit");
+        });
+        btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
+        btnNew.setOnMouseClicked(event ->
+        {
+            action.setValue("addnew");
+            openEditSelectedAddress(selectedAddress);
+        });
     }
 
     private void deleteSelectedAddress()
@@ -122,7 +112,7 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
         String msg = "Deve haver ao menos 1 endereço!";
         if (observableAddressList.size() > 1)
         {
-            action = "delete";
+            action.setValue("delete");
             msg = "Tem certeza de que quer deleter o endereço?";
         }
         openPopUp(msg);
@@ -144,21 +134,26 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
 
         tvAddress = new TableView<>();
 
-        TableColumn<AddressColumnDataModel, String> colName = new TableColumn<>("Nome");
-        TableColumn<AddressColumnDataModel, String> colCEP = new TableColumn<>("CEP");
-        TableColumn<AddressColumnDataModel, String> colNumber = new TableColumn<>("Número");
-        TableColumn<AddressColumnDataModel, String> colComplement = new TableColumn<>("Complemento");
+        TableColumn<ClientAddress, String> colName = new TableColumn<>("Nome");
+        TableColumn<ClientAddress, String> colCEP = new TableColumn<>("CEP");
+        TableColumn<ClientAddress, String> colNumber = new TableColumn<>("Número");
+        TableColumn<ClientAddress, String> colComplement = new TableColumn<>("Complemento");
 
-        colName.setCellValueFactory(data -> data.getValue().column1Property());
-        colCEP.setCellValueFactory(data -> data.getValue().column2Property());
-        colNumber.setCellValueFactory(data -> data.getValue().column3Property());
-        colComplement.setCellValueFactory(data -> data.getValue().column4Property());
+        colName.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
+        colCEP.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCep()));
+        colNumber.setCellValueFactory(data -> new ReadOnlyStringWrapper(
+                String.valueOf(data.getValue().getDoorNumber())
+        ));
+        colComplement.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getComplement()));
+        tvAddress.getColumns().addAll(colName, colCEP, colNumber, colComplement);
 
         colName.setPrefWidth(Constants.WIDTH * 0.1);
         colCEP.setPrefWidth(Constants.WIDTH * 0.1);
         colNumber.setPrefWidth(Constants.WIDTH * 0.1);
         colComplement.setPrefWidth(Constants.WIDTH * 0.24);
         tvAddress.setPrefHeight(Constants.HEIGHT * 0.5);
+
+        tvAddress.setItems(observableAddressList);
 
         btnDelete = new Button("Excluir");
         btnDelete
@@ -177,18 +172,20 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
         bpButtons.setCenter(btnEdit);
         bpButtons.setRight(btnNew);
 
-        tvAddress.getColumns().addAll(colName, colCEP, colNumber, colComplement);
     }
     
-    private void openEditSelectedAddress(String[] address)
+    private void openEditSelectedAddress(ClientAddress address)
     {
         editionMode.setValue(true);
         mainBox.getChildren().clear();
+
         WinAddressClientConstructor win = new WinAddressClientConstructor(mainBox, address);
-        Bindings.bindBidirectional(editionMode, win.getEditionMode());
+
+        Bindings.bindBidirectional(action, win.actionProperty());
+        Bindings.bindBidirectional(editionMode, win.editionModeProperty());
         Bindings.bindBidirectional(messageMenuPopUp, win.getMessageMenuPopUp());
-        Bindings.bindBidirectional(isMenuPopupActive, win.getIsMenuPopupActive());
-        Bindings.bindBidirectional(returnPopUp, win.getReturnPopUp());
+        Bindings.bindBidirectional(isMenuPopupActive, win.isMenuPopupActiveProperty());
+        Bindings.bindBidirectional(returnPopUp, win.returnPopUpProperty());
     }
 
     StringProperty getMessageMenuPopUp()

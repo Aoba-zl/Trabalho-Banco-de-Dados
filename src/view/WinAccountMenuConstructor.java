@@ -97,9 +97,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             addressPage = "storeAddress";
 
         } else {
-            //TODO: coloquei endereço só pra teste
-//        	openWinClientMenu();
-            openWinAddressClientMenu();
+        	openWinClientMenu();
             dataPage = "clientAccountData";
             addressPage = "clientAllAddress";
         }
@@ -240,7 +238,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             win = (WinAccountClientConstructor) subWindowns.get(key);
         else
         {
-            win = new WinAccountClientConstructor();
+            win = new WinAccountClientConstructor(pWin);
             subWindowns.put(key, win);
         }
 
@@ -277,7 +275,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             win = (WinAccountStoreConstructor) subWindowns.get(key);
         else
         {
-            win = new WinAccountStoreConstructor();
+            win = new WinAccountStoreConstructor(pWin);
             subWindowns.put(key, win);
         }
 

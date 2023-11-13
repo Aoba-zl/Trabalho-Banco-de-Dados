@@ -8,6 +8,20 @@ não pode usar "USE" ou "GO" nas procedures T^T
 
 -- Execurar Procedures (stored procedure)
 EXEC ResetarDadosCliente
+EXEC ResetarDadosLoja
+
+SELECT * FROM address
+
+SELECT u.user_name, u.email, u.telephone, c.sex, c.social_name,
+       a.address_name, a.cep, a.number, a.complement
+FROM user_tbl u, client c, address a
+WHERE u.user_name = c.user_name
+    AND u.user_name = a.user_name
+
+SELECT u.user_name, store_name, a.*
+FROM user_tbl u, store s, store_address a
+WHERE u.user_name = s.user_name
+    AND a.user_name = u.user_name
 
 -- Remoção das Procedures
 DROP PROCEDURE ResetarDadosCliente
@@ -49,4 +63,23 @@ BEGIN
     SELECT * FROM address
 END
 
+CREATE PROCEDURE ResetarDadosLoja
+AS
+BEGIN
+    DELETE store_address WHERE user_name = 'l'
+    DELETE store WHERE user_name = 'l'
+    DELETE user_tbl WHERE user_name = 'l'
 
+
+    INSERT INTO user_tbl
+    VALUES ('l', 'l', '11941318918', 'francisco@outlook.com', 'store');
+    INSERT INTO store
+    VALUES ('l', 'Loja', '12349876000159')
+    INSERT INTO store_address
+    VALUES ('l', '08059905', 'SP', 'guarulhos', 'larangeira', 'alberto funalo', '503625', 'Faz o L!')
+
+    SELECT u.user_name, store_name, a.*
+    FROM user_tbl u, store s, store_address a
+    WHERE u.user_name = s.user_name
+        AND a.user_name = u.user_name
+END
