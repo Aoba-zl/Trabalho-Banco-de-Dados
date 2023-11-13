@@ -9,6 +9,7 @@ public class Order {
     private List<Item> items;
     private Currency total;
     private Payment payment;
+    private Integer id;
 
     public List<Item> getItems() {
         return items;
@@ -34,4 +35,11 @@ public class Order {
         this.payment = payment;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

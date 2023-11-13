@@ -23,12 +23,19 @@ public class PurchaseHistoryDao {
         String sql= "select prod.id_product,\n" +
                 "       prod.name_product,\n" +
                 "       pay.date_pay as Data_de_entrega,\n" +
-                "       case when (getdate() + 1 = pay.date_pay)\n" +
+                "       case when (getdate() + 5 = pay.date_pay)\n" +
+                "           then\n" +
+                "                'Preparando'\n" +
+                "           when (getdate() + 1 = pay.date_pay)\n" +
                 "           then\n" +
                 "                'Chega amanhã'\n" +
+                "           when (getdate() = pay.date_pay)\n" +
+                "           then\n" +
+                "                'Finalizado'\n" +
                 "           else\n" +
                 "                'A caminho'\n" +
-                "           end as status\n" +
+                "           end as status,\n" +
+                "       order_tb.id_order\n" +
                 "from payment pay, product prod, order_product order_prod, order_tbl order_tb,\n" +
                 "     client cli\n" +
                 "where prod.id_product = order_prod.id_product\n" +
@@ -55,6 +62,7 @@ public class PurchaseHistoryDao {
             payment.setDate(rs.getDate(3).toLocalDate());
             payment.setStatus(rs.getString(4));
 
+            order.setId(rs.getInt(5));
             order.setItems(itemList);
             order.setPayment(payment);
 
@@ -67,5 +75,81 @@ public class PurchaseHistoryDao {
         return history;
     }
 
-//    public
+    public Order returnStatusProduct(Integer idOrder, Integer idProduct) throws SQLException {
+        Order order= new Order();
+        Connection connection= genericDao.getConnection();
+        String sql= "select prod.name_product,\n" +
+                "       prod.unity_price,\n" +
+                "       prod.shipping,\n" +
+                "       order_prod.quantity,\n" +
+                "       prod.shipping + prod.unity_price as Valor_Total_Produto,\n" +
+                "       case when (p.id_order = pay.id_order)\n" +
+                "                then\n" +
+                "                'Pix'\n" +
+                "            else\n" +
+                "                'Boleto'\n" +
+                "           end as Metodo_Pagamento,\n" +
+                "       pay.status as status\n" +
+                "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
+                "     inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order\n" +
+                "     inner join payment pay on pay.id_order = order_tb.id_order,\n" +
+                "     payment pay2 inner join pix p on p.id_order = pay2.id_order,\n" +
+                "     payment pay3 inner join payment_slip pay_slip on pay_slip.id_order = pay3.id_order\n" +
+                "where pay.id_order= ? and prod.id_product= ?";
+        PreparedStatement ps= connection.prepareStatement(sql);
+        ps.setInt(1, idOrder);
+        ps.setInt(2, idProduct);
+        ResultSet rs= ps.executeQuery();
+
+        Product product= new Product();
+        product.setName(rs.getString(1));
+        product.setPrice(rs.getDouble(2));
+        product.setShipping(rs.getDouble(3));
+
+        Item item= new Item();
+        item.setProduct(product);
+        item.setQuantity(rs.getInt(4));
+        item.setSubTotal(rs.getDouble(5));
+        List<Item> items= new ArrayList<>();
+        items.add(item);
+
+        Payment payment= new Payment();
+        payment.setPaymentMethod(rs.getString(6));
+        payment.setStatus(rs.getString(7));
+
+        order.setPayment(payment);
+        order.setItems(items);
+
+        connection.close();
+        rs.close();
+        ps.close();
+
+
+        return order;
+    }
+
+    public Store returnNameStore(Integer idOrder, Integer idProduct) throws SQLException {
+        Order order= new Order();
+        Connection connection= genericDao.getConnection();
+        String sql= "select prod.user_name as store_name\n" +
+                "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
+                "                  inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order\n" +
+                "                  inner join payment pay on pay.id_order = order_tb.id_order,\n" +
+                "     payment pay2 inner join pix p on p.id_order = pay2.id_order,\n" +
+                "     payment pay3 inner join payment_slip pay_slip on pay_slip.id_order = pay3.id_order\n" +
+                "where pay.id_order= ? and prod.id_product= ?";
+        PreparedStatement ps= connection.prepareStatement(sql);
+        ps.setInt(1, idOrder);
+        ps.setInt(2, idProduct);
+        ResultSet rs= ps.executeQuery();
+
+        Store store= new Store();
+        store.setNameStore(rs.getString(1));
+
+        connection.close();
+        ps.close();
+        rs.close();
+
+        return store;
+    }
 }

@@ -10,6 +10,7 @@ public class Payment
 	private LocalDate date;
     private Currency totalPay;
     private String status;
+    private String paymentMethod;
 
     DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -41,4 +42,13 @@ public class Payment
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
 }
