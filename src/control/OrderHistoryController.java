@@ -3,13 +3,15 @@ package control;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.cell.TextFieldTableCell;
 import model.*;
 import persistence.GenericDao;
 import persistence.PurchaseHistoryDao;
+import view.WinPurchaseHistoryConstructor;
 
-import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     private StringProperty status= new SimpleStringProperty("");
     private StringProperty search= new SimpleStringProperty("");
 
-    public void populateWinHistory() throws SQLException {
+    public ObservableList populateWinHistory() throws SQLException {
         Client client= new Client();
         client.setLogin("teste1");
         GenericDao genericDao= new GenericDao();
@@ -42,7 +44,9 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
                 listHistory.add(order);
             }
         }
+        return listHistory;
     }
+
 
 
 

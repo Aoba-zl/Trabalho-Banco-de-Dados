@@ -4,7 +4,9 @@ import control.OrderHistoryController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,16 +28,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class WinPurchaseHistoryConstructor {
-    private Button btnSearch= new Button("🔍");
     private Button btnSeePurchase= new Button("Ver Compra");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Compra");
 
     OrderHistoryController controllerOrder= new OrderHistoryController();
     private TableView<Order> tableHistory= new TableView<>();
+    private ObservableList<Order> listHistory= FXCollections.observableArrayList();
+
+    private FilteredList<Order> filteredList;
+
 
     // TODO fazer o metodo bindings
 
@@ -65,10 +71,8 @@ public class WinPurchaseHistoryConstructor {
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
         btnSeePurchase.setMinSize(100, 30);
-        btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
-        btnSearch.relocate(510, 50);
         btnSeePurchase.relocate(480, 350);
         setBtnBackImage(btnReturn);
         String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
@@ -79,8 +83,9 @@ public class WinPurchaseHistoryConstructor {
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
 
-        tfSearch.setMinSize(380, 30);
+        tfSearch.setMinSize(400, 30);
         tfSearch.relocate(115, 50);
+        tfSearch.setPromptText("Pesquisar Produto");
 
         lblTitle.setMinSize(150, 25);
         lblTitle.relocate(220, 10);
@@ -100,14 +105,25 @@ public class WinPurchaseHistoryConstructor {
             pane.getChildren().add(subWindowStatus());
         });
 
+        tfSearch.textProperty().addListener((obs, oldValue, newValue) -> {
+            filteredList.setPredicate(order -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true; // Mostra todos os pedidos se o texto estiver vazio
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return order.getItems().stream()
+                        .anyMatch(item -> item.getProduct().getName().toLowerCase().contains(lowerCaseFilter));
+            });
+
+        });
 
         // ----------------------------------------------------
 
-
         bindings();
         populateTable();
-        tableHistory.setItems(controllerOrder.getListHistory());
-        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase,btnSearch, tfSearch,lblTitle, tableHistory);
+        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase, tfSearch,lblTitle, tableHistory);
 
     }
 
@@ -246,7 +262,10 @@ public class WinPurchaseHistoryConstructor {
 
 
         tableHistory.getColumns().addAll(columnIdProduct, columnProductName, columnPaymentDate, columnStatus);
-        controllerOrder.populateWinHistory();
+        listHistory= controllerOrder.populateWinHistory();
+        filteredList= new FilteredList<>(listHistory, p -> true);
+        tableHistory.setItems(filteredList);
+
     }
 
     private void setBtnBackImage(Button btnBack) {
