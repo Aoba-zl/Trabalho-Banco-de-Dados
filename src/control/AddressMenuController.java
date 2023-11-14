@@ -147,6 +147,22 @@ public class AddressMenuController
 		addrD.delete(new Address());
 	}
 
+	public ClientAddress newClientAddress(String login) throws SQLException
+	{
+		GenericDao genericDAO = new GenericDao();
+		ClientAddressDao addrD = new ClientAddressDao(genericDAO, new Client(login));
+
+		String city = getCityEstateText().substring(0, getCityEstateText().indexOf('('));
+		String estate = getCityEstateText().substring(getCityEstateText().indexOf('(')+1,
+				getCityEstateText().indexOf(')'));
+		Address address = new Address(getCepText(), estate, city, getStreetText(), getNeighborhoodText(),
+				getNumberText(), getComplementText());
+		ClientAddress clientAddress = new ClientAddress(address, getNameText());
+
+		addrD.insert(clientAddress);
+		return clientAddress;
+	}
+
 	public StringProperty getNameProperty() { return name; }
 	public StringProperty getCepProperty() { return cep; }
 	public StringProperty getCityEstateProperty() { return cityEstate; }

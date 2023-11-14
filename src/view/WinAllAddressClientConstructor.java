@@ -18,38 +18,52 @@ import control.AddressMenuController;
 
 public class WinAllAddressClientConstructor implements GerericAccountMenuWinInterface
 {
-	private TableView<ClientAddress> tvAddress;
-	private Button btnDelete, btnEdit, btnNew;
+    private TableView<ClientAddress> tvAddress;
+    private Button btnDelete, btnEdit, btnNew;
     private Label lblTitle;
     private BorderPane bpButtons;
     private static ClientAddress selectedAddress;
     private ObservableList<ClientAddress> observableAddressList = FXCollections.observableArrayList();
-    
+
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final BooleanProperty editionMode = new SimpleBooleanProperty(false);
-    private StringProperty action = new SimpleStringProperty(null);
+    private final StringProperty action = new SimpleStringProperty(null);
     private VBox mainBox;
     private String userName;
-    
-    private AddressMenuController control = new AddressMenuController();
+
+    private final AddressMenuController control = new AddressMenuController();
+
+    private WinAddressClientConstructor winAddress;
 
     @Override
     public void addElements(VBox mainBox)
     {
         this.mainBox = mainBox;
+        winAddress = new WinAddressClientConstructor(mainBox);
         userName = UserSession.getUserName();
+
+        bindings();
 
         observableAddressList = control.getAddressList(userName);
         setElements();
         mainBox.getChildren().addAll(lblTitle, tvAddress, bpButtons);
         setEvents();
     }
-    
+
+    private void bindings()
+    {
+        Bindings.bindBidirectional(action, winAddress.actionProperty());
+        Bindings.bindBidirectional(editionMode, winAddress.editionModeProperty());
+        Bindings.bindBidirectional(messageMenuPopUp, winAddress.getMessageMenuPopUp());
+        Bindings.bindBidirectional(isMenuPopupActive, winAddress.isMenuPopupActiveProperty());
+        Bindings.bindBidirectional(returnPopUp, winAddress.returnPopUpProperty());
+    }
+
     private void setEvents()
     {
-    	tvAddress.setOnMouseClicked(
+        tvAddress.setOnMouseClicked(
                 e -> {
                     selectedAddress = tvAddress.getSelectionModel().getSelectedItem();
                     setDisableButtons(false);
@@ -89,20 +103,24 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
                     int i = observableAddressList.indexOf(selectedAddress);
                     observableAddressList.set(i, selectedAddress);
                 }
+                if (action.getValue() == "add")
+                {
+                    observableAddressList.add(selectedAddress);
+                }
             }
-            action.setValue(null);
+            if (!editionMode.getValue())
+                action.setValue(null);
         }));
 
         btnEdit.setOnMouseClicked(event ->
         {
-            openEditSelectedAddress(selectedAddress);
-            action.setValue("edit");
+            openEditSelectedAddress(selectedAddress, "edit");
         });
         btnDelete.setOnMouseClicked(event -> deleteSelectedAddress());
         btnNew.setOnMouseClicked(event ->
         {
-            action.setValue("addnew");
-            openEditSelectedAddress(selectedAddress);
+            selectedAddress = new ClientAddress();
+            openEditSelectedAddress(selectedAddress, "add");
         });
     }
 
@@ -173,19 +191,14 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
         bpButtons.setRight(btnNew);
 
     }
-    
-    private void openEditSelectedAddress(ClientAddress address)
+
+    private void openEditSelectedAddress(ClientAddress address, String actionType)
     {
         editionMode.setValue(true);
         mainBox.getChildren().clear();
 
-        WinAddressClientConstructor win = new WinAddressClientConstructor(mainBox, address);
-
-        Bindings.bindBidirectional(action, win.actionProperty());
-        Bindings.bindBidirectional(editionMode, win.editionModeProperty());
-        Bindings.bindBidirectional(messageMenuPopUp, win.getMessageMenuPopUp());
-        Bindings.bindBidirectional(isMenuPopupActive, win.isMenuPopupActiveProperty());
-        Bindings.bindBidirectional(returnPopUp, win.returnPopUpProperty());
+        action.setValue(actionType);
+        winAddress.addElements(address);
     }
 
     StringProperty getMessageMenuPopUp()
