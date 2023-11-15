@@ -20,12 +20,11 @@ public class ProductDao
 		this.gDao = gDao;
 	}
 
-	public int insert(Product p) throws SQLException //
+	public boolean insert(Product p) throws SQLException //
 	{
-		int id = -1; //Retorna -1 para caso tenha dado erro na inserção.
 		Connection c = gDao.getConnection();
 		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, COALESCE(NULLIF(?,''), 'Sem categoria'), ?);";
-		PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); //Statement.RETURN_GENERATED_KEYS é necessário para pegar a PK
+		PreparedStatement ps = c.prepareStatement(sql); //Statement.RETURN_GENERATED_KEYS pode ser utilizado para caso queira pegar a PK que é gerado de forma automatica
 		ps.setString(1, UserSession.getUserName());
 		ps.setString(2, p.getName());
 		ps.setDouble(3, p.getPrice());
@@ -36,32 +35,22 @@ public class ProductDao
 		
 		int linha = ps.executeUpdate();
 		
-		if(linha > 0)
-		{
-			ResultSet rs = ps.getGeneratedKeys(); //Obtém a PK do produto
-			if(rs.next())
-			{
-				id = rs.getInt(1);						
-			}
-			
-			rs.close();
-		}
+		
 		
 		ps.close();
 		c.close();
 		
-		return id;
+		return linha > 0;
 	}
 
-	public int update(Product p) throws SQLException 
+	public boolean update(Product p) throws SQLException 
 	{
-		int id = -1;
 		
 		//
 		//TODO Codigo para update
 		//
 		
-		return id;
+		return true;
 	}
 
 	public boolean delete(Product p) throws SQLException 
