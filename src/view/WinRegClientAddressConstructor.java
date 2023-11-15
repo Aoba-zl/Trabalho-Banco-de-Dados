@@ -97,6 +97,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		
 		//ChangeScene
 		btnBack.setOnAction(e -> toClientInfo());
+		
 		btnNext.setOnAction(e -> toLogin());
 		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);

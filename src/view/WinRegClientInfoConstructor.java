@@ -119,7 +119,7 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		
 		//ChangeScene
 		btnBack.setOnAction(e -> toLogin());
-		btnNext.setOnAction(e -> toClientAddress());
+		btnNext.setOnAction(e -> toClientAddress(tfName, tfCPF, tfEmail, tfPasswd, tfSocialName, tfPhone, tfBirthDate, tfSex, rbMale, rbFem, rbOther,lblWarning));
 		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
 		
@@ -145,8 +145,9 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	
-	private void toClientAddress()
+	private void toClientAddress(TextField tfName,TextField tfCPF,TextField tfEmail,TextField tfPasswd,TextField tfSocialName,TextField tfPhone,TextField tfBirthDate,TextField tfSex, RadioButton rbMale, RadioButton rbFem, RadioButton rbOther, Label lblWarning)
 	{
+		
 		ChangeSceneController.changeScene(SceneName.REG_CLIENT_ADDRESS, this.pWin);
 	}
 }
