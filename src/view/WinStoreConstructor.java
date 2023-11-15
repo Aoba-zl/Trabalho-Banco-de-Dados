@@ -92,7 +92,7 @@ public class WinStoreConstructor implements GenericWindownInterface
 					Product p = listProduct.get(countProduct);
 					Label lblNameProduct = new Label(p.getName());
 					Label lblDescProduct = new Label(p.getDescription());
-					Label lblQuantityProduct = new Label("Quantidade:");
+					Label lblQuantityProduct = new Label("Quantidade: " + String.valueOf(p.getTotalStock()));
 					Label lblPriceProduct = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ","));
 					lblDescProduct.setPrefHeight(35);
 					lblDescProduct.setWrapText(true);
