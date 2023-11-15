@@ -46,11 +46,33 @@ public class ProductDao
 	public boolean update(Product p) throws SQLException 
 	{
 		
-		//
-		//TODO Codigo para update
-		//
+		Connection c = gDao.getConnection();
+		String sql = "UPDATE product "
+				   + "SET "
+				   + "name_product = ?, "
+				   + "unity_price = ?, "
+				   + "total_stock = ?, "
+				   + "shipping = ?, "
+				   + "category = COALESCE(NULLIF(?,''), 'Sem categoria'), "
+				   + "description = ? "
+				   + "WHERE id_product = ?";
+		PreparedStatement ps = c.prepareStatement(sql); //Statement.RETURN_GENERATED_KEYS pode ser utilizado para caso queira pegar a PK que é gerado de forma automatica
+		ps.setString(1, p.getName());
+		ps.setDouble(2, p.getPrice());
+		ps.setInt(3, p.getTotalStock());
+		ps.setDouble(4, p.getShipping());
+		ps.setString(5, p.getCategory());
+		ps.setString(6, p.getDescription());
+//		ps.setInt(7, p.getCod());
+		ps.setInt(7, 7);
 		
-		return true;
+		int linha = ps.executeUpdate();
+		
+		ps.close();
+		c.close();
+		
+		return linha > 0;
+		
 	}
 
 	public boolean delete(Product p) throws SQLException 
@@ -102,7 +124,7 @@ public class ProductDao
 	{
 		List<Product> products = new ArrayList<Product>();
 		Connection c = gDao.getConnection();
-		String sql = "SELECT id_product, name_product, unity_price, description FROM product WHERE user_name = ?;";
+		String sql = "SELECT id_product, name_product, unity_price, total_stock, description FROM product WHERE user_name = ?;";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, UserSession.getUserName());
 		ResultSet rs = ps.executeQuery();
@@ -112,7 +134,8 @@ public class ProductDao
 			p.setCod(rs.getInt(1));
 			p.setName(rs.getString(2));
 			p.setPrice(rs.getDouble(3));
-			p.setDescription(rs.getString(4));
+			p.setTotalStock(rs.getInt(4));
+			p.setDescription(rs.getString(5));
 			
 			products.add(p);
 		}

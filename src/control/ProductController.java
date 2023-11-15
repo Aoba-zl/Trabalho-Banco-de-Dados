@@ -40,24 +40,46 @@ public class ProductController
 	
 	public boolean insert() throws SQLException
 	{
-		
-		GenericDao gDao = new GenericDao();
-		ProductDao pDao = new ProductDao(gDao);
-		
 		if(checkValues())
 		{
 			return false;
 		}
 		
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
 		Product p = new Product();
 		p.setName(tfName.getText());
 		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
 		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
-		p.setShipping(Double.parseDouble(tfInStock.getText().replace(",", ".")));
+		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
 		p.setCategory(tfCategory.getText());
 		p.setDescription(taDescription.getText());
 		
 		return pDao.insert(p);
+	}
+	
+	public boolean update() throws SQLException
+	{
+		if(checkValues())
+		{
+			return false;
+		}
+		
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
+		Product p = new Product();
+		p.setName(tfName.getText());
+		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
+		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
+		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
+		p.setCategory(tfCategory.getText());
+		p.setDescription(taDescription.getText());
+		//TODO falta setCod ainda
+		
+		
+		return pDao.update(p);
 	}
 	
 	public List<Product> listProduct() throws SQLException
