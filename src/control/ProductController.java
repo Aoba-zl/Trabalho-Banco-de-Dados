@@ -20,7 +20,6 @@ public class ProductController
 	private TextField tfShipping;
 	private TextField tfCategory;
 	private TextArea taDescription;
-	private TextField tfCod;
 	private Label lblMessage;
 	
 	public ProductController()
@@ -28,7 +27,7 @@ public class ProductController
 		
 	}
 	
-	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage) 
+	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage) 
 	{
 		this.tfName = tfName;
 		this.tfPrice = tfPrice;
@@ -37,7 +36,6 @@ public class ProductController
 		this.tfCategory = tfCategory;
 		this.taDescription = taDescription;
 		this.lblMessage = lblMessage;
-		this.tfCod = tfCod;
 	}
 	
 	public boolean insert() throws SQLException
@@ -59,14 +57,7 @@ public class ProductController
 		p.setCategory(tfCategory.getText());
 		p.setDescription(taDescription.getText());
 		
-		int id = pDao.insert(p);
-		
-		if(id != -1)
-		{
-			tfCod.setText(String.valueOf(id));
-			return true;
-		}
-		return false;
+		return pDao.insert(p);
 	}
 	
 	public List<Product> listProduct() throws SQLException
