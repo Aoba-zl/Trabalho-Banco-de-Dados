@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
@@ -23,11 +24,14 @@ import model.Order;
 import model.Product;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 
@@ -58,7 +62,7 @@ public class WinPurchaseHistoryConstructor {
         Bindings.bindBidirectional(tfSearch.textProperty(), controllerOrder.searchProperty());
         Bindings.bindBidirectional(tfProductName.textProperty(), controllerOrder.nameProductProperty());
         Bindings.bindBidirectional(tfShop.textProperty(), controllerOrder.nameStoreProperty());
-        Bindings.bindBidirectional(tfProductPrice.textProperty(), controllerOrder.priceProductProperty(), new NumberStringConverter());
+        Bindings.bindBidirectional(tfProductPrice.textProperty(), controllerOrder.priceProductProperty());
         Bindings.bindBidirectional(tfPortage.textProperty(), controllerOrder.portageProperty());
         Bindings.bindBidirectional(tfQuantity.textProperty(), controllerOrder.quantityProperty(), new NumberStringConverter());
         Bindings.bindBidirectional(tfTotalValue.textProperty(), controllerOrder.totalValueProperty());
@@ -82,6 +86,7 @@ public class WinPurchaseHistoryConstructor {
         setOverButtonStyle(btnReturn, styleEnter, styleExit);
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
+        btnSeePurchase.setDisable(true);
 
         tfSearch.setMinSize(400, 30);
         tfSearch.relocate(115, 50);
@@ -117,6 +122,31 @@ public class WinPurchaseHistoryConstructor {
                         .anyMatch(item -> item.getProduct().getName().toLowerCase().contains(lowerCaseFilter));
             });
 
+        });
+
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            if (!tableHistory.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
+                tableHistory.getSelectionModel().clearSelection();
+            }
+        });
+
+
+        tableHistory.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection == null) {
+                btnSeePurchase.setDisable(true);
+
+
+            } else {
+                Order selectedProduct = tableHistory.getSelectionModel().getSelectedItem();
+                btnSeePurchase.setDisable(false);
+
+                try {
+                    controllerOrder.populateWinStatus(selectedProduct);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
         });
 
         // ----------------------------------------------------
@@ -165,7 +195,8 @@ public class WinPurchaseHistoryConstructor {
         tfTotalValue.setEditable(false);
         tfMethodPayment.setEditable(false);
         tfStatus.setEditable(false);
-        tfQuantity.setMaxWidth(35);
+        tfQuantity.setMaxWidth(30);
+        tfQuantity.setStyle("-fx-alignment: CENTER");
 
 
         Button btnReturnPurchaseStatus= new Button("Voltar");
@@ -267,6 +298,7 @@ public class WinPurchaseHistoryConstructor {
         tableHistory.setItems(filteredList);
 
     }
+
 
     private void setBtnBackImage(Button btnBack) {
         Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());

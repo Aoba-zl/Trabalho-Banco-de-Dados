@@ -11,6 +11,8 @@ import persistence.PurchaseHistoryDao;
 import view.WinPurchaseHistoryConstructor;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,11 +23,11 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     private StringProperty nameProduct= new SimpleStringProperty("");
     private StringProperty nameStore= new SimpleStringProperty("");
     private IntegerProperty quantity= new SimpleIntegerProperty(0);
-    private DoubleProperty priceProduct= new SimpleDoubleProperty(0);
+    private StringProperty priceProduct= new SimpleStringProperty("00.00");
     private StringProperty methodPayment= new SimpleStringProperty("");
-    private ObjectProperty<Date> dateDelivery= new SimpleObjectProperty<>();
-    private StringProperty totalValue= new SimpleStringProperty("");
-    private StringProperty portage = new SimpleStringProperty("");
+    private ObjectProperty<LocalDate> dateDelivery= new SimpleObjectProperty<>();
+    private StringProperty totalValue= new SimpleStringProperty("00.00");
+    private StringProperty portage = new SimpleStringProperty("00.00");
     private StringProperty status= new SimpleStringProperty("");
     private StringProperty search= new SimpleStringProperty("");
 
@@ -45,6 +47,39 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
             }
         }
         return listHistory;
+    }
+
+    public void populateWinStatus(Order order) throws SQLException {
+        List<Item> itemList= order.getItems();
+        Item item= itemList.get(0);
+
+        Integer idOrder= order.getId();
+        Integer idProduct= item.getProduct().getCod();
+        GenericDao genericDao= new GenericDao();
+        PurchaseHistoryDao purchaseHistoryDao= new PurchaseHistoryDao(genericDao);
+        order= purchaseHistoryDao.returnStatusProduct(idOrder, idProduct);
+        Store store= purchaseHistoryDao.returnNameStore(idOrder, idProduct);
+
+        itemList= order.getItems();
+        item= itemList.get(0);
+
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+
+        nameProduct.set(item.getProduct().getName());
+        nameStore.set(store.getNameStore());
+        quantity.set(item.getQuantity());
+        String formatedValue= decimalFormat.format(item.getProduct().getPrice());
+        priceProduct.set("R$ " +formatedValue);
+        methodPayment.set(order.getPayment().getPaymentMethod());
+        dateDelivery.set(order.getPayment().getDate());
+        formatedValue= decimalFormat.format(item.getSubTotal());
+        totalValue.set("R$ " +formatedValue);
+        status.set(order.getPayment().getStatus());
+        formatedValue= decimalFormat.format(item.getProduct().getShipping());
+        portage.set("R$ " + formatedValue);
+
+
+
     }
 
 
@@ -67,7 +102,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
         return quantity;
     }
 
-    public DoubleProperty priceProductProperty() {
+    public StringProperty priceProductProperty() {
         return priceProduct;
     }
 
@@ -75,7 +110,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
         return methodPayment;
     }
 
-    public ObjectProperty<Date> dateDeliveryProperty() {
+    public ObjectProperty<LocalDate> dateDeliveryProperty() {
         return dateDelivery;
     }
 

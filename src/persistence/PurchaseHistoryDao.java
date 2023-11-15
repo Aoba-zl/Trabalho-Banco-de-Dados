@@ -101,24 +101,27 @@ public class PurchaseHistoryDao {
         ps.setInt(2, idProduct);
         ResultSet rs= ps.executeQuery();
 
-        Product product= new Product();
-        product.setName(rs.getString(1));
-        product.setPrice(rs.getDouble(2));
-        product.setShipping(rs.getDouble(3));
+        while (rs.next()){
 
-        Item item= new Item();
-        item.setProduct(product);
-        item.setQuantity(rs.getInt(4));
-        item.setSubTotal(rs.getDouble(5));
-        List<Item> items= new ArrayList<>();
-        items.add(item);
+            Product product= new Product();
+            product.setName(rs.getString(1));
+            product.setPrice(rs.getDouble(2));
+            product.setShipping(rs.getDouble(3));
 
-        Payment payment= new Payment();
-        payment.setPaymentMethod(rs.getString(6));
-        payment.setStatus(rs.getString(7));
+            Item item= new Item();
+            item.setProduct(product);
+            item.setQuantity(rs.getInt(4));
+            item.setSubTotal(rs.getDouble(5));
+            List<Item> items= new ArrayList<>();
+            items.add(item);
 
-        order.setPayment(payment);
-        order.setItems(items);
+            Payment payment= new Payment();
+            payment.setPaymentMethod(rs.getString(6));
+            payment.setStatus(rs.getString(7));
+
+            order.setPayment(payment);
+            order.setItems(items);
+        }
 
         connection.close();
         rs.close();
@@ -129,7 +132,7 @@ public class PurchaseHistoryDao {
     }
 
     public Store returnNameStore(Integer idOrder, Integer idProduct) throws SQLException {
-        Order order= new Order();
+        Store store= new Store();
         Connection connection= genericDao.getConnection();
         String sql= "select prod.user_name as store_name\n" +
                 "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
@@ -143,8 +146,10 @@ public class PurchaseHistoryDao {
         ps.setInt(2, idProduct);
         ResultSet rs= ps.executeQuery();
 
-        Store store= new Store();
-        store.setNameStore(rs.getString(1));
+        while (rs.next()){
+            store.setNameStore(rs.getString(1));
+        }
+
 
         connection.close();
         ps.close();
