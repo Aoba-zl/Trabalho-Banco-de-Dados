@@ -135,7 +135,7 @@ public class WinRegProductConstructor implements GenericWindownInterface
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
 		//TODO quando der insert, deve retornar ao store
-		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage, pane));
+		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage));
 		
 		//------------mudança de scene---------------
 		imgViewGoBack.setOnMouseClicked(e -> toStore());
@@ -161,7 +161,7 @@ public class WinRegProductConstructor implements GenericWindownInterface
 		ChangeSceneController.changeScene(SceneName.STORE, pWin);
 	}
 	
-	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage, Pane pane)
+	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
 	{
 		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, lblMessage);
 		
@@ -188,7 +188,7 @@ public class WinRegProductConstructor implements GenericWindownInterface
 				pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
 				pTransp.getChildren().add(vbRegister);
 				
-				pane.getChildren().add(pTransp);
+				pWin.getChildren().add(pTransp);
 				
 				btnConfirmed.setOnAction(e -> toStore());
 			}

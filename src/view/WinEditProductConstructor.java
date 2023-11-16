@@ -131,7 +131,7 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
-		btnConf.setOnAction(e -> updateProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage, pane));
+		btnConf.setOnAction(e -> updateProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage));
 		
 		//------------mudança de scene---------------
 		lblAccount.setOnMouseClicked(e -> toAccount());
@@ -158,7 +158,7 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
-	private void updateProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage, Pane pane)
+	private void updateProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
 	{
 		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, lblMessage);
 		
@@ -185,7 +185,7 @@ public class WinEditProductConstructor implements GenericWindownInterface
 				pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
 				pTransp.getChildren().add(vbRegister);
 				
-				pane.getChildren().add(pTransp);
+				pWin.getChildren().add(pTransp);
 				
 				btnConfirmed.setOnAction(e -> toProductStore());
 			}
