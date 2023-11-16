@@ -1,26 +1,45 @@
 package view;
 
+import control.OrderHistoryController;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import model.Item;
+import model.Order;
+import model.Product;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 public class WinOrderHistoryConstructor {
-    private Button btnSearch= new Button("\uD83D\uDD0D");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Pedidos");
 
+    private TableView<Order> tableOrderHistory= new TableView<>();
 
-    public void addElements(Pane pane) throws Exception {
+    private ObservableList<Order> listOrder= FXCollections.observableArrayList();
+
+    private FilteredList<Order> filteredList; //Filtra os dados da tabela
+
+    OrderHistoryController controllerOrder= new OrderHistoryController();
+
+    // TODO fazer os Propertys
+
+    public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
-        btnSearch.setMinSize(30, 30);
         btnQuit.relocate(530, 0);
         btnAccount.relocate(580, 0);
-        btnSearch.relocate(520, 50);
         setBtnBackImage(btnReturn);
         String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
                 "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
@@ -30,30 +49,91 @@ public class WinOrderHistoryConstructor {
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
 
-        tfSearch.setMinSize(380, 30);
+        tfSearch.setMinSize(400, 30);
         tfSearch.relocate(115, 50);
+        tfSearch.setPromptText("Pesquisar Pedido");
 
         lblTitle.setMinSize(150, 25);
         lblTitle.relocate(210, 10);
         lblTitle.setFont(Font.font(20));
 
-        TableView tbOrderHistory = new TableView<>(); // colocar o objeto depois
-        TableColumn columnId= new TableColumn<>("ID");
-        TableColumn columnName= new TableColumn("Nome");
-        TableColumn columnPurchaseDate= new TableColumn("Data da Compra");
-        TableColumn columnStatus= new TableColumn("Status");
-        columnId.setMinWidth(60);
-        columnName.setMinWidth(200);
-        columnPurchaseDate.setMinWidth(160);
-        columnStatus.setMinWidth(140);
-        tbOrderHistory.setMinWidth(550);
-        tbOrderHistory.setMaxHeight(250);
-        tbOrderHistory.relocate(30, 90);
-        tbOrderHistory.getColumns().addAll(columnId,columnName,columnPurchaseDate,columnStatus);
+        tableOrderHistory.setMinWidth(550);
+        tableOrderHistory.setMaxWidth(550);
+        tableOrderHistory.setMaxHeight(250);
+        tableOrderHistory.relocate(45, 90);
+
+        //Events --------------------------------------------
+
+        tfSearch.textProperty().addListener((obs, oldValue, newValue) -> {
+            filteredList.setPredicate(order -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true; // Mostra todos os pedidos se o texto estiver vazio
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return order.getItems().stream()
+                        .anyMatch(item -> item.getProduct().getName().toLowerCase().contains(lowerCaseFilter));
+            });
+
+        });
+
+        // ---------------------------------------------------------
+        populateTable();
+
+        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn, tfSearch,lblTitle, tableOrderHistory);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public void populateTable(){
+        TableColumn<Order, String> columnIdOrder = new TableColumn<>("ID");
+        columnIdOrder.setCellValueFactory(itemData -> {
+            String idOrder = String.valueOf(itemData.getValue().getId());
+            return new ReadOnlyStringWrapper(idOrder);
+        });
+
+        TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
+        columnProductName.setCellValueFactory(itemData -> {
+            List<Item> items = itemData.getValue().getItems();
+            Item item = items.get(0);
+            Product product = item.getProduct();
+            String nameProduct = String.valueOf(product.getName());
+            return new ReadOnlyStringWrapper(nameProduct);
+        });
+
+        TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data do Pagamento");
+        columnPaymentDate.setCellValueFactory(itemData -> {
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate dt = itemData.getValue().getPayment().getDate();
+                    String dataStr = dtf.format(dt);
+                    return new ReadOnlyStringWrapper(dataStr);
+                }
+        );
+
+        TableColumn<Order, String> columnStatus = new TableColumn<>("Status");
+        columnStatus.setCellValueFactory(itemData -> {
+            return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
+        });
 
 
-        pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSearch, tfSearch,lblTitle, tbOrderHistory);
+        columnIdOrder.setMinWidth(60);
+        columnProductName.setMinWidth(200);
+        columnPaymentDate.setMinWidth(160);
+        columnStatus.setMinWidth(128);
+        columnIdOrder.setStyle("-fx-alignment: CENTER;");
+        columnProductName.setStyle("-fx-alignment: CENTER;");
+        columnPaymentDate.setStyle("-fx-alignment: CENTER;");
+        columnStatus.setStyle("-fx-alignment: CENTER;");
 
+        tableOrderHistory.getColumns().addAll(columnIdOrder, columnProductName, columnPaymentDate, columnStatus);
+        try {
+            listOrder= controllerOrder.populateWinOrderHistory();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        filteredList= new FilteredList<>(listOrder, p -> true);
+        tableOrderHistory.setItems(filteredList);
     }
 
     private void setBtnBackImage(Button btnBack) {

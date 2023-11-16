@@ -44,10 +44,7 @@ public class WinPurchaseHistoryConstructor {
     private TableView<Order> tableHistory= new TableView<>();
     private ObservableList<Order> listHistory= FXCollections.observableArrayList();
 
-    private FilteredList<Order> filteredList;
-
-
-    // TODO fazer o metodo bindings
+    private FilteredList<Order> filteredList; //Filtra os dados da tabela
 
     private TextField tfProductName= new TextField();
     private TextField tfShop= new TextField();
@@ -59,7 +56,6 @@ public class WinPurchaseHistoryConstructor {
     private TextField tfStatus= new TextField();
 
     public void bindings(){
-        Bindings.bindBidirectional(tfSearch.textProperty(), controllerOrder.searchProperty());
         Bindings.bindBidirectional(tfProductName.textProperty(), controllerOrder.nameProductProperty());
         Bindings.bindBidirectional(tfShop.textProperty(), controllerOrder.nameStoreProperty());
         Bindings.bindBidirectional(tfProductPrice.textProperty(), controllerOrder.priceProductProperty());
@@ -70,7 +66,7 @@ public class WinPurchaseHistoryConstructor {
         Bindings.bindBidirectional(tfStatus.textProperty(), controllerOrder.statusProperty());
 
     }
-    public void addElements(Pane pane) throws SQLException {
+    public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
@@ -153,6 +149,7 @@ public class WinPurchaseHistoryConstructor {
 
         bindings();
         populateTable();
+
         pane.getChildren().addAll(btnAccount, btnQuit, btnReturn,btnSeePurchase, tfSearch,lblTitle, tableHistory);
 
     }
@@ -242,30 +239,23 @@ public class WinPurchaseHistoryConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public void populateTable() throws SQLException {
-        // TODO fazer a populateTable do historico de pedidos
-        TableColumn<Order, String> columnIdProduct= new TableColumn<>("ID");
-        columnIdProduct.setCellValueFactory(itemData -> {
-            List<Item> items = itemData.getValue().getItems();
-            for (int i = 0; i < items.size(); i++) {
-                Item item = items.get(i);
-                Product product = item.getProduct();
-                String idProduct = String.valueOf(product.getCod());
-                return new ReadOnlyStringWrapper(idProduct);
-            }
-            return new ReadOnlyStringWrapper("");
+    public void populateTable() {
+        TableColumn<Order, String> columnIdOrder = new TableColumn<>("ID");
+        columnIdOrder.setCellValueFactory(itemData -> {
+            String idOrder = String.valueOf(itemData.getValue().getId());
+            return new ReadOnlyStringWrapper(idOrder);
         });
 
         TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
         columnProductName.setCellValueFactory(itemData -> {
             List<Item> items = itemData.getValue().getItems();
-            for (int i = 0; i < items.size(); i++) {
-                Item item = items.get(i);
+//            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(0);
                 Product product = item.getProduct();
                 String nameProduct = String.valueOf(product.getName());
                 return new ReadOnlyStringWrapper(nameProduct);
-            }
-            return new ReadOnlyStringWrapper("");
+//            }
+//            return new ReadOnlyStringWrapper("");
         });
 
         TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Entrega");
@@ -282,18 +272,21 @@ public class WinPurchaseHistoryConstructor {
             return new ReadOnlyStringWrapper(itemData.getValue().getPayment().getStatus());
         });
 
-        columnIdProduct.setMinWidth(60);
+        columnIdOrder.setMinWidth(60);
         columnProductName.setMinWidth(200);
         columnPaymentDate.setMinWidth(160);
         columnStatus.setMinWidth(128);
-        columnIdProduct.setStyle("-fx-alignment: CENTER;");
+        columnIdOrder.setStyle("-fx-alignment: CENTER;");
         columnProductName.setStyle("-fx-alignment: CENTER;");
         columnPaymentDate.setStyle("-fx-alignment: CENTER;");
         columnStatus.setStyle("-fx-alignment: CENTER;");
 
-
-        tableHistory.getColumns().addAll(columnIdProduct, columnProductName, columnPaymentDate, columnStatus);
-        listHistory= controllerOrder.populateWinHistory();
+        tableHistory.getColumns().addAll(columnIdOrder, columnProductName, columnPaymentDate, columnStatus);
+        try {
+            listHistory= controllerOrder.populateWinHistory();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         filteredList= new FilteredList<>(listHistory, p -> true);
         tableHistory.setItems(filteredList);
 

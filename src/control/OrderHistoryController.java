@@ -7,6 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.cell.TextFieldTableCell;
 import model.*;
 import persistence.GenericDao;
+import persistence.OrderHistoryDao;
 import persistence.PurchaseHistoryDao;
 import view.WinPurchaseHistoryConstructor;
 
@@ -25,11 +26,9 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     private IntegerProperty quantity= new SimpleIntegerProperty(0);
     private StringProperty priceProduct= new SimpleStringProperty("00.00");
     private StringProperty methodPayment= new SimpleStringProperty("");
-    private ObjectProperty<LocalDate> dateDelivery= new SimpleObjectProperty<>();
     private StringProperty totalValue= new SimpleStringProperty("00.00");
     private StringProperty portage = new SimpleStringProperty("00.00");
     private StringProperty status= new SimpleStringProperty("");
-    private StringProperty search= new SimpleStringProperty("");
 
     public ObservableList populateWinHistory() throws SQLException {
         Client client= new Client();
@@ -71,18 +70,31 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
         String formatedValue= decimalFormat.format(item.getProduct().getPrice());
         priceProduct.set("R$ " +formatedValue);
         methodPayment.set(order.getPayment().getPaymentMethod());
-        dateDelivery.set(order.getPayment().getDate());
         formatedValue= decimalFormat.format(item.getSubTotal());
         totalValue.set("R$ " +formatedValue);
         status.set(order.getPayment().getStatus());
         formatedValue= decimalFormat.format(item.getProduct().getShipping());
         portage.set("R$ " + formatedValue);
-
-
-
     }
 
+    public ObservableList<Order> populateWinOrderHistory() throws SQLException {
+        Store store= new Store();
+        store.setNameStore("teste1vendedor");
+        GenericDao genericDao= new GenericDao();
+        OrderHistoryDao orderHistoryDao= new OrderHistoryDao(genericDao);
 
+        List<Order> listOrder= orderHistoryDao.listOrderHistory(store);
+
+        if (listOrder != null){
+            for (int i = 0; i < listOrder.size(); i++) {
+                Order order= (Order) listOrder.get(i);
+
+                listHistory.add(order);
+            }
+        }
+        return listHistory;
+
+    }
 
 
     public ObservableList<Order> getListHistory() {
@@ -110,20 +122,12 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
         return methodPayment;
     }
 
-    public ObjectProperty<LocalDate> dateDeliveryProperty() {
-        return dateDelivery;
-    }
-
     public StringProperty totalValueProperty() {
         return totalValue;
     }
 
     public StringProperty portageProperty() {
         return portage;
-    }
-
-    public StringProperty searchProperty() {
-        return search;
     }
 
     public StringProperty statusProperty() {

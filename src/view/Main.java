@@ -22,6 +22,8 @@ public class Main extends Application
 	private static WinAccountMenuConstructor winAccountMenu = new WinAccountMenuConstructor();
 
 	private static WinPurchaseHistoryConstructor winPurchaseHistory= new WinPurchaseHistoryConstructor();
+
+	private static WinOrderHistoryConstructor winOrderHistoryConstructor= new WinOrderHistoryConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
@@ -35,6 +37,7 @@ public class Main extends Application
 		// teste Luan -----------------------------------------
 
 
+//		winOrderHistoryConstructor.addElements(pWin);
 		winPurchaseHistory.addElements(pWin);
 
 		// -----------------------------------------------------------
