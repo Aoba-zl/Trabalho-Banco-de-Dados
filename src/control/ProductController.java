@@ -20,7 +20,6 @@ public class ProductController
 	private TextField tfShipping;
 	private TextField tfCategory;
 	private TextArea taDescription;
-	private TextField tfCod;
 	private Label lblMessage;
 	
 	public ProductController()
@@ -28,7 +27,7 @@ public class ProductController
 		
 	}
 	
-	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, TextField tfCod, Label lblMessage) 
+	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage) 
 	{
 		this.tfName = tfName;
 		this.tfPrice = tfPrice;
@@ -37,36 +36,50 @@ public class ProductController
 		this.tfCategory = tfCategory;
 		this.taDescription = taDescription;
 		this.lblMessage = lblMessage;
-		this.tfCod = tfCod;
 	}
 	
 	public boolean insert() throws SQLException
 	{
-		
-		GenericDao gDao = new GenericDao();
-		ProductDao pDao = new ProductDao(gDao);
-		
 		if(checkValues())
 		{
 			return false;
 		}
 		
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
 		Product p = new Product();
 		p.setName(tfName.getText());
 		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
 		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
-		p.setShipping(Double.parseDouble(tfInStock.getText().replace(",", ".")));
+		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
 		p.setCategory(tfCategory.getText());
 		p.setDescription(taDescription.getText());
 		
-		int id = pDao.insert(p);
-		
-		if(id != -1)
+		return pDao.insert(p);
+	}
+	
+	public boolean update() throws SQLException
+	{
+		if(checkValues())
 		{
-			tfCod.setText(String.valueOf(id));
-			return true;
+			return false;
 		}
-		return false;
+		
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
+		Product p = new Product();
+		p.setName(tfName.getText());
+		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
+		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
+		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
+		p.setCategory(tfCategory.getText());
+		p.setDescription(taDescription.getText());
+		//TODO falta setCod ainda
+		
+		
+		return pDao.update(p);
 	}
 	
 	public List<Product> listProduct() throws SQLException
