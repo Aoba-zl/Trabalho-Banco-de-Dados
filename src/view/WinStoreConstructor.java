@@ -1,6 +1,7 @@
 package view;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import control.ChangeSceneController;
@@ -21,7 +22,8 @@ import utils.SceneName;
 public class WinStoreConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-
+	private List<Product> listProduct;
+	
 	@Override
 	public void addElements(Pane pane)
 	{
@@ -62,7 +64,7 @@ public class WinStoreConstructor implements GenericWindownInterface
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
 		
 		ProductController pControl = new ProductController();
-		List<Product> listProduct = null;
+		
 		
 		try {
 			listProduct = pControl.listProductStore();
@@ -70,15 +72,89 @@ public class WinStoreConstructor implements GenericWindownInterface
 			e.printStackTrace();
 		}
 		
-		int sizeProductRow = listProduct.size();
-		int sizeProductColumn = sizeProductRow;
-		int countProduct = 0;
-		
-		
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(254);
 		vbProduct.setMinWidth(586);
 		vbProduct.setMaxWidth(586);
+		
+		ScrollPane spProduct = new ScrollPane();
+		spProduct.setPrefHeight(260);
+		spProduct.setPrefWidth(605);
+		spProduct.setLayoutX(18);
+		spProduct.setLayoutY(91);
+		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
+		spProduct.setContent(vbProduct);
+		
+		completeListProduct(vbProduct);
+		
+		btnSearch.setOnAction(e -> 
+		{
+			if(tfSearch.getText().trim().isEmpty())
+			{
+				completeListProduct(vbProduct);
+			}
+			else
+			{
+				searchListProduct(vbProduct, tfSearch);
+			}
+		});
+		
+		Button btnAdd = new Button("Adicionar novo produto");
+		btnAdd.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
+		
+		HBox hbBtnAdd = new HBox();
+		hbBtnAdd.setStyle("-fx-alignment: center;");
+		hbBtnAdd.setPrefWidth(640);
+		hbBtnAdd.setPrefHeight(20);
+		hbBtnAdd.setLayoutY(360);
+		hbBtnAdd.getChildren().add(btnAdd);
+		
+		//------------mudança de scene---------------
+		btnReturn.setOnAction(e -> toHomePage());
+		btnQuit.setOnAction(e -> toLogin());
+		btnAccount.setOnAction(e -> toAccount());
+		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
+		
+		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, btnReturn);
+		
+	}
+	
+
+	private void toHomePage()
+	{
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
+	}
+	
+	private void toLogin() 
+	{
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
+	}
+	
+	private void toAccount()
+	{
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+	}
+	
+	private void toRegProduct()
+	{
+		ChangeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
+	}
+	
+	private void toProductStore(int cod, String name, String description, double price)
+	{
+		System.out.println(cod + " " + name + " " + description + " " + price); //test
+		
+		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+	}
+	
+	private void completeListProduct(VBox vbProduct)
+	{
+		vbProduct.getChildren().clear();
+		
+		int sizeProductRow = listProduct.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
+		
 		for(int i = 0; i < (sizeProductRow / 4) + 1; i++)
 		{
 			HBox hbProductInfo = new HBox();
@@ -135,63 +211,85 @@ public class WinStoreConstructor implements GenericWindownInterface
 			
 			vbProduct.getChildren().add(hbProductInfo);
 		}
-		
-		
-		ScrollPane spProduct = new ScrollPane();
-		spProduct.setPrefHeight(260);
-		spProduct.setPrefWidth(605);
-		spProduct.setLayoutX(18);
-		spProduct.setLayoutY(91);
-		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
-		spProduct.setContent(vbProduct);
-		
-		Button btnAdd = new Button("Adicionar novo produto");
-		btnAdd.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
-		
-		HBox hbBtnAdd = new HBox();
-		hbBtnAdd.setStyle("-fx-alignment: center;");
-		hbBtnAdd.setPrefWidth(640);
-		hbBtnAdd.setPrefHeight(20);
-		hbBtnAdd.setLayoutY(360);
-		hbBtnAdd.getChildren().add(btnAdd);
-		
-		//------------mudança de scene---------------
-		btnReturn.setOnAction(e -> toHomePage());
-		btnQuit.setOnAction(e -> toLogin());
-		btnAccount.setOnAction(e -> toAccount());
-		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
-		
-		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, btnReturn);
-		
 	}
 	
-
-	private void toHomePage()
+	private void searchListProduct(VBox vbProduct, TextField tfSearch)
 	{
-		ChangeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
-	}
-	
-	private void toLogin() 
-	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
-	}
-	
-	private void toAccount()
-	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
-	}
-	
-	private void toRegProduct()
-	{
-		ChangeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
-	}
-	
-	private void toProductStore(int cod, String name, String description, double price)
-	{
-		System.out.println(cod + " " + name + " " + description + " " + price); //test
+		vbProduct.getChildren().clear();
 		
-		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+		List<Product> searchListProduct = new ArrayList<>();
+		
+		for(Product pList : listProduct)
+		{
+			if(pList.getName().toLowerCase().contains(tfSearch.getText()))
+			{
+				searchListProduct.add(pList);
+			}
+		}
+		
+		int sizeProductRow = searchListProduct.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
+		
+		for(int i = 0; i < (sizeProductRow / 4) + 1; i++)
+		{
+			HBox hbProductInfo = new HBox();
+			hbProductInfo.setPrefWidth(586);
+			hbProductInfo.setMaxWidth(586);
+			hbProductInfo.setPrefHeight(100);
+			for(int j = 0; j < 4; j++)
+			{
+				if(sizeProductColumn > 0)
+				{
+					Product p = searchListProduct.get(countProduct);
+					Label lblNameProduct = new Label(p.getName());
+					Label lblDescProduct = new Label(p.getDescription());
+					Label lblQuantityProduct = new Label("Quantidade: " + String.valueOf(p.getTotalStock()));
+					Label lblPriceProduct = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ","));
+					lblDescProduct.setPrefHeight(35);
+					lblDescProduct.setWrapText(true);
+					lblDescProduct.setStyle("-fx-alignment: top-left");
+					
+					HBox hbLblNameProduct = new HBox();
+					hbLblNameProduct.setMinHeight(35);
+					hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
+					hbLblNameProduct.getChildren().addAll(lblNameProduct);
+					
+					HBox hbLblDescProduct = new HBox();
+					hbLblDescProduct.setMinHeight(35);
+					hbLblDescProduct.getChildren().add(lblDescProduct);
+					
+					HBox hbLblQuantityProduct = new HBox();
+					hbLblQuantityProduct.getChildren().add(lblQuantityProduct);
+					
+					HBox hbLblPrice = new HBox();
+					hbLblPrice.getChildren().add(lblPriceProduct);
+					
+					VBox vbProductInfo = new VBox();
+					vbProductInfo.setPrefWidth(146);
+					vbProductInfo.setPrefHeight(100);
+					vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
+					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
+					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
+					
+					vbProductInfo.setOnMouseClicked(e -> toProductStore(p.getCod(), p.getName(), p.getDescription(), p.getPrice()));
+					
+					hbProductInfo.getChildren().add(vbProductInfo);
+					
+					sizeProductColumn--;
+					countProduct++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			vbProduct.getChildren().add(hbProductInfo);
+		}
 	}
+	
+	
 	
 	private void setBtnBackImage(Button btnBack) {
         Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
