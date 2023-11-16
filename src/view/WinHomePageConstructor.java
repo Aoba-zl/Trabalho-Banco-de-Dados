@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -112,6 +113,15 @@ public class WinHomePageConstructor implements GenericWindownInterface
 				searchListProduct(vbProduct, tfSearch);
 			}
 		});
+		
+		tfSearch.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnSearch.fire();
+			}
+		});
+		
 		
 		//------------mudança de scene---------------
 		btnQuit.setOnAction(e -> toLogin());
@@ -224,7 +234,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		
 		for(Product pList : listProduct)
 		{
-			if(pList.getName().toLowerCase().contains(tfSearch.getText()))
+			if(pList.getName().toLowerCase().contains(tfSearch.getText().toLowerCase()))
 			{
 				searchListProduct.add(pList);
 			}
