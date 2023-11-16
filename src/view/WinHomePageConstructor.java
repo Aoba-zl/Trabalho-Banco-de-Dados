@@ -165,65 +165,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 	{
 		vbProduct.getChildren().clear();
 		
-		int sizeProductRow = listProduct.size();
-		int sizeProductColumn = sizeProductRow;
-		int countProduct = 0;
-		
-		
-		for(int i = 0; i < (sizeProductRow / 4) + 1; i++) //Aqui é feito a contagem da linha para descer de acordo com o tanto de produto no DB
-		{
-			HBox hbProductInfo = new HBox();
-			hbProductInfo.setPrefWidth(586);
-			hbProductInfo.setMaxWidth(586);
-			hbProductInfo.setPrefHeight(100);
-			for(int j = 0; j < 4; j++) //Aqui é feito a contagem de coluna para ser de acordo com a quantidade de produto
-			{
-				if(sizeProductColumn > 0)
-				{
-					Product p = listProduct.get(countProduct);
-					Label lblNameProduct = new Label(p.getName());
-					Label lblDescProduct = new Label(p.getDescription());
-					Label lblPrice = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ",") + "R$");
-					lblDescProduct.setPrefHeight(55);
-					lblDescProduct.setWrapText(true);
-					lblDescProduct.setStyle("-fx-alignment: top-left");
-					
-					HBox hbLblNameProduct = new HBox();
-					hbLblNameProduct.setMinHeight(20);
-					hbLblNameProduct.setStyle("-fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 14px;");
-					hbLblNameProduct.getChildren().addAll(lblNameProduct);
-					
-					HBox hbLblDescProduct = new HBox();
-					hbLblDescProduct.setMinHeight(50);
-					hbLblDescProduct.getChildren().add(lblDescProduct);
-					
-					HBox hbLblPrice = new HBox();
-					hbLblPrice.getChildren().add(lblPrice);
-					
-					VBox vbProductInfo = new VBox();
-					vbProductInfo.setPrefWidth(146);
-					vbProductInfo.setPrefHeight(100);
-					vbProductInfo.setPadding(new Insets(0, 0, 0, 5));
-					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
-					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblPrice);
-					
-					vbProductInfo.setOnMouseClicked(e -> toProduct(p.getCod(), p.getName(), p.getDescription(), p.getPrice()));
-					
-					hbProductInfo.getChildren().add(vbProductInfo);
-					
-					sizeProductColumn--;
-					countProduct++;
-				}
-				else
-				{
-					break;
-				}
-				
-			}
-			
-			vbProduct.getChildren().add(hbProductInfo);
-		}
-		
+		tableProduct(listProduct, vbProduct);
 	}
 	
 	private void searchListProduct(VBox vbProduct, TextField tfSearch)
@@ -240,7 +182,12 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			}
 		}
 		
-		int sizeProductRow = searchListProduct.size();
+		tableProduct(searchListProduct, vbProduct);
+	}
+	
+	private void tableProduct(List<Product> list, VBox vbProduct)
+	{
+		int sizeProductRow = list.size();
 		int sizeProductColumn = sizeProductRow;
 		int countProduct = 0;
 		
@@ -254,7 +201,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			{
 				if(sizeProductColumn > 0)
 				{
-					Product p = searchListProduct.get(countProduct);
+					Product p = list.get(countProduct);
 					Label lblNameProduct = new Label(p.getName());
 					Label lblDescProduct = new Label(p.getDescription());
 					Label lblPrice = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ",") + "R$");
@@ -297,7 +244,6 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			
 			vbProduct.getChildren().add(hbProductInfo);
 		}
-		
 	}
 	
 	
