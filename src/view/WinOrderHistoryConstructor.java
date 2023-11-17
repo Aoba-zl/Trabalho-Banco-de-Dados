@@ -86,7 +86,7 @@ public class WinOrderHistoryConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public void populateTable(){
+    private void populateTable(){
         TableColumn<Order, String> columnIdOrder = new TableColumn<>("ID");
         columnIdOrder.setCellValueFactory(itemData -> {
             String idOrder = String.valueOf(itemData.getValue().getId());

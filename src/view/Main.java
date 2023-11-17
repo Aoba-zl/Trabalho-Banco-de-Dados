@@ -24,6 +24,8 @@ public class Main extends Application
 	private static WinPurchaseHistoryConstructor winPurchaseHistory= new WinPurchaseHistoryConstructor();
 
 	private static WinOrderHistoryConstructor winOrderHistoryConstructor= new WinOrderHistoryConstructor();
+
+	private static WinShoppingCartConstructor winShoppingCartConstructor= new WinShoppingCartConstructor();
 	
 	@Override
 	public void start(Stage PrimaryStage) throws Exception 
@@ -38,7 +40,8 @@ public class Main extends Application
 
 
 //		winOrderHistoryConstructor.addElements(pWin);
-		winPurchaseHistory.addElements(pWin);
+//		winPurchaseHistory.addElements(pWin);
+		winShoppingCartConstructor.addElements(pWin);
 
 		// -----------------------------------------------------------
 		

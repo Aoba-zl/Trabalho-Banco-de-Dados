@@ -2,12 +2,18 @@ package control;
 
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.*;
 
 public class CartController
 {
-    Client client;
-    Cart cart;
+    private Client client;
+    private Cart cart;
+
+    private ObservableList<Item> listCart= FXCollections.observableArrayList();
+
+
 
     public CartController(Client client)
     {
@@ -15,11 +21,10 @@ public class CartController
         this.cart = client.getCart();
     }
 
-    public List<Item> listOrder ()
-    {
-        return cart.getItens();
+    public ObservableList<Item> getListCart() {
+        return listCart;
     }
-    
+
     public void deleteOrder (Item order)
     {
         //TODO: CtrlCarrinho. Corpo da operacao

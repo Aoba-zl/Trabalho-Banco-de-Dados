@@ -154,7 +154,7 @@ public class WinPurchaseHistoryConstructor {
 
     }
 
-    public BorderPane subWindowStatus(){
+    private BorderPane subWindowStatus(){
         Pane panePurchaseStatus= new Pane();
         GridPane gridPurchaseStatus = new GridPane();
         panePurchaseStatus.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px");
@@ -239,7 +239,7 @@ public class WinPurchaseHistoryConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public void populateTable() {
+    private void populateTable() {
         TableColumn<Order, String> columnIdOrder = new TableColumn<>("ID");
         columnIdOrder.setCellValueFactory(itemData -> {
             String idOrder = String.valueOf(itemData.getValue().getId());
@@ -249,13 +249,10 @@ public class WinPurchaseHistoryConstructor {
         TableColumn<Order, String> columnProductName= new TableColumn<>("Nome do Produto");
         columnProductName.setCellValueFactory(itemData -> {
             List<Item> items = itemData.getValue().getItems();
-//            for (int i = 0; i < items.size(); i++) {
-                Item item = items.get(0);
-                Product product = item.getProduct();
-                String nameProduct = String.valueOf(product.getName());
-                return new ReadOnlyStringWrapper(nameProduct);
-//            }
-//            return new ReadOnlyStringWrapper("");
+            Item item = items.get(0);
+            Product product = item.getProduct();
+            String nameProduct = String.valueOf(product.getName());
+            return new ReadOnlyStringWrapper(nameProduct);
         });
 
         TableColumn<Order, String> columnPaymentDate= new TableColumn<>("Data de Entrega");

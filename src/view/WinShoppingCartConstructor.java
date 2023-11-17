@@ -1,19 +1,30 @@
 package view;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import model.Cart;
+import model.Item;
+import model.Product;
+
+import java.util.List;
 
 public class WinShoppingCartConstructor {
     private Label lblTittle= new Label("Carrinho");
     private Label lblTotalPrice= new Label("Total:");
+    private Label lblPortage= new Label("Frete:");
     private Label lblQuantity= new Label("Quantidade:");
     private Button btnRemove= new Button("Remover");
     private Button btnSelectAll= new Button("Selecionar Todos");
     private Button btnPlaceOrder= new Button("Realizar Pedido");
-    private TextField tfQuantity= new TextField();
+    private Button btnMinus= new Button("-");
+    private Button btnPlus= new Button("+");
+
+
+    private TableView<Item> tableCart= new TableView<>();
 
     public void addElements(Pane pane){
         Button btnReturn= new Button();
@@ -28,6 +39,10 @@ public class WinShoppingCartConstructor {
         btnSelectAll.relocate(160, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
+        btnMinus.relocate(120, 320);
+        btnMinus.setFont(Font.font(12));
+        btnPlus.relocate(145, 320);
+        btnPlus.setFont(Font.font(12));
         setBtnBackImage(btnReturn);
         String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
                 "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
@@ -37,31 +52,59 @@ public class WinShoppingCartConstructor {
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
 
-        lblTittle.setFont(Font.font(20));
-        lblTittle.relocate(280, 20);
-        lblQuantity.setFont(Font.font(14));
-        lblQuantity.relocate(30, 315);
+        lblTittle.setFont(Font.font(26));
+        lblTittle.relocate(260, 15);
         lblTotalPrice.setFont(Font.font(15));
         lblTotalPrice.relocate(335, 355);
-
-        tfQuantity.setMaxSize(30, 30);
-        tfQuantity.relocate(115, 315);
-
-        TableColumn columnName= new TableColumn<>("Nome");
-        TableColumn columnDesciption= new TableColumn<>("Descrição");
-        TableColumn columnProductValue= new TableColumn<>("Preço");
-        columnName.setMinWidth(190);
-        columnDesciption.setMinWidth(215);
-        columnProductValue.setMinWidth(170);
-
-        TableView tbShoppingCart= new TableView<>();
-        tbShoppingCart.setMinWidth(575);
-        tbShoppingCart.setMaxHeight(250);
-        tbShoppingCart.relocate(30, 60);
-        tbShoppingCart.getColumns().addAll(columnName, columnDesciption, columnProductValue);
+        lblPortage.setFont(Font.font(15));
+        lblPortage.relocate(335, 325);
+        lblQuantity.setFont(Font.font(15));
+        lblQuantity.relocate(30, 320);
 
 
-        pane.getChildren().addAll(tbShoppingCart, btnAccount,btnQuit,btnReturn,btnRemove, btnSelectAll, btnPlaceOrder,lblQuantity, lblTittle, lblTotalPrice, tfQuantity);
+        tableCart.setMinWidth(575);
+        tableCart.setMaxHeight(250);
+        tableCart.relocate(30, 60);
+
+
+        populateTable();
+        pane.getChildren().addAll(tableCart, btnAccount,btnQuit,btnReturn,btnRemove, btnSelectAll, btnPlaceOrder, btnMinus, btnPlus, lblTittle, lblTotalPrice, lblPortage, lblQuantity);
+
+    }
+
+    private void populateTable(){
+        TableColumn<Item, String> columnProductName= new TableColumn<>("Nome");
+        columnProductName.setCellValueFactory(itemData -> {
+            Product product = itemData.getValue().getProduct();
+            String nameProduct = String.valueOf(product.getName());
+            return new ReadOnlyStringWrapper(nameProduct);
+        });
+
+        TableColumn<Item, String> columnDescription= new TableColumn<>("Descrição");
+        columnDescription.setCellValueFactory(itemData -> {
+            Product product = itemData.getValue().getProduct();
+            String productDescription = String.valueOf(product.getDescription());
+            return new ReadOnlyStringWrapper(productDescription);
+        });
+
+        TableColumn<Item, String> columnQuantity= new TableColumn<>("Quantidade");
+        columnQuantity.setCellValueFactory(itemData -> {
+            String productQuantity= String.valueOf(itemData.getValue().getQuantity());
+            return new ReadOnlyStringWrapper(productQuantity);
+        });
+
+        TableColumn<Item, String> columnPrice= new TableColumn<>("Preço");
+        columnPrice.setCellValueFactory(itemData -> {
+            String productPrice= String.valueOf(itemData.getValue().getSubTotal());
+            return new ReadOnlyStringWrapper(productPrice);
+        });
+
+        columnProductName.setMinWidth(170);
+        columnDescription.setMinWidth(205);
+        columnQuantity.setMinWidth(40);
+        columnPrice.setMinWidth(120);
+
+        tableCart.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
 
     }
 
