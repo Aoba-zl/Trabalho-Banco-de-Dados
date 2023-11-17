@@ -34,7 +34,8 @@ public class PurchaseHistoryDao {
                 "                'Preparando'\n" +
                 "           else\n" +
                 "                'A caminho'\n" +
-                "           end as status \n" +
+                "           end as status, \n" +
+                "           prod.id_product \n" +
                 "from payment pay, product prod, order_product order_prod, order_tbl order_tb,\n" +
                 "     client cli\n" +
                 "where prod.id_product = order_prod.id_product\n" +
@@ -60,6 +61,7 @@ public class PurchaseHistoryDao {
             Payment payment= new Payment();
             payment.setDate(rs.getDate(3).toLocalDate());
             payment.setStatus(rs.getString(4));
+            product.setCod(rs.getInt(5));
 
             order.setItems(itemList);
             order.setPayment(payment);
@@ -81,12 +83,12 @@ public class PurchaseHistoryDao {
                 "       prod.shipping,\n" +
                 "       order_prod.quantity,\n" +
                 "       prod.shipping + prod.unity_price as Valor_Total_Produto,\n" +
-                "       case when (p.id_order = pay.id_order)\n" +
+                "       case when (p.id_order = pay.id_order )\n" +
                 "                then\n" +
                 "                'Pix'\n" +
-                "            else\n" +
+                "                else\n" +
                 "                'Boleto'\n" +
-                "           end as Payment_Method,\n" +
+                "                end as Payment_Method,\n" +
                 "       case when (day(getdate()) - day(pay.date_pay) >= 5)\n" +
                 "                then\n" +
                 "                'Finalizado'\n" +
@@ -98,12 +100,12 @@ public class PurchaseHistoryDao {
                 "                'Preparando'\n" +
                 "            else\n" +
                 "                'A caminho'\n" +
-                "           end as status \n" +
+                "           end as status\n" +
                 "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
                 "     inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order\n" +
-                "     inner join payment pay on pay.id_order = order_tb.id_order,\n" +
-                "     payment pay2 inner join pix p on p.id_order = pay2.id_order,\n" +
-                "     payment pay3 inner join payment_slip pay_slip on pay_slip.id_order = pay3.id_order\n" +
+                "     inner join payment pay on pay.id_order = order_tb.id_order\n" +
+                "     left outer join pix p on pay.id_order = p.id_order\n" +
+                "     left outer join payment_slip ps on ps.id_order = pay.id_order\n" +
                 "where pay.id_order= ? and prod.id_product= ?";
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setInt(1, idOrder);
