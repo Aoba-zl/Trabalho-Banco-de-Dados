@@ -1,30 +1,42 @@
 package view;
 
+import control.CartController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import model.Cart;
 import model.Item;
+import model.Order;
 import model.Product;
 
+import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class WinShoppingCartConstructor {
     private Label lblTittle= new Label("Carrinho");
     private Label lblTotalPrice= new Label("Total:");
     private Label lblPortage= new Label("Frete:");
-    private Label lblQuantity= new Label("Quantidade:");
+    private Label lblQuantity= new Label("Alterar \nQuantidade:");
     private Button btnRemove= new Button("Remover");
-    private Button btnSelectAll= new Button("Selecionar Todos");
     private Button btnPlaceOrder= new Button("Realizar Pedido");
     private Button btnMinus= new Button("-");
     private Button btnPlus= new Button("+");
 
 
     private TableView<Item> tableCart= new TableView<>();
+
+    CartController controllerCart= new CartController();
+
+    public void bindings(){
+        Bindings.bindBidirectional(lblPortage.textProperty(), controllerCart.portageProperty());
+        Bindings.bindBidirectional(lblTotalPrice.textProperty(), controllerCart.totalCartProperty());
+    }
 
     public void addElements(Pane pane){
         Button btnReturn= new Button();
@@ -35,14 +47,14 @@ public class WinShoppingCartConstructor {
         btnRemove.setMinSize(100, 30);
         btnRemove.setStyle("-fx-background-color: #9f3f3f");
         btnRemove.relocate(30, 350);
-        btnSelectAll.setMinSize(130, 30);
-        btnSelectAll.relocate(160, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
-        btnMinus.relocate(120, 320);
-        btnMinus.setFont(Font.font(12));
-        btnPlus.relocate(145, 320);
-        btnPlus.setFont(Font.font(12));
+        btnMinus.relocate(230, 355);
+        btnMinus.setFont(Font.font(13));
+        btnMinus.setDisable(true);
+        btnPlus.relocate(255, 355);
+        btnPlus.setFont(Font.font(13));
+        btnPlus.setDisable(true);
         setBtnBackImage(btnReturn);
         String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
                 "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
@@ -55,20 +67,74 @@ public class WinShoppingCartConstructor {
         lblTittle.setFont(Font.font(26));
         lblTittle.relocate(260, 15);
         lblTotalPrice.setFont(Font.font(15));
-        lblTotalPrice.relocate(335, 355);
+        lblTotalPrice.relocate(310, 355);
         lblPortage.setFont(Font.font(15));
-        lblPortage.relocate(335, 325);
+        lblPortage.relocate(310, 325);
         lblQuantity.setFont(Font.font(15));
-        lblQuantity.relocate(30, 320);
+        lblQuantity.relocate(145, 335);
 
 
         tableCart.setMinWidth(575);
         tableCart.setMaxHeight(250);
         tableCart.relocate(30, 60);
 
+        // Events ---------------------------------------------------------
+
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            if (!tableCart.getBoundsInParent().contains(event.getSceneX(), event.getSceneY()) &&
+                    !btnPlus.getBoundsInParent().contains(event.getSceneX(), event.getSceneY()) &&
+                    !btnMinus.getBoundsInParent().contains(event.getSceneX(), event.getSceneY()) &&
+                    !btnRemove.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
+                tableCart.getSelectionModel().clearSelection();
+            }
+
+        });
+
+        tableCart.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection == null) {
+                btnMinus.setDisable(true);
+                btnPlus.setDisable(true);
+
+            } else {
+                Item selectedProduct = tableCart.getSelectionModel().getSelectedItem();
+                btnMinus.setDisable(false);
+                btnPlus.setDisable(false);
+
+                btnMinus.setOnMouseClicked(event -> {
+                    if (selectedProduct.getQuantity() <= selectedProduct.getProduct().getTotalStock() &&
+                        selectedProduct.getQuantity() > 1){
+                        selectedProduct.setQuantity(selectedProduct.getQuantity() - 1);
+                        controllerCart.alterQuantity(selectedProduct);
+                    }
+                    else {
+                        //TODO menssagem de erro informando que o produto não possui esse total no estoque
+                    }
+                });
+
+                btnPlus.setOnMouseClicked(event -> {
+                    if (selectedProduct.getQuantity() < selectedProduct.getProduct().getTotalStock()){
+                        selectedProduct.setQuantity(selectedProduct.getQuantity() + 1);
+                        controllerCart.alterQuantity(selectedProduct);
+                    }
+                });
+
+                btnRemove.setOnMouseClicked(event -> {
+                    controllerCart.clearCart(selectedProduct);
+                    tableCart.getItems().remove(selectedProduct);
+                });
+
+
+
+            }
+        });
+
+
+        // ----------------------------------------------------------------
+
 
         populateTable();
-        pane.getChildren().addAll(tableCart, btnAccount,btnQuit,btnReturn,btnRemove, btnSelectAll, btnPlaceOrder, btnMinus, btnPlus, lblTittle, lblTotalPrice, lblPortage, lblQuantity);
+        bindings();
+        pane.getChildren().addAll(tableCart, btnAccount,btnQuit,btnReturn,btnRemove, btnPlaceOrder, btnMinus, btnPlus, lblTittle, lblTotalPrice, lblPortage, lblQuantity);
 
     }
 
@@ -93,18 +159,28 @@ public class WinShoppingCartConstructor {
             return new ReadOnlyStringWrapper(productQuantity);
         });
 
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         TableColumn<Item, String> columnPrice= new TableColumn<>("Preço");
         columnPrice.setCellValueFactory(itemData -> {
-            String productPrice= String.valueOf(itemData.getValue().getSubTotal());
+            String formatedvalue= decimalFormat.format(itemData.getValue().getSubTotal());
+            String productPrice= ("R$ " + formatedvalue);
             return new ReadOnlyStringWrapper(productPrice);
         });
 
-        columnProductName.setMinWidth(170);
+        columnProductName.setMinWidth(160);
         columnDescription.setMinWidth(205);
-        columnQuantity.setMinWidth(40);
-        columnPrice.setMinWidth(120);
+        columnQuantity.setMinWidth(80);
+        columnPrice.setMinWidth(128);
+        columnProductName.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
+        columnDescription.setStyle("-fx-font-size: 13;");
+        columnQuantity.setStyle("-fx-alignment: CENTER; -fx-font-size: 12;");
+        columnPrice.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
+
+        tableCart.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         tableCart.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
+        controllerCart.populateWinCart();
+        tableCart.setItems(controllerCart.getListCart());
 
     }
 

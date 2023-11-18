@@ -46,6 +46,8 @@ public class PurchaseHistoryDao {
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setString(1, client.getLogin());
         ResultSet rs= ps.executeQuery();
+
+        List<Item> itemList= new ArrayList<>();
         while (rs.next()){
             Order order= new Order();
 
@@ -55,7 +57,6 @@ public class PurchaseHistoryDao {
 
             Item item= new Item();
             item.setProduct(product);
-            List<Item> itemList= new ArrayList<>();
             itemList.add(item);
 
             Payment payment= new Payment();

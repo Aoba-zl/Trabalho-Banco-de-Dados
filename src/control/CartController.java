@@ -1,34 +1,76 @@
 package control;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
+import persistence.CartDao;
 import persistence.GenericDao;
 
 public class CartController
 {
     private Client client;
+
+
     private Cart cart;
 
+    private Order order;
+
     private ObservableList<Item> listCart= FXCollections.observableArrayList();
+
+    private GenericDao genericDao= new GenericDao();
+    private CartDao cartDao= new CartDao(genericDao);
+
+    private StringProperty portage= new SimpleStringProperty("Frete:");
+    private StringProperty totalCart= new SimpleStringProperty("Total:");
 
 
 
     public void populateWinCart(){
-        if (listCart == null) {
-            GenericDao genericDao= new GenericDao();
-            // se a lista estiver vazia, consulta no banco de dados se a uma order que esta sem pagamento
-            // se retornar null, o usuario não adicionou nenhum produto ao carrinho
-        }
-        else {
-            //se tiver items na lista, consulta no banco de dados se a uma order sem pagamento
-            //se retornar alguma order, aqueles items na lista são adicionados ao order usando o inserir do banco de dados
-            //se não, é preciso criar uma order e os items na lista são inseridos no banco de dados
+        client= new Client();
+        client.setLogin("teste2");
+
+        order= new Order();
+        order= cartDao.listCart(client);
+
+        if (order.getItems() != null){
+            List<Item> items= order.getItems();
+            double portageCal= 0;
+            double totalPrice= 0;
+
+            for (int i = 0; i < items.size(); i++) {
+                Item item= items.get(i);
+                portageCal+= item.getProduct().getShipping();
+                totalPrice+= item.getSubTotal();
+
+                listCart.add(items.get(i));
+            }
+            totalPrice+= portageCal;
+            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+            String formatedvalue= decimalFormat.format(portageCal);
+            String portageTotal= ("R$ " + formatedvalue);
+
+            portage.set("Frete: " + portageTotal);
+
+            formatedvalue= decimalFormat.format(totalPrice);
+            String totalValue= ("R$ " + formatedvalue);
+
+            totalCart.set("Total: " + totalValue);
         }
 
+    }
 
+    public int getOrderID(){
+        client= new Client();
+        client.setLogin("teste2");
+
+        int orderId= cartDao.getOrderId(client.getLogin());
+
+        return orderId;
     }
 
     public CartController(Client client) {
@@ -36,40 +78,53 @@ public class CartController
         this.cart = client.getCart();
     }
 
+    public CartController() {
+    }
+
     public ObservableList<Item> getListCart() {
         return listCart;
     }
 
-    public void setListCart(Item item) {
-        listCart.add(0, item);
-    }
-
-    public void deleteOrder (Item order) {
-        //TODO: CtrlCarrinho. Corpo da operacao
+    public void deleteOrder () {
+        cartDao.deleteOrder(getOrderID());
     }
     
     public double calculateTotal (List<Item> select) {
         double totalSelect = 0;
-        //TODO: CtrlCarrinho. Corpo da operacao
-        // loop de soma os valores dos pedidos selecionados no carrinho
+        for (int i = 0; i < listCart.size(); i++) {
+            Item item= listCart.get(i);
+            totalSelect+= item.getSubTotal() + item.getProduct().getShipping();
+        }
         return totalSelect;
     }
-    public void clearCart() {
-        //TODO: CtrlCarrinho. Corpo da operacao
-        List<Item> items = cart.getItens();
-        items.clear();
+    public void clearCart(Item item) {
+        cartDao.deleteItem(item.getProduct().getCod(), getOrderID());
+        if (listCart.size() == 1){
+            deleteOrder();
+        }
     }
     
-    public void alterQuantity () {
-        //TODO: CtrlCarrinho. Corpo da operacao
+    public void alterQuantity (Item item) {
+        cartDao.alterQuantity(getOrderID(), item);
+        listCart.clear();
+        populateWinCart();
     }
     
-    public void placeOrder () {
-        //TODO: CtrlCarrinho. Corpo da operacao
+    public void placeOrder (Client client, Item item) {
+        cartDao.insertNewOrder(client, item, calculateTotal(listCart));
+        populateWinCart();
     }
     
     private Order createPedido () {
         Order newOrder = new Order();
         return newOrder;
+    }
+
+    public StringProperty portageProperty() {
+        return portage;
+    }
+
+    public StringProperty totalCartProperty() {
+        return totalCart;
     }
 }

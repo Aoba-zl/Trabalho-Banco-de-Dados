@@ -1,13 +1,11 @@
 package model;
 
-import javafx.beans.property.SimpleStringProperty;
-
 import java.util.Currency;
 import java.util.List;
 
 public class Order {
     private List<Item> items;
-    private Currency total;
+    private double total;
     private Payment payment;
     private Integer id;
 
@@ -19,11 +17,11 @@ public class Order {
         this.items = items;
     }
 
-    public Currency getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Currency total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
