@@ -30,9 +30,10 @@ public class CartController
 
 
 
+
     public void populateWinCart(){
         client= new Client();
-        client.setLogin("teste2");
+        client.setLogin("teste2"); //todo alterar -------------------
 
         order= new Order();
         order= cartDao.listCart(client);
@@ -60,17 +61,19 @@ public class CartController
             String totalValue= ("R$ " + formatedvalue);
 
             totalCart.set("Total: " + totalValue);
+
+            cartDao.setTotalCart(order.getId(), totalPrice);
         }
 
     }
 
-    public int getOrderID(){
+    public Order getOrderID(){
         client= new Client();
-        client.setLogin("teste2");
+        client.setLogin("teste2"); //todo alterar ---------
 
-        int orderId= cartDao.getOrderId(client.getLogin());
+        order= cartDao.getOrderId(client.getLogin());
 
-        return orderId;
+        return order;
     }
 
     public CartController(Client client) {
@@ -110,14 +113,17 @@ public class CartController
         populateWinCart();
     }
     
-    public void placeOrder (Client client, Item item) {
-        cartDao.insertNewOrder(client, item, calculateTotal(listCart));
-        populateWinCart();
+    public void placeOrder (Item item) {
+        cartDao.insertNewItem(getOrderID(), item);
     }
     
-    private Order createPedido () {
-        Order newOrder = new Order();
-        return newOrder;
+    public void createOrder (Client client, Item item) {
+        cartDao.insertNewOrder(client, item);
+        populateWinCart();
+    }
+
+    public void updateOrder(Item item){
+        cartDao.insertNewItem(getOrderID(), item);
     }
 
     public StringProperty portageProperty() {

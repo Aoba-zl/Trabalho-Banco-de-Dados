@@ -1,10 +1,21 @@
 package view;
 
+import control.CartController;
+import control.PlaceOrderController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import model.Item;
+import model.Order;
+import model.Product;
+
+import java.text.DecimalFormat;
+import java.util.List;
 
 public class WinPurchaseDetailsConstruct  {
     private Button btnBuy= new Button("Comprar");
@@ -13,10 +24,23 @@ public class WinPurchaseDetailsConstruct  {
     private Label lblPortage= new Label("Frete:");
     private Label lblPaymentMethod= new Label("Método de Pagamento:");
 
+    private TableView<Item> tablePurchase= new TableView<>();
 
-    public void addElements(Pane pane) {
+    PlaceOrderController controllerPlaceOrder= new PlaceOrderController();
+
+    CartController cartController= new CartController();
+
+    WinShoppingCartConstructor winShoppingCartConstructor;
+
+
+    public void bindings(){
+        Bindings.bindBidirectional(lblPortage.textProperty(), controllerPlaceOrder.portageProperty());
+        Bindings.bindBidirectional(lblTotalPurchaseValue.textProperty(), controllerPlaceOrder.totalPurchaseProperty());
+    }
+
+    public void addElements(Pane pane, ObservableList<Item> listItems, Boolean cart) {
         Button btnReturn= new Button();
-        btnBuy.relocate(500, 330);
+        btnBuy.relocate(520, 330);
         btnBuy.setPrefHeight(40);
         btnBuy.setPrefWidth(90);
         setBtnBackImage(btnReturn);
@@ -29,35 +53,165 @@ public class WinPurchaseDetailsConstruct  {
 
         lblTittle.setFont(Font.font(24));
         lblTittle.relocate(210, 20);
-        lblTotalPurchaseValue.setFont(Font.font(13));
+        lblTotalPurchaseValue.setFont(Font.font(15));
         lblTotalPurchaseValue.relocate(380, 340);
-        lblPortage.setFont(Font.font(13));
-        lblPortage.relocate(270, 340);
+        lblPortage.setFont(Font.font(15));
+        lblPortage.relocate(265, 340);
         lblPaymentMethod.setFont(Font.font(13));
         lblPaymentMethod.relocate(30, 340);
 
         ComboBox cbPaymentMethod= new ComboBox<>();
         cbPaymentMethod.setPrefHeight(20);
-        cbPaymentMethod.setPrefWidth(70);
+        cbPaymentMethod.setPrefWidth(80);
         cbPaymentMethod.relocate(175, 338);
+        cbPaymentMethod.getItems().addAll("Pix", "Boleto");
 
-        TableView tbProducts= new TableView<>();
-        TableColumn columnId= new TableColumn<>("ID");
-        TableColumn columnName= new TableColumn<>("Nome");
-        TableColumn columnStoreName= new TableColumn<>("Nome da Loja");
-        TableColumn columnProductValue= new TableColumn<>("Preço");
-        columnId.setMinWidth(60);
-        columnName.setMinWidth(200);
-        columnStoreName.setMinWidth(170);
-        columnProductValue.setMinWidth(108);
-        tbProducts.setPrefHeight(240);
-        tbProducts.setPrefWidth(560);
-        tbProducts.relocate(40, 70);
-        tbProducts.getColumns().addAll(columnId, columnName, columnStoreName, columnProductValue);
+        tablePurchase.setMinWidth(575);
+        tablePurchase.setMaxHeight(250);
+        tablePurchase.relocate(30, 60);
+
+        //EVENTS --------------------------------------------------------------
+
+        btnReturn.setOnMouseClicked(event -> {
+            if (cart){
+                winShoppingCartConstructor= new WinShoppingCartConstructor();
+                pane.getChildren().clear();
+                winShoppingCartConstructor.addElements(pane);
+            }
+            else {
+                //todo retorna para a tela do produto se cart == false
+            }
+        });
+
+        btnBuy.setOnMouseClicked(event -> {
+
+            if (cart){
+                if (cbPaymentMethod.getValue() == "Pix"){
+                    controllerPlaceOrder.placePayment(cartController.getOrderID(), true);
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait();
+                    pane.getChildren().clear();
+                    winShoppingCartConstructor= new WinShoppingCartConstructor();
+                    winShoppingCartConstructor.addElements(pane);
+                }
+                else if (cbPaymentMethod.getValue() == "Boleto") {
+                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false);
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait();
+                    pane.getChildren().clear();
+                    winShoppingCartConstructor= new WinShoppingCartConstructor();
+                    winShoppingCartConstructor.addElements(pane);
+                }
+                else if (cbPaymentMethod.getValue() == null){
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selecione o método de pagamento!");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait(); // Exibe o alerta e espera até que ele seja fechado
+                }
+            }
+            else{
+                //todo operação para a tela do produto
+                if (cbPaymentMethod.getValue() == "Pix"){
+                    controllerPlaceOrder.createOrderAndPayment();
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait();
+                    pane.getChildren().clear();
+                    winShoppingCartConstructor= new WinShoppingCartConstructor();
+                    winShoppingCartConstructor.addElements(pane);
+                }
+                else if (cbPaymentMethod.getValue() == "Boleto") {
+                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false);
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait();
+                    pane.getChildren().clear();
+                    winShoppingCartConstructor= new WinShoppingCartConstructor();
+                    winShoppingCartConstructor.addElements(pane);
+                }
+                else if (cbPaymentMethod.getValue() == null){
+                    Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informação");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selecione o método de pagamento!");
+                    alert.getDialogPane().setStyle("-fx-font-size: 15");
+                    alert.showAndWait(); // Exibe o alerta e espera até que ele seja fechado
+                }
+            }
 
 
-        pane.getChildren().addAll(tbProducts, btnBuy, btnReturn, lblPaymentMethod,lblPortage,lblTotalPurchaseValue,lblTittle, cbPaymentMethod);
+        });
 
+
+
+        //---------------------------------------------------------------------
+
+
+        bindings();
+        populateTable(listItems);
+        pane.getChildren().addAll(tablePurchase, btnBuy, btnReturn, lblPaymentMethod,lblPortage,lblTotalPurchaseValue,lblTittle, cbPaymentMethod);
+
+    }
+
+    private void populateTable(ObservableList<Item> listItems){
+        TableColumn<Item, String> columnProductName= new TableColumn<>("Nome");
+        columnProductName.setCellValueFactory(itemData -> {
+            Product product = itemData.getValue().getProduct();
+            String nameProduct = String.valueOf(product.getName());
+            return new ReadOnlyStringWrapper(nameProduct);
+        });
+
+        TableColumn<Item, String> columnDescription= new TableColumn<>("Descrição");
+        columnDescription.setCellValueFactory(itemData -> {
+            Product product = itemData.getValue().getProduct();
+            String productDescription = String.valueOf(product.getDescription());
+            return new ReadOnlyStringWrapper(productDescription);
+        });
+
+        TableColumn<Item, String> columnQuantity= new TableColumn<>("Quantidade");
+        columnQuantity.setCellValueFactory(itemData -> {
+            String productQuantity= String.valueOf(itemData.getValue().getQuantity());
+            return new ReadOnlyStringWrapper(productQuantity);
+        });
+
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        TableColumn<Item, String> columnPrice= new TableColumn<>("Preço");
+        columnPrice.setCellValueFactory(itemData -> {
+            String formatedvalue= decimalFormat.format(itemData.getValue().getSubTotal());
+            String productPrice= ("R$ " + formatedvalue);
+            return new ReadOnlyStringWrapper(productPrice);
+        });
+
+        columnProductName.setMinWidth(160);
+        columnDescription.setMinWidth(205);
+        columnQuantity.setMinWidth(80);
+        columnPrice.setMinWidth(128);
+        columnProductName.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
+        columnDescription.setStyle("-fx-font-size: 13;");
+        columnQuantity.setStyle("-fx-alignment: CENTER; -fx-font-size: 12;");
+        columnPrice.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
+
+        tablePurchase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        controllerPlaceOrder.populateWinPurchase(listItems);
+        tablePurchase.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
+        tablePurchase.setItems(listItems);
     }
 
     private void setBtnBackImage(Button btnBack) {

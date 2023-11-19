@@ -68,11 +68,12 @@ public class CartDao {
         }
     }
 
-    public int getOrderId(String login){
+    public Order getOrderId(String login){
         Connection connection= null;
         try {
             connection = genericDao.getConnection();
-            String sql= "select car.id_order\n" +
+            String sql= "select car.id_order,\n" +
+                    "       car.total\n" +
                     "from order_tbl order_tab, cart car, client cli\n" +
                     "where order_tab.id_order = car.id_order\n" +
                     "  and cli.user_name = car.user_name\n" +
@@ -82,20 +83,41 @@ public class CartDao {
 
             ResultSet rs= ps.executeQuery();
 
-            int id = 0;
+            Order order= new Order();
             while (rs.next()){
-                id= rs.getInt(1);
+                order.setId(rs.getInt(1));
+                order.setTotal(rs.getDouble(2));
             }
 
             connection.close();
 
-            return id;
+            return order;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void insertNewOrder(Client client, Item item, Double total){
+    public void setTotalCart(int orderId, double total){
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= "update cart\n" +
+                    "set\n" +
+                    "    total= ?\n" +
+                    "where id_order = ?";
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setDouble(1, total);
+            ps.setInt(2, orderId);
+
+            ps.executeUpdate();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Erro em inserir total do carrinho");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void insertNewOrder(Client client, Item item){
         Order order= new Order();
         try {
             Connection connection= genericDao.getConnection();
@@ -122,7 +144,7 @@ public class CartDao {
             PreparedStatement insertCart= connection.prepareStatement(sql2);
             insertCart.setString(1, client.getLogin());
             insertCart.setInt(2, order.getId());
-            insertCart.setDouble(3, total);
+            insertCart.setDouble(3, item.getSubTotal());
 
             insertCart.executeUpdate();
 
@@ -149,7 +171,31 @@ public class CartDao {
         }
     }
 
-    public void alterQuantity( int orderId, Item item){
+    public void insertNewItem(Order order, Item item){
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= "insert into order_product (id_order, id_product, quantity, sub_total)\n" +
+                    "values\n" +
+                    "    (?, ?, ?, ?)";
+            PreparedStatement insertOrder= connection.prepareStatement(sql);
+            insertOrder.setInt(1, order.getId());
+            insertOrder.setInt(2, item.getProduct().getCod());
+            insertOrder.setInt(3, item.getQuantity());
+            insertOrder.setDouble(4, item.getProduct().getPrice() * item.getQuantity());
+
+            insertOrder.executeUpdate();
+
+
+
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public void alterQuantity(Order order, Item item){
         try {
             Connection connection= genericDao.getConnection();
             String sql= "update order_product\n" +
@@ -162,11 +208,11 @@ public class CartDao {
             ps.setInt(1, item.getQuantity());
             ps.setDouble(2, item.getQuantity() * item.getProduct().getPrice());
             ps.setInt(3, item.getProduct().getCod());
-            ps.setInt(4, orderId);
+            ps.setInt(4, order.getId());
 
             ps.executeUpdate();
 
-            connection.close();
+
 
         } catch (SQLException e) {
             System.out.println("Erro em alterar quantidade do produto no banco de dados");
@@ -174,7 +220,7 @@ public class CartDao {
         }
     }
 
-    public void deleteItem(int idProduct, int idOrder){
+    public void deleteItem(int idProduct, Order order){
         try {
             Connection connection= genericDao.getConnection();
             String sql= "delete from order_product\n" +
@@ -182,7 +228,7 @@ public class CartDao {
                     "    and id_order = ?";
             PreparedStatement ps= connection.prepareStatement(sql);
             ps.setInt(1, idProduct);
-            ps.setInt(2, idOrder);
+            ps.setInt(2, order.getId());
 
             ps.executeUpdate();
 
@@ -193,20 +239,20 @@ public class CartDao {
         }
     }
 
-     public void deleteOrder(int idOrder){
+     public void deleteOrder(Order order){
         try {
             Connection connection= genericDao.getConnection();
             String sql= "delete from cart\n" +
                     "where id_order = ?";
             PreparedStatement deleteCart= connection.prepareStatement(sql);
-            deleteCart.setInt(1,idOrder);
+            deleteCart.setInt(1,order.getId());
 
             deleteCart.executeUpdate();
 
             String sql3= "delete from order_tbl\n" +
                     "where id_order= ?";
             PreparedStatement deleteOrder= connection.prepareStatement(sql3);
-            deleteOrder.setInt(1, idOrder);
+            deleteOrder.setInt(1, order.getId());
 
             deleteOrder.executeUpdate();
 

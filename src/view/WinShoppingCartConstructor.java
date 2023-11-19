@@ -2,6 +2,7 @@ package view;
 
 import control.CartController;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -33,6 +34,8 @@ public class WinShoppingCartConstructor {
 
     CartController controllerCart= new CartController();
 
+    WinPurchaseDetailsConstruct winPurchaseDetailsConstruct;
+
     public void bindings(){
         Bindings.bindBidirectional(lblPortage.textProperty(), controllerCart.portageProperty());
         Bindings.bindBidirectional(lblTotalPrice.textProperty(), controllerCart.totalCartProperty());
@@ -49,6 +52,7 @@ public class WinShoppingCartConstructor {
         btnRemove.relocate(30, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
+        btnPlaceOrder.setDisable(true);
         btnMinus.relocate(230, 355);
         btnMinus.setFont(Font.font(13));
         btnMinus.setDisable(true);
@@ -63,6 +67,8 @@ public class WinShoppingCartConstructor {
         setOverButtonStyle(btnReturn, styleEnter, styleExit);
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
+
+
 
         lblTittle.setFont(Font.font(26));
         lblTittle.relocate(260, 15);
@@ -106,15 +112,16 @@ public class WinShoppingCartConstructor {
                         selectedProduct.setQuantity(selectedProduct.getQuantity() - 1);
                         controllerCart.alterQuantity(selectedProduct);
                     }
-                    else {
-                        //TODO menssagem de erro informando que o produto não possui esse total no estoque
-                    }
+
                 });
 
                 btnPlus.setOnMouseClicked(event -> {
                     if (selectedProduct.getQuantity() < selectedProduct.getProduct().getTotalStock()){
                         selectedProduct.setQuantity(selectedProduct.getQuantity() + 1);
                         controllerCart.alterQuantity(selectedProduct);
+                    }
+                    else {
+                        //TODO menssagem de erro informando que o produto não possui esse total no estoque
                     }
                 });
 
@@ -123,9 +130,13 @@ public class WinShoppingCartConstructor {
                     tableCart.getItems().remove(selectedProduct);
                 });
 
-
-
             }
+        });
+
+        btnPlaceOrder.setOnMouseClicked(event -> {
+            winPurchaseDetailsConstruct= new WinPurchaseDetailsConstruct();
+            pane.getChildren().clear();
+            winPurchaseDetailsConstruct.addElements(pane, controllerCart.getListCart(), true);
         });
 
 
@@ -135,6 +146,7 @@ public class WinShoppingCartConstructor {
         populateTable();
         bindings();
         pane.getChildren().addAll(tableCart, btnAccount,btnQuit,btnReturn,btnRemove, btnPlaceOrder, btnMinus, btnPlus, lblTittle, lblTotalPrice, lblPortage, lblQuantity);
+
 
     }
 
@@ -181,6 +193,10 @@ public class WinShoppingCartConstructor {
         tableCart.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
         controllerCart.populateWinCart();
         tableCart.setItems(controllerCart.getListCart());
+
+        BooleanBinding isTableEmpty = Bindings.isEmpty(tableCart.getItems());
+        btnPlaceOrder.disableProperty().bind(isTableEmpty);
+
 
     }
 
