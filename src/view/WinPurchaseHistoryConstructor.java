@@ -34,7 +34,9 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-
+/**
+ * Esta é uma classe de Boundary que representa a tela de Historico de Compras.
+ */
 public class WinPurchaseHistoryConstructor {
     private Button btnSeePurchase= new Button("Ver Compra");
     private TextField tfSearch= new TextField();
@@ -55,7 +57,7 @@ public class WinPurchaseHistoryConstructor {
     private TextField tfMethodPayment = new TextField();
     private TextField tfStatus= new TextField();
 
-    public void bindings(){
+    private void bindings(){
         Bindings.bindBidirectional(tfProductName.textProperty(), controllerOrder.nameProductProperty());
         Bindings.bindBidirectional(tfShop.textProperty(), controllerOrder.nameStoreProperty());
         Bindings.bindBidirectional(tfProductPrice.textProperty(), controllerOrder.priceProductProperty());
@@ -66,6 +68,11 @@ public class WinPurchaseHistoryConstructor {
         Bindings.bindBidirectional(tfStatus.textProperty(), controllerOrder.statusProperty());
 
     }
+
+    /**
+     * Adiciona os elementos a tela Principal e possui os eventos dos elementos.
+     * @param pane O painel usado para inserir o elementos.
+     */
     public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
