@@ -51,11 +51,17 @@ public class RegisterUserController {
     	this.lblWarning = lblWarning;
     }
     
-    public boolean validateUserLogin(String login) {
+    public boolean validateUserLogin(User newUser) throws SQLException {
         //TODO: CtrlCadastroUsuario. Corpo da operacao
         /*
         se o login não estiver no BD -> True, pode criar user c/ o login.
          */
+		GenericDao gDao = new GenericDao();
+		UserDao uDao = new UserDao(gDao);
+		User u = uDao.consult(newUser);
+		if (u.getLogin() != newUser.getLogin()) {
+				return true;
+		}
         return false;
     }
     public Address completeAddress(String cep) {
@@ -74,6 +80,10 @@ public class RegisterUserController {
 		UserDao uDao = new UserDao(gDao);
 		ClientDao cDao = new ClientDao(gDao);
     	User newUser = new UserFactory().create(tfName.getText().trim(), tfPasswd.getText().trim(), "client", tfEmail.getText().trim(), tfPhone.getText().trim());
+    	if (validateUserLogin(newUser)) {
+    		lblWarning.setText("Nome Ja Cadastrado");
+        	return false;
+    	}
     	String Sex;
     	if (rbMale.isSelected()) {
     		Sex = "Masculino";
@@ -105,37 +115,50 @@ public class RegisterUserController {
         return store;
     }
     private boolean checkValuesClient () {
+    	// 01-02-2013 formato que deve ser chegar
+    	if (!tfBirthDate.getText().trim().isBlank() && tfBirthDate.getLength() == 10) {
+    		tfBirthDate.setText(tfBirthDate.getText().replace("/", "-"));
+    		String[] data = tfBirthDate.getText().split("-");
+    		if (data.length !=3 || data[0].length() !=2 || data[1].length() !=2 || data[2].length() !=4 || !data[0].matches("\\d+")|| !data[1].matches("\\d+")|| !data[2].matches("\\d+") || Integer.parseInt(data[2]) < 1800 || Integer.parseInt(data[0]) > 31 || Integer.parseInt(data[1]) > 12 ) {
+    			lblWarning.setText("Data de Nascimento invalida");
+            	return false;
+    		}
+    	}else {
+    		lblWarning.setText("Data de Nascimento Deve Estar no Formato: dd-mm-aaaa");
+    		return false;
+    	}
     	
-    	if (tfBirthDate.getText().trim().isBlank()) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (tfCPF.getText().trim().isBlank() || !tfCPF.getText().matches("\\d+") || tfCPF.getText().length() != 11) {
+    		lblWarning.setText("CPF Invalido");
         	return false;
     	}
-    	if (tfCPF.getText().trim().isBlank() || tfCPF.getText().matches("\\d+")) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (tfEmail.getText().trim().isBlank() || tfEmail.getLength() > 100) {
+    		lblWarning.setText("Email Invalido");
         	return false;
     	}
-    	if (tfEmail.getText().trim().isBlank()) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (tfName.getText().trim().isBlank() || tfName.getLength() > 60) {
+    		lblWarning.setText("Nome de Usuario Invalido");
         	return false;
     	}
-    	if (tfName.getText().trim().isBlank()) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (tfPasswd.getText().trim().isBlank() || tfPasswd.getLength() > 60) {
+    		lblWarning.setText("Senha Invalido");
         	return false;
     	}
-    	if (tfPasswd.getText().trim().isBlank()) {
-    		lblWarning.setText("Nome Social Invalido");
-        	return false;
-    	}
-    	if (tfPhone.getText().trim().isBlank() || tfCPF.getText().matches("\\d+")) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (tfPhone.getText().trim().isBlank() || !tfPhone.getText().matches("\\d+") || tfPhone.getLength() <9 || tfPhone.getLength() > 10 ) {
+    		lblWarning.setText("Telefone Invalido");
         	return false;
     	}
     	if (rbOther.isSelected()) {
-    		if (tfSex.getText().trim().isBlank()) {
-    			lblWarning.setText("Nome Social Invalido");
+    		if (tfSex.getText().trim().isBlank() || tfSex.getLength() > 25) {
+    			lblWarning.setText("Sexo Invalido");
     			return false;
     		}
     	}
+    	if (!rbFem.isSelected() && !rbMale.isSelected() && !rbOther.isSelected()) {
+    		lblWarning.setText("Selecione um sexo");
+        	return false;
+    	}
+    	
     	if (tfSocialName.getText().trim().isBlank() || tfSocialName.getText().length() > 100) {
     		lblWarning.setText("Nome Social Invalido");
         	return false;

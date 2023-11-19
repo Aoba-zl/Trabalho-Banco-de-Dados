@@ -1,6 +1,9 @@
 package view;
 
+import java.sql.SQLException;
+
 import control.ChangeSceneController;
+import control.RegisterUserController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -133,21 +136,32 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		if (rb.isSelected()) {
 			lb.setVisible(true);
 			tf.setVisible(true);
-		}else {
+		}else {	
 			lb.setVisible(false);
 			tf.setVisible(false);
 		}
 	}
 	
+	// Voltando para tela de login
 	private void toLogin()
 	{
 		UserSession.clearSession();
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
-	
+	// avançando para tela de endereco e validando inserçoes
 	private void toClientAddress(TextField tfName,TextField tfCPF,TextField tfEmail,TextField tfPasswd,TextField tfSocialName,TextField tfPhone,TextField tfBirthDate,TextField tfSex, RadioButton rbMale, RadioButton rbFem, RadioButton rbOther, Label lblWarning)
 	{
-		
-		ChangeSceneController.changeScene(SceneName.REG_CLIENT_ADDRESS, this.pWin);
+		RegisterUserController login = new RegisterUserController(tfName, tfCPF, tfEmail, tfPasswd, tfSocialName, tfPhone, tfBirthDate, tfSex, rbMale, rbFem, rbOther,lblWarning);
+		try {
+			if (login.generateClient())
+				openWinAddressClient (tfName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	// avanço para a tela de endereço
+	private void openWinAddressClient (TextField tfName) {
+		WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(tfName);
+		ClienA.addElements(pWin);
 	}
 }

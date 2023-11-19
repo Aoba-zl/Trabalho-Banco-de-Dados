@@ -13,7 +13,14 @@ import utils.UserSession;
 
 public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
-	Pane pWin;
+	private Pane pWin;
+	private String usuario;
+	
+	public WinRegClientAddressConstructor () {
+	}
+	public WinRegClientAddressConstructor (TextField login) {
+		usuario = login.getText();
+	}
 	
     public void addElements(Pane pane)
 	{
