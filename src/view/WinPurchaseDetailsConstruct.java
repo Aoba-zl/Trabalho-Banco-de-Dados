@@ -122,7 +122,7 @@ public class WinPurchaseDetailsConstruct  {
             else{
                 //todo operação para a tela do produto
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.createOrderAndPayment();
+//                    controllerPlaceOrder.createOrderAndPayment(); //todo alterar
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
@@ -134,7 +134,7 @@ public class WinPurchaseDetailsConstruct  {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false);
+                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false); //todo alterar
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);

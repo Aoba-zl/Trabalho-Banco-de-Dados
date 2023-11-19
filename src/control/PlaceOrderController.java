@@ -58,7 +58,7 @@ public class PlaceOrderController {
     }
 
     public Client getClient(){
-        client.setLogin();
+//        client.setLogin(); todo adicionar metodo para pegar login
         return client;
     }
 
