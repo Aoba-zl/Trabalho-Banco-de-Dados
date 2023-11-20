@@ -2,8 +2,11 @@ package view;
 
 import java.sql.SQLException;
 
+import javax.naming.Binding;
+
 import control.ChangeSceneController;
 import control.RegisterUserController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -22,7 +25,7 @@ import utils.UserSession;
 public class WinRegClientInfoConstructor implements GenericWindownInterface
 {
 	Pane pWin;
-	
+	private RegisterUserController login = new RegisterUserController();
     private ToggleGroup group;
 	public void addElements(Pane pane)
 	{
@@ -90,11 +93,28 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		tfSex.relocate(435, 225);
 		tfSex.setVisible(false);
 		
+		// ----- Criando property com o controller ----- //
+		
+		Bindings.bindBidirectional(tfName.textProperty(), login.getName());
+		Bindings.bindBidirectional(tfCPF.textProperty(), login.getCpf());
+		Bindings.bindBidirectional(tfEmail.textProperty(), login.getEmail());
+		Bindings.bindBidirectional(tfPasswd.textProperty(), login.getPasswd());
+		Bindings.bindBidirectional(tfSocialName.textProperty(), login.getSocialName());
+		Bindings.bindBidirectional(tfPhone.textProperty(), login.getPhone());
+		Bindings.bindBidirectional(tfBirthDate.textProperty(), login.getBirthDate());
+		Bindings.bindBidirectional(tfSex.textProperty(), login.getSex());
+		Bindings.bindBidirectional(lblWarning.textProperty(), login.getWarning());
+		
+		
 		// ----- Criando optionPanes ----- //
 		
 		RadioButton rbMale = new RadioButton("Masculino");
 		RadioButton rbFem = new RadioButton("Feminino");
 		RadioButton rbOther = new RadioButton("Outro");
+		
+		Bindings.bindBidirectional(rbMale.selectedProperty(), login.getMale());
+		Bindings.bindBidirectional(rbFem.selectedProperty(), login.getFem());
+		Bindings.bindBidirectional(rbOther.selectedProperty(), login.getOther());
 		group = new ToggleGroup();
 		rbMale.setToggleGroup(group);
 		rbFem.setToggleGroup(group);
@@ -122,7 +142,7 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		
 		//ChangeScene
 		btnBack.setOnAction(e -> toLogin());
-		btnNext.setOnAction(e -> toClientAddress(tfName, tfCPF, tfEmail, tfPasswd, tfSocialName, tfPhone, tfBirthDate, tfSex, rbMale, rbFem, rbOther,lblWarning));
+		btnNext.setOnAction(e -> toClientAddress());
 		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
 		
@@ -149,19 +169,12 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	// avançando para tela de endereco e validando inserçoes
-	private void toClientAddress(TextField tfName,TextField tfCPF,TextField tfEmail,TextField tfPasswd,TextField tfSocialName,TextField tfPhone,TextField tfBirthDate,TextField tfSex, RadioButton rbMale, RadioButton rbFem, RadioButton rbOther, Label lblWarning)
+	private void toClientAddress()
 	{
-		RegisterUserController login = new RegisterUserController(tfName, tfCPF, tfEmail, tfPasswd, tfSocialName, tfPhone, tfBirthDate, tfSex, rbMale, rbFem, rbOther,lblWarning);
-		try {
-			if (login.generateClient())
-				openWinAddressClient (tfName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	// avanço para a tela de endereço
-	private void openWinAddressClient (TextField tfName) {
-		WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(tfName);
-		ClienA.addElements(pWin);
+			if (login.checkValuesClient()) {
+				pWin.getChildren().clear();
+				WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(login);
+				ClienA.addElements(pWin);
+			}
 	}
 }

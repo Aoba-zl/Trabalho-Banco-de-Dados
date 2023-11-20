@@ -4,6 +4,10 @@ import java.sql.SQLException;
 
 import factory.ClientFactory;
 import factory.UserFactory;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -21,36 +25,20 @@ public class RegisterUserController {
     Address novoEndereco;
     
     // cliente
-    private TextField tfName;
-    private TextField tfCPF;
-    private TextField tfEmail;
-    private TextField tfPasswd;
-    private TextField tfSocialName;
-    private TextField tfPhone;
-    private TextField tfBirthDate;
-    private TextField tfSex;
-    private RadioButton rbMale;
-    private RadioButton rbFem;
-    private RadioButton rbOther;
-    private Label lblWarning;
+    private StringProperty spName = new SimpleStringProperty("");
+    private StringProperty spCpf = new SimpleStringProperty("");
+    private StringProperty spEmail = new SimpleStringProperty("");
+    private StringProperty spPasswd = new SimpleStringProperty("");
+    private StringProperty spSocialName = new SimpleStringProperty("");
+    private StringProperty spPhone = new SimpleStringProperty("");
+    private StringProperty spBirthDate = new SimpleStringProperty("");
+    private StringProperty spSex = new SimpleStringProperty("");
+    private StringProperty spWarning = new SimpleStringProperty("");
+    private BooleanProperty spMale = new SimpleBooleanProperty();
+    private BooleanProperty spFem = new SimpleBooleanProperty();
+    private BooleanProperty spOther = new SimpleBooleanProperty();
     
-    
-    // Cliente
-    public RegisterUserController (TextField tfName,TextField tfCPF,TextField tfEmail,TextField tfPasswd,TextField tfSocialName,TextField tfPhone,TextField tfBirthDate,TextField tfSex, RadioButton rbMale, RadioButton rbFem, RadioButton rbOther,Label lblWarning) {
-    	this.tfBirthDate = tfBirthDate;
-    	this.tfCPF = tfCPF;
-    	this.tfEmail = tfEmail;
-    	this.tfName = tfName;
-    	this.tfPasswd = tfPasswd;
-    	this.tfPhone = tfPhone;
-    	this.tfSex = tfSex;
-    	this.tfSocialName = tfSocialName;
-    	this.rbFem = rbFem;
-    	this.rbMale = rbMale;
-    	this.rbOther = rbOther;
-    	this.lblWarning = lblWarning;
-    }
-    
+ 
     public boolean validateUserLogin(User newUser) throws SQLException {
         //TODO: CtrlCadastroUsuario. Corpo da operacao
         /*
@@ -79,22 +67,33 @@ public class RegisterUserController {
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		ClientDao cDao = new ClientDao(gDao);
-    	User newUser = new UserFactory().create(tfName.getText().trim(), tfPasswd.getText().trim(), "client", tfEmail.getText().trim(), tfPhone.getText().trim());
+		
+    	User newUser = new User(getNameValue());
+    	newUser.setEmail(getEmailValue());
+    	newUser.setPassword(getPasswdValue());
+    	newUser.setPermission("client");
+    	newUser.setTelephone(getPhoneValue());
     	if (validateUserLogin(newUser)) {
-    		lblWarning.setText("Nome Ja Cadastrado");
+    		spWarning.setValue("Nome Ja Cadastrado");
         	return false;
     	}
     	String Sex;
-    	if (rbMale.isSelected()) {
+    	if (spMale.getValue()) {
     		Sex = "Masculino";
     	} else { 
-    		if (rbFem.isSelected()){
+    		if (spFem.getValue()){
     			Sex = "Feminino";
     		} else {
-    			Sex = tfSex.getText().trim();
+    			Sex = getSexValue ();
     		}
     	} 	
-        Client newClient = new ClientFactory().create(newUser, tfSocialName.getText().trim(), tfCPF.getText().trim(), tfBirthDate.getText().trim(), Sex);
+        Client newClient = new Client();
+        newClient.setLogin(getNameValue());
+        newClient.setSocialName(getSocialNameValue());
+        newClient.setCpf(getCpfValue());
+        newClient.setDateBirth(getBirthDateValue());
+        newClient.setSex(Sex);
+        
         uDao.insert(newUser);
         cDao.insert(newClient);
         return true;
@@ -114,56 +113,78 @@ public class RegisterUserController {
         //TODO: CtrlCadastroUsuario. Corpo da operacao
         return store;
     }
-    private boolean checkValuesClient () {
-    	// 01-02-2013 formato que deve ser chegar
-    	if (!tfBirthDate.getText().trim().isBlank() && tfBirthDate.getLength() == 10) {
-    		tfBirthDate.setText(tfBirthDate.getText().replace("/", "-"));
-    		String[] data = tfBirthDate.getText().split("-");
+    public boolean checkValuesClient () {
+    	System.out.println(getName());
+    	// 01-02-2013 formato que deve chegar
+    	if (!getBirthDateValue ().trim().isBlank() && getBirthDateValue ().length() == 10) {
+    		spBirthDate.setValue(spBirthDate.getValue().replace("/", "-"));
+    		String[] data = getBirthDateValue().split("-");
     		if (data.length !=3 || data[0].length() !=2 || data[1].length() !=2 || data[2].length() !=4 || !data[0].matches("\\d+")|| !data[1].matches("\\d+")|| !data[2].matches("\\d+") || Integer.parseInt(data[2]) < 1800 || Integer.parseInt(data[0]) > 31 || Integer.parseInt(data[1]) > 12 ) {
-    			lblWarning.setText("Data de Nascimento invalida");
+    			spWarning.setValue("Data de Nascimento invalida");
             	return false;
     		}
     	}else {
-    		lblWarning.setText("Data de Nascimento Deve Estar no Formato: dd-mm-aaaa");
+    		spWarning.setValue("Data de Nascimento Deve Estar no Formato: dd-mm-aaaa");
     		return false;
     	}
     	
-    	if (tfCPF.getText().trim().isBlank() || !tfCPF.getText().matches("\\d+") || tfCPF.getText().length() != 11) {
-    		lblWarning.setText("CPF Invalido");
+    	if (getCpfValue().trim().isBlank() || !getCpfValue().matches("\\d+") || getCpfValue().length() != 11) {
+    		spWarning.setValue("CPF Invalido");
         	return false;
     	}
-    	if (tfEmail.getText().trim().isBlank() || tfEmail.getLength() > 100) {
-    		lblWarning.setText("Email Invalido");
+    	if (getEmailValue().trim().isBlank() || getEmailValue().length() > 100) {
+    		spWarning.setValue("Email Invalido");
         	return false;
     	}
-    	if (tfName.getText().trim().isBlank() || tfName.getLength() > 60) {
-    		lblWarning.setText("Nome de Usuario Invalido");
+    	if (getNameValue().trim().isBlank() || getNameValue().length() > 60) {
+    		spWarning.setValue("Nome de Usuario Invalido");
         	return false;
     	}
-    	if (tfPasswd.getText().trim().isBlank() || tfPasswd.getLength() > 60) {
-    		lblWarning.setText("Senha Invalido");
+    	if (getPasswdValue ().trim().isBlank() || getPasswdValue ().length() > 60) {
+    		spWarning.setValue("Senha Invalido");
         	return false;
     	}
-    	if (tfPhone.getText().trim().isBlank() || !tfPhone.getText().matches("\\d+") || tfPhone.getLength() <9 || tfPhone.getLength() > 10 ) {
-    		lblWarning.setText("Telefone Invalido");
+    	if (getPhoneValue().trim().isBlank() || !getPhoneValue().matches("\\d+") || getPhoneValue().length() <9 || getPhoneValue().length() > 10 ) {
+    		spWarning.setValue("Telefone Invalido");
         	return false;
     	}
-    	if (rbOther.isSelected()) {
-    		if (tfSex.getText().trim().isBlank() || tfSex.getLength() > 25) {
-    			lblWarning.setText("Sexo Invalido");
+    	if (spOther.getValue()) {
+    		if (getSexValue ().trim().isBlank() || getSexValue ().length() > 25) {
+    			spWarning.setValue("Sexo Invalido");
     			return false;
     		}
     	}
-    	if (!rbFem.isSelected() && !rbMale.isSelected() && !rbOther.isSelected()) {
-    		lblWarning.setText("Selecione um sexo");
+    	if (!spFem.getValue() && !spMale.getValue() && !spOther.getValue()) {
+    		spWarning.setValue("Selecione um sexo");
         	return false;
     	}
     	
-    	if (tfSocialName.getText().trim().isBlank() || tfSocialName.getText().length() > 100) {
-    		lblWarning.setText("Nome Social Invalido");
+    	if (getSocialNameValue().trim().isBlank() || getSocialNameValue().length() > 100) {
+    		spWarning.setValue("Nome Social Invalido");
         	return false;
     	}
     	return true;
     }
+    public StringProperty getName () { return spName; }
+    public StringProperty getCpf () { return spCpf; }
+    public StringProperty getEmail () { return spEmail; }
+    public StringProperty getPasswd () { return spPasswd; }
+    public StringProperty getSocialName () { return spSocialName; }
+    public StringProperty getPhone () { return spPhone; }
+    public StringProperty getBirthDate () { return spBirthDate; }
+    public StringProperty getSex () { return spSex; }
+    public StringProperty getWarning () { return spWarning; }
+    public BooleanProperty getMale () { return spMale; }
+    public BooleanProperty getFem () { return spFem; }
+    public BooleanProperty getOther () { return spOther; }
+    
+    public String getNameValue () { return spName.getValue(); }
+    public String getCpfValue () { return spCpf.getValue(); }
+    public String getEmailValue () { return spEmail.getValue(); }
+    public String getPasswdValue () { return spPasswd.getValue(); }	
+    public String getSocialNameValue () { return spSocialName.getValue(); }
+    public String getPhoneValue () { return spPhone.getValue(); }
+    public String getBirthDateValue () { return spBirthDate.getValue(); }
+    public String getSexValue () { return spSex.getValue(); }
     
 }

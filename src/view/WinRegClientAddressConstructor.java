@@ -1,6 +1,7 @@
 package view;
 
 import control.ChangeSceneController;
+import control.RegisterUserController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,12 +15,12 @@ import utils.UserSession;
 public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-	private String usuario;
+	private RegisterUserController login;
 	
 	public WinRegClientAddressConstructor () {
 	}
-	public WinRegClientAddressConstructor (TextField login) {
-		usuario = login.getText();
+	public WinRegClientAddressConstructor (RegisterUserController login) {
+		this.login = login;
 	}
 	
     public void addElements(Pane pane)
