@@ -1,8 +1,20 @@
-# Default ignored files
 /shelf/
 /workspace.xml
-# Editor-based HTTP Client requests
 /httpRequests/
-# Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+.project
+.classpath
+.idea/
+*.class
+*.classpath
+*.idea
+*.iml
+*.xml
+out/
+module-info.java
+build.fxbuild
+*.jar
+/src/META-INF/MANIFEST.MF
+/bin/
+/lib/

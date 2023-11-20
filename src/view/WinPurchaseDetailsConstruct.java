@@ -19,8 +19,7 @@ import java.text.DecimalFormat;
 /**
  * Esta é uma classe de Boundary que representa a tela de detalhes da compra.
  */
-public class WinPurchaseDetailsConstruct implements GenericWindownInterface
-{
+public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 	Pane pWin;
 
     private Button btnBuy= new Button("Comprar");
@@ -255,5 +254,10 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface
     private void toCart()
     {
     	ChangeSceneController.changeScene(SceneName.CART, pWin);
+    }
+
+    @Override
+    public void addElements(Pane pane) {
+
     }
 }
