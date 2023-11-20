@@ -10,36 +10,51 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Esta é uma classe de Persistence que realiza as operações com o banco de dados.
+ */
 public class OrderHistoryDao {
 
     GenericDao genericDao;
+
+    /**
+     * Adquire a conexão com o banco de dados.
+     * @param genericDao A conexão com o banco de dados.
+     */
     public OrderHistoryDao(GenericDao genericDao) {
         this.genericDao= genericDao;
     }
 
+    /**
+     * Retorna o histórico de pedidos de um determinado vendedor
+     * @param store A loja
+     * @return O histórico de pedidos
+     * @throws SQLException Exceções de SQL
+     */
     public List<Order> listOrderHistory(Store store) throws SQLException {
         List<Order> listHistory= new ArrayList<>();
         Connection connection= genericDao.getConnection();
-        String sql= "select order_tb.id_order,\n" +
-                "       prod.name_product,\n" +
-                "       pay.date_pay,\n" +
-                "       case when (day(getdate()) - day(pay.date_pay) >= 5)\n" +
-                "                then\n" +
-                "                'Finalizado'\n" +
-                "            when (day(getdate()) - day(pay.date_pay) = 4)\n" +
-                "                then\n" +
-                "                'Chega amanhã'\n" +
-                "            when (getdate() = pay.date_pay)\n" +
-                "                then\n" +
-                "                'Preparando'\n" +
-                "            else\n" +
-                "                'A caminho'\n" +
-                "           end as status\n" +
-                "from payment pay, product prod, order_product order_prod, order_tbl order_tb\n" +
-                "where prod.id_product = order_prod.id_product\n" +
-                "  and order_prod.id_order = order_tb.id_order\n" +
-                "  and order_tb.id_order = pay.id_order\n" +
-                "  and prod.user_name = ?";
+        String sql= """
+                select order_tb.id_order,
+                       prod.name_product,
+                       pay.date_pay,
+                       case when (day(getdate()) - day(pay.date_pay) >= 5)
+                                then
+                                'Finalizado'
+                            when (day(getdate()) - day(pay.date_pay) = 4)
+                                then
+                                'Chega amanhã'
+                            when (getdate() = pay.date_pay)
+                                then
+                                'Preparando'
+                            else
+                                'A caminho'
+                           end as status
+                from payment pay, product prod, order_product order_prod, order_tbl order_tb
+                where prod.id_product = order_prod.id_product
+                  and order_prod.id_order = order_tb.id_order
+                  and order_tb.id_order = pay.id_order
+                  and prod.user_name = ?""";
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setString(1, store.getNameStore());
         ResultSet rs= ps.executeQuery();

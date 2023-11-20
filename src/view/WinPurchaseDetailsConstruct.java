@@ -11,12 +11,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import model.Item;
-import model.Order;
 import model.Product;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
+/**
+ * Esta é uma classe de Boundary que representa a tela de detalhes da compra.
+ */
 public class WinPurchaseDetailsConstruct  {
     private Button btnBuy= new Button("Comprar");
     private Label lblTittle= new Label("Detalhes da Compra");
@@ -33,11 +34,18 @@ public class WinPurchaseDetailsConstruct  {
     WinShoppingCartConstructor winShoppingCartConstructor;
 
 
-    public void bindings(){
+    private void bindings(){
         Bindings.bindBidirectional(lblPortage.textProperty(), controllerPlaceOrder.portageProperty());
         Bindings.bindBidirectional(lblTotalPurchaseValue.textProperty(), controllerPlaceOrder.totalPurchaseProperty());
     }
 
+    /**
+     * Adiciona os elementos ao Painel, utilizando uma lista de items e verifica se transição de tela
+     * veio apartir da tela do carrinho ou da tela do produto.
+     * @param pane O painel.
+     * @param listItems A lista.
+     * @param cart A verificação.
+     */
     public void addElements(Pane pane, ObservableList<Item> listItems, Boolean cart) {
         Button btnReturn= new Button();
         btnBuy.relocate(520, 330);
@@ -87,7 +95,7 @@ public class WinPurchaseDetailsConstruct  {
 
             if (cart){
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.placePayment(cartController.getOrderID(), true);
+                    controllerPlaceOrder.placePayment(cartController.getOrder(), true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
@@ -99,7 +107,7 @@ public class WinPurchaseDetailsConstruct  {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false);
+                    controllerPlaceOrder.placePayment(cartController.getOrder(), false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
@@ -134,7 +142,7 @@ public class WinPurchaseDetailsConstruct  {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrderID(), false); //todo alterar
+                    controllerPlaceOrder.placePayment(cartController.getOrder(), false); //todo alterar
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);

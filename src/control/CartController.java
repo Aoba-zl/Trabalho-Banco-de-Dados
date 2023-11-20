@@ -11,8 +11,10 @@ import model.*;
 import persistence.CartDao;
 import persistence.GenericDao;
 
-public class CartController
-{
+/**
+ * Esta é uma classe de Controller que realiza as operações da classe WinShoppingCartConstructor.
+ */
+public class CartController {
     private Client client;
 
 
@@ -29,8 +31,9 @@ public class CartController
     private StringProperty totalCart= new SimpleStringProperty("Total:");
 
 
-
-
+    /**
+     * Carrega os dados para tela do carrinho de compras.
+     */
     public void populateWinCart(){
         client= new Client();
         client.setLogin("teste2"); //todo alterar -------------------
@@ -67,11 +70,15 @@ public class CartController
 
     }
 
-    public Order getOrderID(){
+    /**
+     * Obtem o codigo e total do pedido.
+     * @return O pedido.
+     */
+    public Order getOrder(){
         client= new Client();
         client.setLogin("teste2"); //todo alterar ---------
 
-        order= cartDao.getOrderId(client.getLogin());
+        order= cartDao.getOrder(client.getLogin());
 
         return order;
     }
@@ -84,14 +91,32 @@ public class CartController
     public CartController() {
     }
 
+    /**
+     * Obtêm a lista de items do pedido.
+     * @return A lista de items.
+     */
     public ObservableList<Item> getListCart() {
         return listCart;
     }
 
-    public void deleteOrder () {
-        cartDao.deleteOrder(getOrderID());
+    /**
+     * Remove um item do carrinho.
+     * @param item O item.
+     */
+    public void clearCart(Item item) {
+        cartDao.deleteItem(item.getProduct().getCod(), getOrder());
+        if (listCart.size() == 1){
+            deleteOrder();
+        }
     }
-    
+
+    /**
+     * Deleta o pedido.
+     */
+    public void deleteOrder () {
+        cartDao.deleteOrder(getOrder());
+    }
+
     public double calculateTotal (List<Item> select) {
         double totalSelect = 0;
         for (int i = 0; i < listCart.size(); i++) {
@@ -100,36 +125,47 @@ public class CartController
         }
         return totalSelect;
     }
-    public void clearCart(Item item) {
-        cartDao.deleteItem(item.getProduct().getCod(), getOrderID());
-        if (listCart.size() == 1){
-            deleteOrder();
-        }
-    }
-    
+
+    /**
+     * Altera a quantidade do item no carrinho.
+     * @param item O item.
+     */
     public void alterQuantity (Item item) {
-        cartDao.alterQuantity(getOrderID(), item);
+        cartDao.alterQuantity(getOrder(), item);
         listCart.clear();
         populateWinCart();
     }
-    
+
+    /**
+     * Adiciona um novo item ao carrinho.
+     * @param item O item.
+     */
     public void placeOrder (Item item) {
-        cartDao.insertNewItem(getOrderID(), item);
+        cartDao.insertNewItem(getOrder(), item);
     }
-    
+
+    /**
+     * Cria um novo pedido de um determinado cliente.
+     * @param client O cliente.
+     * @param item O item.
+     */
     public void createOrder (Client client, Item item) {
         cartDao.insertNewOrder(client, item);
         populateWinCart();
     }
 
-    public void updateOrder(Item item){
-        cartDao.insertNewItem(getOrderID(), item);
-    }
-
+    /**
+     * Obtêm o campo de frete.
+     * @return o campo frete.
+     */
     public StringProperty portageProperty() {
         return portage;
     }
 
+    /**
+     * Obtêm o campo de valor total.
+     * @return o campo total.
+     */
     public StringProperty totalCartProperty() {
         return totalCart;
     }

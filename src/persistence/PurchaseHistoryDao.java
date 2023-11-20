@@ -9,40 +9,54 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Esta é uma classe de Persistence que realiza as operações com o banco de dados.
+ */
 public class PurchaseHistoryDao {
 
     GenericDao genericDao;
 
+    /**
+     * Adquire a conexão com o banco de dados.
+     * @param genericDao A conexão com o banco de dados.
+     */
     public PurchaseHistoryDao(GenericDao genericDao) {
         this.genericDao= genericDao;
     }
 
+    /**
+     * Retorna o histórico de compra de um determinado cliente.
+     * @param client O cliente.
+     * @return O historico de compra.
+     * @throws SQLException Exceções de SQL.
+     */
     public List<Order> listPurchaseHistory(Client client) throws SQLException{
         List<Order> history= new ArrayList<>();
         Connection connection= genericDao.getConnection();
-        String sql= "select order_tb.id_order,\n" +
-                "       prod.name_product,\n" +
-                "       dateadd(day, 5, pay.date_pay) as Data_de_entrega,\n" +
-                "       case when (day(getdate()) - day(pay.date_pay) >= 5)\n" +
-                "           then\n" +
-                "                'Finalizado'\n" +
-                "           when (day(getdate()) - day(pay.date_pay) = 4)\n" +
-                "           then\n" +
-                "                'Chega amanhã'\n" +
-                "           when (getdate() = pay.date_pay)\n" +
-                "           then\n" +
-                "                'Preparando'\n" +
-                "           else\n" +
-                "                'A caminho'\n" +
-                "           end as status, \n" +
-                "           prod.id_product \n" +
-                "from payment pay, product prod, order_product order_prod, order_tbl order_tb,\n" +
-                "     client cli\n" +
-                "where prod.id_product = order_prod.id_product\n" +
-                "        and order_prod.id_order = order_tb.id_order\n" +
-                "        and order_tb.id_order = pay.id_order\n" +
-                "        and cli.user_name = order_tb.user_name_client\n" +
-                "        and cli.user_name = ?";
+        String sql= """
+                select order_tb.id_order,
+                       prod.name_product,
+                       dateadd(day, 5, pay.date_pay) as Data_de_entrega,
+                       case when (day(getdate()) - day(pay.date_pay) >= 5)
+                           then
+                                'Finalizado'
+                           when (day(getdate()) - day(pay.date_pay) = 4)
+                           then
+                                'Chega amanhã'
+                           when (getdate() = pay.date_pay)
+                           then
+                                'Preparando'
+                           else
+                                'A caminho'
+                           end as status,\s
+                           prod.id_product\s
+                from payment pay, product prod, order_product order_prod, order_tbl order_tb,
+                     client cli
+                where prod.id_product = order_prod.id_product
+                        and order_prod.id_order = order_tb.id_order
+                        and order_tb.id_order = pay.id_order
+                        and cli.user_name = order_tb.user_name_client
+                        and cli.user_name = ?""";
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setString(1, client.getLogin());
         ResultSet rs= ps.executeQuery();
@@ -76,38 +90,46 @@ public class PurchaseHistoryDao {
         return history;
     }
 
+    /**
+     * Retorna o status de uma determinada compra de um produto, contendo nome, preço, quantidade, frete...
+     * @param idOrder O codigo da compra.
+     * @param idProduct O codigo do produto.
+     * @return O status do produto.
+     * @throws SQLException Exceções de SQL.
+     */
     public Order returnStatusProduct(Integer idOrder, Integer idProduct) throws SQLException {
         Order order= new Order();
         Connection connection= genericDao.getConnection();
-        String sql= "select prod.name_product,\n" +
-                "       prod.unity_price,\n" +
-                "       prod.shipping,\n" +
-                "       order_prod.quantity,\n" +
-                "       prod.shipping + prod.unity_price as Valor_Total_Produto,\n" +
-                "       case when (p.id_order = pay.id_order )\n" +
-                "                then\n" +
-                "                'Pix'\n" +
-                "                else\n" +
-                "                'Boleto'\n" +
-                "                end as Payment_Method,\n" +
-                "       case when (day(getdate()) - day(pay.date_pay) >= 5)\n" +
-                "                then\n" +
-                "                'Finalizado'\n" +
-                "            when (day(getdate()) - day(pay.date_pay) = 4)\n" +
-                "                then\n" +
-                "                'Chega amanhã'\n" +
-                "            when (getdate() = pay.date_pay)\n" +
-                "                then\n" +
-                "                'Preparando'\n" +
-                "            else\n" +
-                "                'A caminho'\n" +
-                "           end as status\n" +
-                "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
-                "     inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order\n" +
-                "     inner join payment pay on pay.id_order = order_tb.id_order\n" +
-                "     left outer join pix p on pay.id_order = p.id_order\n" +
-                "     left outer join payment_slip ps on ps.id_order = pay.id_order\n" +
-                "where pay.id_order= ? and prod.id_product= ?";
+        String sql= """
+                select prod.name_product,
+                       prod.unity_price,
+                       prod.shipping,
+                       order_prod.quantity,
+                       prod.shipping + prod.unity_price as Valor_Total_Produto,
+                       case when (p.id_order = pay.id_order )
+                                then
+                                'Pix'
+                                else
+                                'Boleto'
+                                end as Payment_Method,
+                       case when (day(getdate()) - day(pay.date_pay) >= 5)
+                                then
+                                'Finalizado'
+                            when (day(getdate()) - day(pay.date_pay) = 4)
+                                then
+                                'Chega amanhã'
+                            when (getdate() = pay.date_pay)
+                                then
+                                'Preparando'
+                            else
+                                'A caminho'
+                           end as status
+                from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product
+                     inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order
+                     inner join payment pay on pay.id_order = order_tb.id_order
+                     left outer join pix p on pay.id_order = p.id_order
+                     left outer join payment_slip ps on ps.id_order = pay.id_order
+                where pay.id_order= ? and prod.id_product= ?""";
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setInt(1, idOrder);
         ps.setInt(2, idProduct);
@@ -143,16 +165,24 @@ public class PurchaseHistoryDao {
         return order;
     }
 
+    /**
+     * Retorna o nome da loja do produto comprado.
+     * @param idOrder O codigo da compra.
+     * @param idProduct O codigo do produto.
+     * @return A loja.
+     * @throws SQLException Exceções de SQL.
+     */
     public Store returnNameStore(Integer idOrder, Integer idProduct) throws SQLException {
         Store store= new Store();
         Connection connection= genericDao.getConnection();
-        String sql= "select prod.user_name as store_name\n" +
-                "from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product\n" +
-                "                  inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order\n" +
-                "                  inner join payment pay on pay.id_order = order_tb.id_order,\n" +
-                "     payment pay2 inner join pix p on p.id_order = pay2.id_order,\n" +
-                "     payment pay3 inner join payment_slip pay_slip on pay_slip.id_order = pay3.id_order\n" +
-                "where pay.id_order= ? and prod.id_product= ?";
+        String sql= """
+                select prod.user_name as store_name
+                from product prod inner join order_product order_prod on prod.id_product = order_prod.id_product
+                                  inner join order_tbl order_tb on order_tb.id_order = order_prod.id_order
+                                  inner join payment pay on pay.id_order = order_tb.id_order,
+                     payment pay2 inner join pix p on p.id_order = pay2.id_order,
+                     payment pay3 inner join payment_slip pay_slip on pay_slip.id_order = pay3.id_order
+                where pay.id_order= ? and prod.id_product= ?""";
         PreparedStatement ps= connection.prepareStatement(sql);
         ps.setInt(1, idOrder);
         ps.setInt(2, idProduct);

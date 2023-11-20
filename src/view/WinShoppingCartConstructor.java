@@ -19,6 +19,9 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * Esta é uma classe de Boundary que representa a tela do carrinho de compra.
+ */
 public class WinShoppingCartConstructor {
     private Label lblTittle= new Label("Carrinho");
     private Label lblTotalPrice= new Label("Total:");
@@ -36,11 +39,15 @@ public class WinShoppingCartConstructor {
 
     WinPurchaseDetailsConstruct winPurchaseDetailsConstruct;
 
-    public void bindings(){
+    private void bindings(){
         Bindings.bindBidirectional(lblPortage.textProperty(), controllerCart.portageProperty());
         Bindings.bindBidirectional(lblTotalPrice.textProperty(), controllerCart.totalCartProperty());
     }
 
+    /**
+     * Adiciona os elementos a tela Principal e possui os eventos dos elementos.
+     * @param pane O painel usado para inserir o elementos.
+     */
     public void addElements(Pane pane){
         Button btnReturn= new Button();
         Button btnAccount= new Button("Conta");

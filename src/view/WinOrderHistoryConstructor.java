@@ -20,6 +20,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
+/**
+ * Esta é uma classe de Boundary que representa a tela histórico de pedidos.
+ */
 public class WinOrderHistoryConstructor {
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Pedidos");
@@ -34,6 +37,10 @@ public class WinOrderHistoryConstructor {
 
     // TODO fazer os Propertys
 
+    /**
+     * Adiciona os elementos a tela Principal e possui os eventos dos elementos.
+     * @param pane O painel usado para inserir o elementos.
+     */
     public void addElements(Pane pane) {
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");

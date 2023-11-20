@@ -13,6 +13,9 @@ import utils.UserSession;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * Esta é uma classe de Controller que realiza as operações da tela WinPurchaseDetailsConstruct.
+ */
 public class PlaceOrderController {
 
     Client client;
@@ -24,13 +27,17 @@ public class PlaceOrderController {
 
     private StringProperty totalPurchase= new SimpleStringProperty("Total:");
 
-
+    /**
+     * Carrega um lista de items para tela detalhes de compra.
+     * @param listItems A lista.
+     */
     public void populateWinPurchase(List<Item> listItems){
         if (!listItems.isEmpty()){
             double portageCal= 0;
             double totalPrice= 0;
 
-            for (int i = 0; i < listItems.size(); i++) {
+            int listsize= listItems.size();
+            for (int i = 0; i < listsize; i++) {
                 Item item= listItems.get(i);
                 portageCal+= item.getProduct().getShipping();
                 totalPrice+= item.getSubTotal();
@@ -49,10 +56,21 @@ public class PlaceOrderController {
         }
     }
 
+    /**
+     * Adiciona o pagamento ao pedido, verificando o meio de pagamento.
+     * @param order O pedido.
+     * @param pix O meio de pagamento.
+     */
     public void placePayment(Order order, Boolean pix){
         purchaseDetailsDao.insertPayment(order, pix);
     }
 
+    /**
+     * Cria um pedido e seu pagamento, verificando o meio de pagamento de um determinado cliente.
+     * @param client O cliente.
+     * @param item O item do pedido.
+     * @param pix O meio de pagamento.
+     */
     public void createOrderAndPayment(Client client, Item item, Boolean pix){
         purchaseDetailsDao.insertOrder(client, item, pix);
     }

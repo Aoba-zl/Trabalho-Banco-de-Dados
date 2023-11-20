@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Esta Classe representa o controles das Classes WinPurchaseHistory e WinOrderHistory.
+ * Esta Classe de Controller que realiza as operações das Classes WinPurchaseHistoryConstructor e WinOrderHistoryConstructor.
  */
 public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>> {
 
@@ -116,7 +116,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
 
 
     /**
-     * Obtem a lista de Order
+     * Obtêm a lista de Order
      * @return A lista de Order
      */
     public ObservableList<Order> getListHistory() {
@@ -124,7 +124,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo do nome do produto.
+     * Obtêm o campo do nome do produto.
      * @return o campo nome do produto.
      */
     public StringProperty nameProductProperty() {
@@ -132,7 +132,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo do nome da loja.
+     * Obtêm o campo do nome da loja.
      * @return o campo nome da loja.
      */
     public StringProperty nameStoreProperty() {
@@ -140,7 +140,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo da quantidade.
+     * Obtêm o campo da quantidade.
      * @return o campo quantidade.
      */
     public IntegerProperty quantityProperty() {
@@ -148,7 +148,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo de preço do produto.
+     * Obtêm o campo de preço do produto.
      * @return o campo preço do produto
      */
     public StringProperty priceProductProperty() {
@@ -156,7 +156,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo de metodo de pagamento
+     * Obtêm o campo de metodo de pagamento
      * @return o campo metodo pagamento
      */
     public StringProperty methodPaymentProperty() {
@@ -164,7 +164,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * Obtem o campo de valor total
+     * Obtêm o campo de valor total
      * @return o campo valor total
      */
     public StringProperty totalValueProperty() {
@@ -172,7 +172,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * obtem o campo de frete
+     * obtêm o campo de frete
      * @return o campo frete
      */
     public StringProperty portageProperty() {
@@ -180,7 +180,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
     }
 
     /**
-     * obtem o campo de status
+     * obtêm o campo de status
      * @return o campo status
      */
     public StringProperty statusProperty() {
