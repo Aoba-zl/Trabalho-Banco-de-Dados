@@ -2,21 +2,31 @@ package view;
 
 import java.sql.SQLException;
 
+import control.ChangeSceneController;
 import control.LoginController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
+import utils.UserSession;
 
-public class WinLoginConstructor 
+public class WinLoginConstructor implements GenericWindownInterface
 {
+	private Pane pWin;
+
+	@Override
 	public void addElements (Pane pane)
 	{
+		this.pWin = pane;
+		
 		Label lblLogin = new Label("Login");
 		lblLogin.setPrefHeight(35);
 		lblLogin.setPrefWidth(640);
@@ -34,9 +44,9 @@ public class WinLoginConstructor
 		lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: #2675ff;");
 		
 		TextField tfUserName = new TextField();
-		TextField tfPassword = new TextField();
+		PasswordField pfPassword = new PasswordField();
 		tfUserName.setPrefWidth(120);
-		tfPassword.setPrefWidth(120);
+		pfPassword.setPrefWidth(120);
 		
 		Label lblMessage = new Label();
 		lblMessage.setMinHeight(25);
@@ -54,7 +64,7 @@ public class WinLoginConstructor
 		hbBtnEnter.setStyle("-fx-alignment: bottom-right; -fx-spacing: 10px;");
 		hbBtnEnter.setPrefHeight(50);
 		hbUser.getChildren().addAll(lblUser, tfUserName);
-		hbPassword.getChildren().addAll(lblPassword, tfPassword);
+		hbPassword.getChildren().addAll(lblPassword, pfPassword);
 		hbLblReg.getChildren().addAll(lblHasRegister, lblCreateRegister);
 		hbBtnEnter.getChildren().addAll(lblMessage, btnEnter);
 		
@@ -95,11 +105,11 @@ public class WinLoginConstructor
 		lblTypeAc.setStyle("-fx-font-size: 13px;");
 		
 		Button btnRegisterClient = new Button("Cliente");
-		Button btnRegisterSeller = new Button("Lojista");
+		Button btnRegisterStore = new Button("Lojista");
 		btnRegisterClient.setPrefWidth(75);
 		btnRegisterClient.setPrefHeight(30);
-		btnRegisterSeller.setPrefWidth(75);
-		btnRegisterSeller.setPrefHeight(30);
+		btnRegisterStore.setPrefWidth(75);
+		btnRegisterStore.setPrefHeight(30);
 		
 		HBox hbTypeAc = new HBox();
 		hbTypeAc.setStyle("-fx-alignment: center");
@@ -107,7 +117,7 @@ public class WinLoginConstructor
 		
 		HBox hbRegister = new HBox();
 		hbRegister.setStyle("-fx-alignment: center; -fx-spacing: 20px;");
-		hbRegister.getChildren().addAll(btnRegisterClient, btnRegisterSeller);
+		hbRegister.getChildren().addAll(btnRegisterClient, btnRegisterStore);
 		
 		VBox vbRegister = new VBox(20);
 		vbRegister.setPrefHeight(130);
@@ -132,8 +142,29 @@ public class WinLoginConstructor
 										});
 		pTransp.setOnMouseClicked(e -> pTransp.setVisible(false));
 		
+		btnRegisterClient.setOnAction(e -> toRegClient());
+		
+		btnRegisterStore.setOnAction(e -> toRegStore());
+		
 		//------------mudança de scene---------------
-		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword, lblMessage));
+		btnEnter.setOnAction(e -> signUpUser(tfUserName, pfPassword, lblMessage));
+		
+		tfUserName.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnEnter.fire();
+			}
+		});
+		
+		pfPassword.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnEnter.fire();
+			}
+		});
+		
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		
@@ -164,8 +195,21 @@ public class WinLoginConstructor
 	
 	private void toHomePage()
 	{
-		Main m = new Main();
-		m.changeScene("homePage");
+		// TODO: Voltar pra Holme page apos os testes
+//		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+	}
+	
+	private void toRegClient()
+	{
+		UserSession.setUser("register", null);;
+		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
+	}
+	
+	private void toRegStore()
+	{
+		UserSession.setUser("register", null);
+		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
 }

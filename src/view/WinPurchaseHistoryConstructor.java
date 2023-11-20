@@ -37,7 +37,8 @@ import java.util.stream.Collectors;
 /**
  * Esta é uma classe de Boundary que representa a tela de Historico de Compras.
  */
-public class WinPurchaseHistoryConstructor {
+public class WinPurchaseHistoryConstructor implements GenericWindownInterface {
+    private Button btnSearch= new Button("Buscar");
     private Button btnSeePurchase= new Button("Ver Compra");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Compra");
@@ -177,7 +178,7 @@ public class WinPurchaseHistoryConstructor {
         Label lblQuantity= new Label("Quantidade:");
         Label lblTotalValue= new Label("Valor Total:");
         Label lblFormPayment= new Label("Forma de Pagamento:");
-        Label lblStatus= new Label("Status");
+        Label lblStatus= new Label("Status:");
         lblTittle.setFont(Font.font(20));
         lblProductName.setFont(Font.font(14));
         lblShop.setFont(Font.font(14));

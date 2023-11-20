@@ -1,8 +1,10 @@
 package view;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import control.ChangeSceneController;
 import control.ProductController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -11,39 +13,43 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.Product;
+import utils.SceneName;
 
-public class WinStoreConstructor 
+public class WinStoreConstructor implements GenericWindownInterface
 {
+	private Pane pWin;
+	private List<Product> listProduct;
+	
+	@Override
 	public void addElements(Pane pane)
 	{
+		pWin = pane;
+		
 		Label lblHomePage = new Label("Sua Loja");
 		lblHomePage.setPrefHeight(35);
 		lblHomePage.setPrefWidth(640);
 		lblHomePage.setStyle("-fx-font-size: 24px; -fx-alignment: center; -fx-font-weight: bold");
 		lblHomePage.setLayoutY(25);
 		
-		Image imgGoBack = new Image(getClass().getResource("image/goBack.png").toString());
-		ImageView imgViewGoBack = new ImageView(imgGoBack);
-		imgViewGoBack.setFitWidth(24);
-		imgViewGoBack.setFitHeight(24);
-		imgViewGoBack.setStyle("-fx-cursor: hand");
-		imgViewGoBack.setPickOnBounds(true);
-		
-		Label lblExit = new Label("Sair❌");
-		Label lblAccount = new Label("Conta");
-		lblExit.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
-		lblAccount.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
+		Button btnQuit = new Button("Sair❌");
+		Button btnAccount = new Button("Conta");
+		Button btnReturn = new Button();
+		setBtnBackImage(btnReturn);
+		setOverButtonStyle(btnQuit);
+		setOverButtonStyle(btnAccount);
+		setOverButtonStyle(btnReturn);
 		
 		HBox hbOption = new HBox();
 		hbOption.setPrefWidth(640);
 		hbOption.setPrefHeight(30);
 		hbOption.setPadding(new Insets(0, 15, 0, 0));
 		hbOption.setStyle("-fx-alignment: top-right; -fx-spacing: 15px;");
-		hbOption.getChildren().addAll(lblExit, lblAccount);
+		hbOption.getChildren().addAll(btnQuit, btnAccount);
 		
 		TextField tfSearch = new TextField();
 		tfSearch.setPromptText("Buscar item");
@@ -59,7 +65,7 @@ public class WinStoreConstructor
 		hbSearch.getChildren().addAll(tfSearch, btnSearch);
 		
 		ProductController pControl = new ProductController();
-		List<Product> listProduct = null;
+		
 		
 		try {
 			listProduct = pControl.listProductStore();
@@ -67,15 +73,119 @@ public class WinStoreConstructor
 			e.printStackTrace();
 		}
 		
-		int sizeProductRow = listProduct.size();
-		int sizeProductColumn = sizeProductRow;
-		int countProduct = 0;
-		
-		
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(254);
 		vbProduct.setMinWidth(586);
 		vbProduct.setMaxWidth(586);
+		
+		ScrollPane spProduct = new ScrollPane();
+		spProduct.setPrefHeight(260);
+		spProduct.setPrefWidth(605);
+		spProduct.setLayoutX(18);
+		spProduct.setLayoutY(91);
+		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
+		spProduct.setContent(vbProduct);
+		
+		completeListProduct(vbProduct);
+		
+		btnSearch.setOnAction(e -> 
+		{
+			if(tfSearch.getText().trim().isEmpty())
+			{
+				completeListProduct(vbProduct);
+			}
+			else
+			{
+				searchListProduct(vbProduct, tfSearch);
+			}
+		});
+		
+		tfSearch.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnSearch.fire();
+			}
+		});
+		
+		Button btnAdd = new Button("Adicionar novo produto");
+		btnAdd.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
+		
+		HBox hbBtnAdd = new HBox();
+		hbBtnAdd.setStyle("-fx-alignment: center;");
+		hbBtnAdd.setPrefWidth(640);
+		hbBtnAdd.setPrefHeight(20);
+		hbBtnAdd.setLayoutY(360);
+		hbBtnAdd.getChildren().add(btnAdd);
+		
+		//------------mudança de scene---------------
+		btnReturn.setOnAction(e -> toHomePage());
+		btnQuit.setOnAction(e -> toLogin());
+		btnAccount.setOnAction(e -> toAccount());
+		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
+		
+		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, btnReturn);
+		
+	}
+	
+
+	private void toHomePage()
+	{
+		ChangeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
+	}
+	
+	private void toLogin() 
+	{
+		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
+	}
+	
+	private void toAccount()
+	{
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+	}
+	
+	private void toRegProduct()
+	{
+		ChangeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
+	}
+	
+	private void toProductStore(int cod, String name, String description, double price)
+	{
+		System.out.println(cod + " " + name + " " + description + " " + price); //test
+		
+		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+	}
+	
+	private void completeListProduct(VBox vbProduct)
+	{
+		vbProduct.getChildren().clear();
+		
+		tableProduct(listProduct, vbProduct);
+	}
+	
+	private void searchListProduct(VBox vbProduct, TextField tfSearch)
+	{
+		vbProduct.getChildren().clear();
+		
+		List<Product> searchListProduct = new ArrayList<>();
+		
+		for(Product pList : listProduct)
+		{
+			if(pList.getName().toLowerCase().contains(tfSearch.getText().toLowerCase()))
+			{
+				searchListProduct.add(pList);
+			}
+		}
+		
+		tableProduct(searchListProduct, vbProduct);
+	}
+	
+	private void tableProduct(List<Product> list, VBox vbProduct)
+	{
+		int sizeProductRow = list.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
+		
 		for(int i = 0; i < (sizeProductRow / 4) + 1; i++)
 		{
 			HBox hbProductInfo = new HBox();
@@ -86,10 +196,10 @@ public class WinStoreConstructor
 			{
 				if(sizeProductColumn > 0)
 				{
-					Product p = listProduct.get(countProduct);
+					Product p = list.get(countProduct);
 					Label lblNameProduct = new Label(p.getName());
 					Label lblDescProduct = new Label(p.getDescription());
-					Label lblQuantityProduct = new Label("Quantidade:");
+					Label lblQuantityProduct = new Label("Quantidade: " + String.valueOf(p.getTotalStock()));
 					Label lblPriceProduct = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ","));
 					lblDescProduct.setPrefHeight(35);
 					lblDescProduct.setWrapText(true);
@@ -132,66 +242,32 @@ public class WinStoreConstructor
 			
 			vbProduct.getChildren().add(hbProductInfo);
 		}
-		
-		
-		ScrollPane spProduct = new ScrollPane();
-		spProduct.setPrefHeight(260);
-		spProduct.setPrefWidth(605);
-		spProduct.setLayoutX(18);
-		spProduct.setLayoutY(91);
-		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
-		spProduct.setContent(vbProduct);
-		
-		Button btnAdd = new Button("Adicionar novo produto");
-		btnAdd.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px;");
-		
-		HBox hbBtnAdd = new HBox();
-		hbBtnAdd.setStyle("-fx-alignment: center;");
-		hbBtnAdd.setPrefWidth(640);
-		hbBtnAdd.setPrefHeight(20);
-		hbBtnAdd.setLayoutY(360);
-		hbBtnAdd.getChildren().add(btnAdd);
-		
-		//------------mudança de scene---------------
-		imgViewGoBack.setOnMouseClicked(e -> toHomePage());
-		lblExit.setOnMouseClicked(e -> toLogin());
-		lblAccount.setOnMouseClicked(e -> toAccount());
-		btnAdd.setOnMouseClicked(e -> toRegProduct()); //Assim que o registro for concluído, mostrará uma mensagem de conclusão e voltara para a tela de store.
-		
-		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct, hbBtnAdd, imgViewGoBack);
-		
 	}
 	
+	
+	private void setBtnBackImage(Button btnBack) {
+        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
+        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
+        int widthHeight = 25;
+        ivGoBackBtn.setFitHeight(widthHeight);
+        ivGoBackBtn.setFitWidth(widthHeight);
 
-	private void toHomePage()
-	{
-		Main m = new Main();
-		m.changeScene("homePage");
-	}
-	
-	private void toLogin() 
-	{
-		Main m = new Main();
-		m.changeScene("login");
-	}
-	
-	private void toAccount()
-	{
-		Main m = new Main();
-		m.changeScene("account");
-	}
-	
-	private void toRegProduct()
-	{
-		Main m = new Main();
-		m.changeScene("regProduct");
-	}
-	
-	private void toProductStore(int cod, String name, String description, double price)
-	{
-		System.out.println(cod + " " + name + " " + description + " " + price); //test
-		
-		Main m = new Main();
-		m.changeScene("productStore");
-	}
+        btnBack.setGraphic(ivGoBackBtn);
+    }
+
+    private void setBtnStyle(Button button, String style) {
+        button.setStyle(style);
+    }
+
+
+    private void setOverButtonStyle(Button button) 
+    {
+    	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
+    	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
+                "-fx-background-color: rgba(255,255,255,0);";
+        button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
+        button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
+        button.setStyle(styleExit);
+    }
 }

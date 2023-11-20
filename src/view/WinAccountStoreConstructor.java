@@ -1,6 +1,7 @@
 package view;
 
-import control.CtrlAccountMenu;
+import control.AccountMenuController;
+import control.ChangeSceneController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -8,14 +9,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 import utils.UserSession;
 
-public class WinAccountStoreConstructor
+import java.sql.SQLException;
+
+public class WinAccountStoreConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfName, tfCnpj, tfEmail, tfPhone;
     private Button btnDeleteAccount, btnEditAccount, btnCancelEdit;
@@ -28,9 +31,16 @@ public class WinAccountStoreConstructor
     private String action = null;
     private String userName;
     
-    private CtrlAccountMenu control = new CtrlAccountMenu();
+    private AccountMenuController control = new AccountMenuController();
+    private Pane pWin;
 
-    public WinAccountStoreConstructor(VBox mainBox)
+    public WinAccountStoreConstructor(Pane mainPane)
+    {
+        this.pWin = mainPane;
+    }
+
+    @Override
+    public void addElements(VBox mainBox)
     {
         this.mainBox = mainBox;
         userName = UserSession.getUserName();
@@ -66,15 +76,31 @@ public class WinAccountStoreConstructor
         
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
+            String msg = null;
             if (newValue && action == "edit")
             {
                 setDisableEditableFields(true);
                 changeCancelDeleteButtons(btnDeleteAccount);
                 control.editAccount(userName);
+                openPopUp("Dados Alterados com sucesso!");
             }
             else if (newValue && action == "delete")
             {
-            	control.deleteAccount(userName);
+                msg = "Dados deletados com sucesso!";
+                try
+                {
+                    control.deleteAccount(userName);
+                    UserSession.clearSession();
+                    ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+                }
+                catch (SQLException e)
+                {
+                    msg = "Houve um erro inesperado.\nPor favor, tente novamente\n";
+                }
+                finally
+                {
+                    openPopUp(msg);
+                }
             }
             action = null;
         }));
@@ -138,15 +164,18 @@ public class WinAccountStoreConstructor
         mainBox.getChildren().addAll(lblTitle, bpLogin, bpName, bpCnpj, bpEmail, bpPhone,
                 bpBirthDate, bpButtons);
     }
-    
+
+    private void openPopUp(String message)
+    {
+        messageMenuPopUp.setValue(message);
+        isMenuPopupActive.setValue(true);
+    }
+
     private void btnEditClicked()
     {
         returnPopUp.setValue(false);
         if (action == "edit")
-        {
-            messageMenuPopUp.setValue("Tem certeza de que deseja alterar a conta?");
-            isMenuPopupActive.setValue(true);
-        }
+            openPopUp("Tem certeza de que deseja alterar a conta?");
         else
         {
             action = "edit";
@@ -159,8 +188,7 @@ public class WinAccountStoreConstructor
     {
         returnPopUp.setValue(false);
         action = "delete";
-        messageMenuPopUp.setValue("Tem certeza de que deseja deletar a conta?");
-        isMenuPopupActive.setValue(true);
+        openPopUp("Tem certeza de que deseja deletar a conta?");
     }
     
     private void setDisableEditableFields(boolean isDisable)
@@ -175,16 +203,7 @@ public class WinAccountStoreConstructor
         bpButtons.setLeft(button);
     }
     
-    StringProperty getMessageMenuPopUp()
-    {
-        return messageMenuPopUp;
-    }
-    BooleanProperty getIsMenuPopupActive()
-    {
-        return isMenuPopupActive;
-    }
-    BooleanProperty getReturnPopUp()
-    {
-        return returnPopUp;
-    }
+    StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
+    BooleanProperty getIsMenuPopupActive() { return isMenuPopupActive; }
+    BooleanProperty getReturnPopUp() { return returnPopUp; }
 }

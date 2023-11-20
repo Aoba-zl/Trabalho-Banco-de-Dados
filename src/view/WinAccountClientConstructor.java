@@ -1,6 +1,7 @@
 package view;
 
-import control.CtrlAccountMenu;
+import control.AccountMenuController;
+import control.ChangeSceneController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,10 +10,14 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.SceneName;
 import utils.UserSession;
 
-public class WinAccountClientConstructor
+import java.sql.SQLException;
+
+public class WinAccountClientConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
     private StringProperty sexText = new SimpleStringProperty("");
@@ -28,9 +33,16 @@ public class WinAccountClientConstructor
     private String action = null;
     private String userName;
     
-    private CtrlAccountMenu control = new CtrlAccountMenu();
+    private AccountMenuController control = new AccountMenuController();
+    private Pane pWin;
 
-    public WinAccountClientConstructor(VBox mainBox)
+    public WinAccountClientConstructor(Pane mainPane)
+    {
+        this.pWin = mainPane;
+    }
+
+    @Override
+    public void addElements(VBox mainBox)
     {
     	this.mainBox = mainBox;
     	userName = UserSession.getUserName();
@@ -56,6 +68,7 @@ public class WinAccountClientConstructor
 
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
+            String msg = null;
             if (newValue && action == "edit")
             {
                 setDisableEditableFields(true);
@@ -64,12 +77,26 @@ public class WinAccountClientConstructor
             }
             else if (newValue && action == "delete")
             {
-            	control.deleteAccount(userName);
+                msg = "Dados deletados com sucesso!";
+                try
+                {
+                    control.deleteAccount(userName);
+                    UserSession.clearSession();
+                    ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+                }
+                catch (SQLException e)
+                {
+                    msg = "Houve um erro inesperado.\nPor favor, tente novamente";
+                    System.err.println(e.getMessage());
+                }
+                finally
+                {
+                    openPopUp(msg);
+                }
             }
             action = null;
         }));
-        
-        
+
         rbMale.selectedProperty().addListener(
                 (observable, oldValue, newValue) -> sexText.setValue("masculino"));
         rbFemale.selectedProperty().addListener(
@@ -96,7 +123,13 @@ public class WinAccountClientConstructor
         }
         ));
     }
-    
+
+    private void openPopUp(String message)
+    {
+        messageMenuPopUp.setValue(message);
+        isMenuPopupActive.setValue(true);
+    }
+
     private void setElements()
     {
         Label lblTitle = new Label("Dados");
@@ -184,10 +217,7 @@ public class WinAccountClientConstructor
     {
         returnPopUp.setValue(false);
         if (action == "edit")
-        {
-            messageMenuPopUp.setValue("Tem certeza de que deseja alterar a conta?");
-            isMenuPopupActive.setValue(true);
-        }
+            openPopUp("Tem certeza de que deseja alterar a conta?");
         else
         {
             action = "edit";
@@ -200,8 +230,7 @@ public class WinAccountClientConstructor
     {
         returnPopUp.setValue(false);
         action = "delete";
-        messageMenuPopUp.setValue("Tem certeza de que deseja deletar a conta?");
-        isMenuPopupActive.setValue(true);
+        openPopUp("Tem certeza de que deseja deletar a conta?");
     }
 
     private void setDisableEditableFields(boolean isDisable)

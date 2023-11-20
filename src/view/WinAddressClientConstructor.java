@@ -1,19 +1,149 @@
 package view;
 
+import control.AddressMenuController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import model.ClientAddress;
+import utils.UserSession;
+
+import java.sql.SQLException;
 
 public class WinAddressClientConstructor
 {
-    private String textBtnEditAccount = "Editar";
+    private String textBtnEditAccount;
+    private TextField tfName, tfCep, tfCityEstate, tfNeighborhood,
+            tfStreet, tfNumber, tfComplement;
+    private Button btnEditAccount, btnCancel;
+
+    private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private final BooleanProperty editionMode = new SimpleBooleanProperty(true);
+    private StringProperty action = new SimpleStringProperty(null);
     private final VBox mainBox;
-    public WinAddressClientConstructor(VBox mainBox, String[] selectedAddress)
+    private String userName;
+    private AddressMenuController control = new AddressMenuController();
+    private ClientAddress selectedAddress;
+
+    public WinAddressClientConstructor(VBox mainBox)
     {
-        // TODO: Carregar endereço para edição
         this.mainBox = mainBox;
+        userName = UserSession.getUserName();
+    }
+
+    public void addElements(ClientAddress selectedAddress)
+    {
+        this.selectedAddress = selectedAddress;
+
+        System.out.println(actionValue());
+
+        if (actionValue() == ("edit"))
+            textBtnEditAccount = "Editar";
+        else if (actionValue() == ("add"))
+            textBtnEditAccount = "Adicionar";
+
+        setElements();
+        setEvents();
+        setPropertiesConnections();
+        if (action.getValue() == ("edit"))
+            control.fillClientAddressFields(this.selectedAddress);
+        else if (actionValue() == ("add"))
+            clearFields();
+    }
+
+    private void clearFields()
+    {
+        tfName.setText("");
+        tfCep.setText("");
+        tfCityEstate.setText("");
+        tfNeighborhood.setText("");
+        tfStreet.setText("");
+        tfNumber.setText("");
+        tfComplement.setText("");
+    }
+
+    private void setPropertiesConnections()
+    {
+        Bindings.bindBidirectional(tfName.textProperty()           ,  control.getNameProperty());
+        Bindings.bindBidirectional(tfCep.textProperty()            ,  control.getCepProperty());
+        Bindings.bindBidirectional(tfCityEstate.textProperty()     ,  control.getCityEstateProperty());
+        Bindings.bindBidirectional(tfNeighborhood.textProperty()   ,  control.getNeighborhoodProperty());
+        Bindings.bindBidirectional(tfStreet.textProperty()         ,  control.getStreetProperty());
+        Bindings.bindBidirectional(tfNumber.textProperty()         ,  control.getNumberProperty());
+        Bindings.bindBidirectional(tfComplement.textProperty()     ,  control.getComplementProperty());
+    }
+
+    private void setEvents()
+    {
+        btnCancel.setOnMouseClicked(
+                e -> editionMode.setValue(false));
+        btnEditAccount.setOnMouseClicked(e ->
+        {
+            returnPopUp.setValue(false);
+            openPopUp("Tem certeza?");
+        });
+
+        returnPopUp.addListener(((observable, oldValue, newValue) ->
+        {
+            if (newValue)
+            {
+                if (actionValue() == ("edit"))
+                {
+                    ClientAddress newaddr = control.editClientAddress(selectedAddress, userName);
+                    if (newaddr == null)
+                        openPopUp("Houve um erro inesperado.\nPor favor, tente novamente");
+                    else
+                    {
+                        selectedAddress.setName(newaddr.getName());
+                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                        selectedAddress.setStreet(newaddr.getStreet());
+                        selectedAddress.setEstate(newaddr.getEstate());
+                        selectedAddress.setCity(newaddr.getCity());
+                        selectedAddress.setCep(newaddr.getCep());
+                        selectedAddress.setComplement(newaddr.getComplement());
+                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+
+                        openPopUp("Editado com Sucesso");
+                        editionMode.setValue(false);
+                    }
+                }
+                else if (actionValue() == ("add"))
+                {
+                    String msg = "Endereço adicionado com Sucesso!";
+                    try
+                    {
+                        ClientAddress newaddr = control.newClientAddress(userName);
+                        selectedAddress.setName(newaddr.getName());
+                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                        selectedAddress.setStreet(newaddr.getStreet());
+                        selectedAddress.setEstate(newaddr.getEstate());
+                        selectedAddress.setCity(newaddr.getCity());
+                        selectedAddress.setCep(newaddr.getCep());
+                        selectedAddress.setComplement(newaddr.getComplement());
+                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+                        editionMode.setValue(false);
+                    }
+                    catch (SQLException e)
+                    {
+                        msg = "Houve um erro inesperado.\\nPor favor, tente novamente";
+                        throw new RuntimeException(e);
+                    }
+                    openPopUp(msg);
+                }
+            }
+        }));
+    }
+
+    private void setElements()
+    {
         Label lblTitle = new Label("Endereço");
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;" +
                 "-fx-label-padding: 0px 0px 15px 0px");
@@ -35,19 +165,26 @@ public class WinAddressClientConstructor
         Label lblNumber       = new Label("Numero da Porta:");
         Label lblComplement   = new Label("Complemento:");
 
-        TextField tfName         = new TextField();
-        TextField tfCep          = new TextField();
-        TextField tfEstateCity   = new TextField();
-        tfEstateCity.setDisable(true);
-        TextField tfNeighborhood = new TextField();
-        TextField tfStreet       = new TextField();
-        TextField tfNumber       = new TextField();
-        TextField tfComplement   = new TextField();
+        tfName         = new TextField();
+        tfCep          = new TextField();
+        tfCityEstate = new TextField();
+        tfNeighborhood = new TextField();
+        tfStreet       = new TextField();
+        tfNumber       = new TextField();
+        tfComplement   = new TextField();
+        if (actionValue() == ("edit"))
+        {
+            tfCep.setDisable(true);
+            tfCityEstate.setDisable(true);
+            tfNeighborhood.setDisable(true);
+            tfStreet.setDisable(true);
+            tfNumber.setDisable(true);
+        }
 
-        Button btnEditAccount   = new Button(textBtnEditAccount);
+        btnEditAccount   = new Button(textBtnEditAccount);
         btnEditAccount
                 .setStyle("-fx-border-radius: 8px;-fx-background-radius: 8px");
-        Button btnCancel   = new Button("Cancelar");
+        btnCancel   = new Button("Cancelar");
         btnCancel
                 .setStyle( "-fx-background-color: #fd7171; -fx-text-fill: white;" +
                         "-fx-border-radius: 8px; -fx-background-radius: 8px;");
@@ -57,7 +194,7 @@ public class WinAddressClientConstructor
         bpCep.setLeft(lblCep);
         bpCep.setRight(tfCep);
         bpEstateCity.setLeft(lblEstateCity);
-        bpEstateCity.setRight(tfEstateCity);
+        bpEstateCity.setRight(tfCityEstate);
         bpNeighborhood.setLeft(lblNeighborhood);
         bpNeighborhood.setRight(tfNeighborhood);
         bpStreet.setLeft(lblStreet);
@@ -73,4 +210,19 @@ public class WinAddressClientConstructor
         mainBox.getChildren().addAll(lblTitle, bpName, bpCep, bpEstateCity, bpNeighborhood,
                 bpStreet, bpNumber, bpComplemet, bpButtons);
     }
+
+    private void openPopUp(String message)
+    {
+        isMenuPopupActive.setValue(false);
+        messageMenuPopUp.setValue(message);
+        isMenuPopupActive.setValue(true);
+    }
+
+    StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
+    BooleanProperty isMenuPopupActiveProperty() { return isMenuPopupActive; }
+    BooleanProperty returnPopUpProperty() { return returnPopUp; }
+    BooleanProperty editionModeProperty() { return editionMode; }
+    StringProperty actionProperty() { return action; }
+
+    private String actionValue() { return action.getValue(); }
 }

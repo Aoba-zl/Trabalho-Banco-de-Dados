@@ -1,5 +1,6 @@
 package view;
-
+import utils.SceneName;
+import control.ChangeSceneController;
 import control.CartController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -22,7 +23,9 @@ import java.util.List;
 /**
  * Esta é uma classe de Boundary que representa a tela do carrinho de compra.
  */
-public class WinShoppingCartConstructor {
+public class WinShoppingCartConstructor implements GenericWindownInterface {
+	Pane pWin;
+	
     private Label lblTittle= new Label("Carrinho");
     private Label lblTotalPrice= new Label("Total:");
     private Label lblPortage= new Label("Frete:");
@@ -48,7 +51,9 @@ public class WinShoppingCartConstructor {
      * Adiciona os elementos a tela Principal e possui os eventos dos elementos.
      * @param pane O painel usado para inserir o elementos.
      */
-    public void addElements(Pane pane){
+    public void addElements(Pane pane) {
+    	this.pWin = pane;
+
         Button btnReturn= new Button();
         Button btnAccount= new Button("Conta");
         Button btnQuit= new Button("Sair❌");
@@ -146,6 +151,11 @@ public class WinShoppingCartConstructor {
             winPurchaseDetailsConstruct.addElements(pane, controllerCart.getListCart(), true);
         });
 
+        btnReturn.setOnAction(e -> toHome());
+        btnAccount.setOnAction(e -> toAccount());
+        btnQuit.setOnAction(e -> toLogin());
+        btnPlaceOrder.setOnAction(e -> toDetails());
+
 
         // ----------------------------------------------------------------
 
@@ -228,4 +238,23 @@ public class WinShoppingCartConstructor {
         button.setStyle(styleExit);
     }
 
+    private void toLogin()
+	{
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	}
+
+	private void toAccount()
+	{
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+	}
+
+    private void toHome()
+    {
+    	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+    }
+
+    private void toDetails()
+    {
+		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
+	}
 }

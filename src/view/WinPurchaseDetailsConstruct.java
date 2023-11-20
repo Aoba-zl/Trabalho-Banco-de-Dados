@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import control.CartController;
 import control.PlaceOrderController;
 import javafx.beans.binding.Bindings;
@@ -10,15 +11,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import utils.SceneName;
 import model.Item;
 import model.Product;
-
 import java.text.DecimalFormat;
 
 /**
  * Esta é uma classe de Boundary que representa a tela de detalhes da compra.
  */
-public class WinPurchaseDetailsConstruct  {
+public class WinPurchaseDetailsConstruct implements GenericWindownInterface
+{
+	Pane pWin;
+
     private Button btnBuy= new Button("Comprar");
     private Label lblTittle= new Label("Detalhes da Compra");
     private Label lblTotalPurchaseValue= new Label("Total:");
@@ -47,6 +51,8 @@ public class WinPurchaseDetailsConstruct  {
      * @param cart A verificação.
      */
     public void addElements(Pane pane, ObservableList<Item> listItems, Boolean cart) {
+    	this.pWin = pane;
+
         Button btnReturn= new Button();
         btnBuy.relocate(520, 330);
         btnBuy.setPrefHeight(40);
@@ -166,6 +172,8 @@ public class WinPurchaseDetailsConstruct  {
 
         });
 
+        btnReturn.setOnAction(e -> toCart());
+
 
 
         //---------------------------------------------------------------------
@@ -242,5 +250,10 @@ public class WinPurchaseDetailsConstruct  {
         button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
+    }
+
+    private void toCart()
+    {
+    	ChangeSceneController.changeScene(SceneName.CART, pWin);
     }
 }

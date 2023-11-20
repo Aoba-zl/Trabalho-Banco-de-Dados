@@ -2,7 +2,9 @@ package control;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import model.Client;
+import model.ClientAddress;
 import model.User;
 import model.Store;
 import persistence.ClientDao;
@@ -12,12 +14,13 @@ import persistence.UserDao;
 import utils.UserSession;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import factory.ClientFactory;
 import factory.StoreFactory;
 import factory.UserFactory;
 
-public class CtrlAccountMenu
+public class AccountMenuController
 {
 	private StringProperty login = new SimpleStringProperty("");
 	private StringProperty name = new SimpleStringProperty("");
@@ -119,44 +122,47 @@ public class CtrlAccountMenu
 		}
     }
 
-    public void deleteAccount(String login)
+    public void deleteAccount(String login) throws SQLException
     {
     	String userType = UserSession.getUserType();
-    	System.out.printf("Editando um \"%s\"\n", userType);
-    	// TODO: função interditada por ser mt complexa
-//    	if (userType.equals("client"))
-//    		deleteClientAccount(login);
-//    	else
-//    		deleteStoreAccount(login);
-    	
     	if (userType.equals("client"))
-    		System.out.println("Apagando Cliente");
+    		deleteClientAccount(login);
     	else
-    		System.out.println("Apagando Cliente");
-    	
+    		deleteStoreAccount(login);
+
     }
     
     private void deleteClientAccount(String login)
     {
-    	// TODO: apagar TODOS os endereços de cliente + carrinho + pedidos
+    	// TODO: apagar carrinho + pedidos
+		AddressMenuController controller = new AddressMenuController();
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	ClientDao clientDao = new ClientDao(genericDAO);
 
     	try
     	{
-    		userDao.delete(new User(login));
+			ObservableList<ClientAddress> allAddress = controller.getAddressList(login);
+			for (ClientAddress addr : allAddress)
+				controller.deleteClientAddress(addr, login);
     		clientDao.delete(new Client(login));
+			userDao.delete(new User(login));
     	} catch (SQLException e) {
 			e.printStackTrace();
 		}
     }
     
-    private void deleteStoreAccount(String login)
+    private void deleteStoreAccount(String login) throws SQLException
     {
+		AddressMenuController addressMenuController = new AddressMenuController();
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	StoreDao storeDao = new StoreDao(genericDAO);
+
+		addressMenuController.deleteStoreAddress(login);
+		storeDao.delete(new Store(login));
+		userDao.delete(new User(login));
+
     }
     
     private void setFields(User user)
