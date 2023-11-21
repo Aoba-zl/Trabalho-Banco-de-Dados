@@ -19,6 +19,10 @@ import factory.ClientFactory;
 import factory.StoreFactory;
 import factory.UserFactory;
 
+
+/**
+ * Controlador responsável pelas operações da conta do usuário.
+ */
 public class AccountMenuController
 {
 	private final StringProperty login = new SimpleStringProperty("");
@@ -29,6 +33,10 @@ public class AccountMenuController
     private final StringProperty dateBirth = new SimpleStringProperty("");
     private final StringProperty sex = new SimpleStringProperty("");
 
+	/**
+	 * Preenche os campos de dados de uma loja com base no login.
+	 * @param login O login da loja.
+	 */
     public void completeStoreFields(String login)
     {
     	GenericDao genericDAO = new GenericDao();
@@ -41,7 +49,11 @@ public class AccountMenuController
     		e.printStackTrace();
 		}
     }
-    
+
+	/**
+	 * Preenche os campos de dados de um cliente com base no login.
+	 * @param login O login do cliente.
+	 */
     public void completeClientFields(String login)
     {
     	GenericDao genericDAO = new GenericDao();
@@ -55,6 +67,10 @@ public class AccountMenuController
 		}
     }
 
+	/**
+	 * Edita a conta do usuário com base no tipo de usuário.
+	 * @param login O login do usuário.
+	 */
     public void editAccount(String login)
     {
     	String userType = UserSession.getUserType();
@@ -109,6 +125,11 @@ public class AccountMenuController
 		}
     }
 
+	/**
+	 * Exclui a conta do usuário com base no tipo de usuário.
+	 * @param login O login do usuário.
+	 * @throws SQLException Se ocorrer um erro ao excluir a conta.
+	 */
     public void deleteAccount(String login) throws SQLException
     {
     	String userType = UserSession.getUserType();
@@ -119,7 +140,7 @@ public class AccountMenuController
 
     }
     
-    private void deleteClientAccount(String login)
+    private void deleteClientAccount(String login) throws SQLException
     {
     	// TODO: apagar carrinho + pedidos
 		AddressMenuController controller = new AddressMenuController();
@@ -127,16 +148,11 @@ public class AccountMenuController
     	UserDao userDao = new UserDao(genericDAO);
     	ClientDao clientDao = new ClientDao(genericDAO);
 
-    	try
-    	{
-			ObservableList<ClientAddress> allAddress = controller.getAddressList(login);
-			for (ClientAddress addr : allAddress)
-				controller.deleteClientAddress(addr, login);
-    		clientDao.delete(new Client(login));
-			userDao.delete(new User(login));
-    	} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ObservableList<ClientAddress> allAddress = controller.getAddressList(login);
+		for (ClientAddress addr : allAddress)
+			controller.deleteClientAddress(addr, login);
+    	clientDao.delete(new Client(login));
+		userDao.delete(new User(login));
     }
     
     private void deleteStoreAccount(String login) throws SQLException
@@ -179,64 +195,70 @@ public class AccountMenuController
     	cpfCnpj.setValue(client.getCpf());
     	sex.setValue(client.getSex());
     }
-    
-    public StringProperty getLoginProperty()
-    {
-    	return login;
-    }
-    public StringProperty getNameProperty()
-    {
-    	return name;
-    }
-    public StringProperty getCpfCnpjProperty()
-    {
-    	return cpfCnpj;
-    }
-    public StringProperty getEmailProperty()
-    {
-    	return email;
-    }
-    public StringProperty getPhoneProperty()
-    {
-    	return phone;
-    }
-    public StringProperty getDateBirthProperty()
-    {
-    	return dateBirth;
-    }
-    public StringProperty getSexProperty()
-    {
-    	return sex;
-    }
 
-    public String getLoginValue()
-    {
-    	return login.getValue();
-    }
-    
-    public String getNameValue()
-    {
-    	return name.getValue();
-    }
-    
-    public String getCpfCnpjValue()
-    {
-    	return cpfCnpj.getValue();
-    }
-    public String getEmailValue()
-    {
-    	return email.getValue();
-    }
-    public String getPhoneValue()
-    {
-    	return phone.getValue();
-    }
-    public String getDateBirthValue()
-    {
-    	return dateBirth.getValue();
-    }
-    public String getSexValue()
-    {
-    	return sex.getValue();
-    }
+	/**
+	 * Obtém a propriedade de StringProperty login.
+	 * @return A propriedade de login.
+	 */
+    public StringProperty getLoginProperty() {return login;}
+
+	/**
+	 * Obtém a propriedade de StringProperty name.
+	 * @return A propriedade de name.
+	 */
+    public StringProperty getNameProperty(){return name;}
+
+	/**
+	 * Obtém a propriedade de StringProperty CpfCnpj.
+	 * @return A propriedade de CpfCnpj.
+	 */
+	public StringProperty getCpfCnpjProperty(){return cpfCnpj;}
+
+	/**
+	 * Obtém a propriedade de StringProperty e-mail.
+	 * @return A propriedade de e-mail.
+	 */
+	public StringProperty getEmailProperty(){return email;}
+
+	/**
+	 * Obtém a propriedade de StringProperty phone.
+	 * @return A propriedade de phone.
+	 */
+	public StringProperty getPhoneProperty(){return phone;}
+
+	/**
+	 * Obtém a propriedade de StringProperty DateBirth.
+	 * @return A propriedade de DateBirth.
+	 */
+	public StringProperty getDateBirthProperty(){return dateBirth;}
+
+	/**
+	 * Obtém a propriedade de StringProperty sex.
+	 * @return A propriedade de sex.
+	 */
+	public StringProperty getSexProperty(){return sex;}
+
+	/**
+	 * Obtém o valor atual da propriedade name.
+	 * @return O valor do name.
+	 */
+    public String getNameValue(){return name.getValue();}
+
+	/**
+	 * Obtém o valor atual da propriedade e-mail.
+	 * @return O valor do e-mail.
+	 */
+	public String getEmailValue(){return email.getValue();}
+
+	/**
+	 * Obtém o valor atual da propriedade phone.
+	 * @return O valor do phone.
+	 */
+	public String getPhoneValue(){return phone.getValue();}
+
+	/**
+	 * Obtém o valor atual da propriedade sex.
+	 * @return O valor do sex.
+	 */
+	public String getSexValue(){return sex.getValue();}
 }

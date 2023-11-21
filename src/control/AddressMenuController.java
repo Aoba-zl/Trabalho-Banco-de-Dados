@@ -14,7 +14,6 @@ import model.Store;
 import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
-import utils.UserSession;
 
 public class AddressMenuController
 {
@@ -26,7 +25,11 @@ public class AddressMenuController
 	private final StringProperty number = new SimpleStringProperty();
 	private final StringProperty complement = new SimpleStringProperty();
 
-
+	/**
+	 * Obtém uma lista observável de endereços do cliente.
+	 * @param login O login do cliente.
+	 * @return Uma lista observável de endereços do cliente.
+	 */
 	public ObservableList<ClientAddress> getAddressList(String login)
 	{
 		ObservableList<ClientAddress> allAddressStr = FXCollections.observableArrayList();
@@ -47,7 +50,12 @@ public class AddressMenuController
 		
 		return null;
 	}
-	
+
+
+	/**
+	 * Preenche os campos de endereço do cliente.
+	 * @param addressCli O endereço do cliente (vem da lista de endereços).
+	 */
 	public void fillClientAddressFields(ClientAddress addressCli)
 	{
 		name.setValue(addressCli.getName());
@@ -61,6 +69,10 @@ public class AddressMenuController
 		cityEstate.setValue(city + " ("+ estate +")");
 	}
 
+	/**
+	 * Preenche os campos de endereço da loja.
+	 * @param login O login da loja.
+	 */
 	public void fillStoreAddressFields(String login)
 	{
 		GenericDao genericDAO = new GenericDao();
@@ -88,6 +100,11 @@ public class AddressMenuController
 		}
 	}
 
+	/**
+	 * Edita o endereço da loja.
+	 * @param login O login da loja.
+	 * @throws SQLException Se ocorrer um erro ao editar o endereço.
+	 */
 	public void editStoreAddress(String login) throws SQLException
 	{
 		GenericDao genericDAO = new GenericDao();
@@ -95,15 +112,21 @@ public class AddressMenuController
 
 		Address currentAddress = addrD.consult(new Address());
 		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
+				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
 		addrD.update(address);
 	}
 
+	/**
+	 * Edita o endereço do cliente.
+	 * @param currentAddress O endereço atual do cliente.
+	 * @param login O login do cliente.
+	 * @return O novo endereço do cliente.
+	 */
 	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)
 	{
 		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberText(), getComplementText());
-		ClientAddress newAddress = new ClientAddress(address, getNameText());
+				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
+		ClientAddress newAddress = new ClientAddress(address, getNameValue());
 
 		GenericDao genericDAO = new GenericDao();
 		ClientAddressDao clientAddressDao = new ClientAddressDao(genericDAO, new Client(login));
@@ -121,6 +144,12 @@ public class AddressMenuController
 		return null;
 	}
 
+	/**
+	 * Exclui o endereço do cliente.
+	 * @param address O endereço do cliente.
+	 * @param login O login do cliente.
+	 * @return true se o endereço foi excluído com sucesso, false caso contrário.
+	 */
 	public boolean deleteClientAddress(ClientAddress address, String login)
 	{
 		GenericDao genericDAO = new GenericDao();
@@ -139,6 +168,11 @@ public class AddressMenuController
 		return false;
 	}
 
+	/**
+	 * Exclui o endereço da loja.
+	 * @param login O login da loja.
+	 * @throws SQLException Se ocorrer um erro ao excluir o endereço.
+	 */
 	public void deleteStoreAddress(String login) throws SQLException
 	{
 		GenericDao genericDAO = new GenericDao();
@@ -147,21 +181,67 @@ public class AddressMenuController
 		addrD.delete(new Address());
 	}
 
+	/**
+	 * Obtém a propriedade do StringProperty name.
+	 * @return A propriedade do name.
+	 */
 	public StringProperty getNameProperty() { return name; }
+
+	/**
+	 * Obtém a propriedade do StringProperty CEP.
+	 * @return A propriedade do CEP.
+	 */
 	public StringProperty getCepProperty() { return cep; }
+
+	/**
+	 * Obtém a propriedade do StringProperty CityEstate.
+	 * @return A propriedade do CityEstate.
+	 */
 	public StringProperty getCityEstateProperty() { return cityEstate; }
+
+	/**
+	 * Obtém a propriedade do StringProperty Neighborhood.
+	 * @return A propriedade do Neighborhood.
+	 */
 	public StringProperty getNeighborhoodProperty() { return neighborhood; }
+
+	/**
+	 * Obtém a propriedade do StringProperty street.
+	 * @return A propriedade do street.
+	 */
 	public StringProperty getStreetProperty() { return street; }
+
+	/**
+	 * Obtém a propriedade do StringProperty number.
+	 * @return A propriedade do number.
+	 */
 	public StringProperty getNumberProperty() { return number; }
+
+	/**
+	 * Obtém a propriedade do StringProperty complement.
+	 * @return A propriedade do complement.
+	 */
 	public StringProperty getComplementProperty() { return complement; }
 
-	public String getNameText() { return name.getValue(); }
-	public String getCepText() { return cep.getValue(); }
-	public String getCityEstateText() { return cityEstate.getValue(); }
-	public String getNeighborhoodText() { return neighborhood.getValue(); }
-	public String getStreetText() { return street.getValue(); }
-	public String getNumberText() { return number.getValue(); }
-	public String getComplementText()
+	// -----------------------------------------------
+
+	/**
+	 * Obtém o valor atual de propriedade do name.
+	 * @return O valor do nome.
+	 */
+	public String getNameValue() { return name.getValue(); }
+
+	/**
+	 * Obtém o valor atual de propriedade do number.
+	 * @return O valor do número.
+	 */
+	public String getNumberValue() { return number.getValue(); }
+
+	/**
+	 * Obtém o valor atual da propriedade de complement.
+	 * @return O valor do complemento.
+	 */
+	public String getComplementValue()
 	{
 		String result = complement.getValue();
 		if (result == null || result.isEmpty())
