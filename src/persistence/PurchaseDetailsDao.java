@@ -95,7 +95,7 @@ public class PurchaseDetailsDao {
     }
 
     /**
-     * Reduz o stock dos produtos comprados.
+     * Reduz o stock dos produtos comprados, utilizando a quantidade dos items.
      * @param items A lista de produtos.
      */
     public void reduceStock(List<Item> items){
@@ -189,9 +189,36 @@ public class PurchaseDetailsDao {
 
             connection.close();
 
+            reduceStock(item);
 
         } catch (SQLException e) {
             System.out.println("Erro ao inserir Order e pagamento pelo pagamento" + e.getMessage());
+        }
+    }
+
+    /**
+     * Reduz o stock dos produtos comprados, utilizando a quantidade do item.
+     * @param item O item.
+     */
+    public void reduceStock(Item item){
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= """
+                    update product
+                     set
+                         total_stock= total_stock - ?
+                     where id_product = ?
+                    """;
+
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setInt(1, item.getQuantity());
+            ps.setInt(2, item.getProduct().getCod());
+            ps.executeUpdate();
+
+            connection.close();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao reduzir estoque dos produtos comprados!" + e.getMessage());
         }
     }
 }
