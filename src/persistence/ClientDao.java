@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import model.Client;
+import model.User;
 
 public class ClientDao implements CrudDao<Client>
 {
@@ -63,8 +64,6 @@ public class ClientDao implements CrudDao<Client>
 		PreparedStatement preparedStatement = connection.prepareStatement(querySql);
 		preparedStatement.setString(1, client.getSocialName());
 		preparedStatement.setString(2, client.getCpf());
-//		java.sql.Date sqlDate = new java.sql.Date(client.getDateBirth().getTime());
-//		preparedStatement.setDate(3, sqlDate);
 		try
 		{
 			preparedStatement.setDate(3, convertDate(client.getDateBirth()));
@@ -97,18 +96,23 @@ public class ClientDao implements CrudDao<Client>
 	public Client consult(Client client) throws SQLException
 	{
 		Connection connection = gDao.getConnection();
-		String querySql = "SELECT social_name, cpf, sex, "
-				+ "CONVERT(CHAR(10), date_birth, 103) AS date_birth "
-				+ "FROM client WHERE user_name = ?";
+		String querySql = """
+				SELECT u.user_name AS login, u.email, u.telephone,
+					   c.sex, c.social_name, c.cpf, CONVERT(CHAR(10), c.date_birth, 103) AS date_birth
+				FROM user_tbl u, client c
+				WHERE u.user_name = ? AND c.user_name = u.user_name
+				""";
 		PreparedStatement preparedStatement = connection.prepareStatement(querySql);
 		preparedStatement.setString(1, client.getLogin());
 		ResultSet result = preparedStatement.executeQuery();
 
 		if (result.next())
 		{
+			client.setLogin(result.getString("login"));
+			client.setEmail(result.getString("email"));
+			client.setTelephone(result.getString("telephone"));
 			client.setSocialName(result.getString("social_name"));
 			client.setCpf(result.getString("cpf"));
-//			client.setDateBirth(result.getDate("date_birth"));
 			client.setDateBirth(result.getString("date_birth"));
 			client.setSex(result.getString("sex"));
 		}
@@ -123,9 +127,12 @@ public class ClientDao implements CrudDao<Client>
 	{
 		List<Client> clients = new ArrayList<>();
 		Connection connection = gDao.getConnection();
-		String querySql = "SELECT social_name, cpf, sex, "
-				+ "CONVERT(CHAR(10), date_birth, 103) AS date_birth "
-				+ "FROM client WHERE user_name = ?";
+		String querySql = """
+				SELECT u.user_name AS login, u.email, u.telephone,
+					   c.sex, c.social_name, c.cpf, CONVERT(CHAR(10), c.date_birth, 103) AS date_birth
+				FROM user_tbl u, client c
+				WHERE u.user_name = c.user_name AND c.user_name = u.user_name
+				""";
 		PreparedStatement preparedStatement = connection.prepareStatement(querySql);
 		ResultSet result = preparedStatement.executeQuery();
 
@@ -134,7 +141,6 @@ public class ClientDao implements CrudDao<Client>
 			Client client = new Client(null);
 			client.setSocialName(result.getString("social_name"));
 			client.setCpf(result.getString("cpf"));
-//			client.setDateBirth(result.getDate("date_birth"));
 			client.setDateBirth(result.getString("date_birth"));
 			client.setSex(result.getString("sex"));
 
@@ -145,10 +151,4 @@ public class ClientDao implements CrudDao<Client>
 		connection.close();
 		return clients;
 	}
-
-//	public boolean signUpStore() //irá cadastrar, retornará false caso dê algum erro no cadastro
-//	{
-//		return true;
-//	}
-
 }

@@ -15,10 +15,8 @@ public class User
     	this.setLogin(login);
     }
     
-    public User()
-    {
-    }
-    
+	public User() { super(); }
+
     public boolean equals(User user)
 	{
         boolean validacaoLogin = Objects.equals(this.login, user.login);

@@ -14,7 +14,6 @@ import persistence.UserDao;
 import utils.UserSession;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import factory.ClientFactory;
 import factory.StoreFactory;
@@ -22,27 +21,21 @@ import factory.UserFactory;
 
 public class AccountMenuController
 {
-	private StringProperty login = new SimpleStringProperty("");
-	private StringProperty name = new SimpleStringProperty("");
-	private StringProperty cpfCnpj = new SimpleStringProperty("");
-	private StringProperty email = new SimpleStringProperty("");
-	private StringProperty phone = new SimpleStringProperty("");
-    private StringProperty dateBirth = new SimpleStringProperty("");
-    private StringProperty sex = new SimpleStringProperty("");
+	private final StringProperty login = new SimpleStringProperty("");
+	private final StringProperty name = new SimpleStringProperty("");
+	private final StringProperty cpfCnpj = new SimpleStringProperty("");
+	private final StringProperty email = new SimpleStringProperty("");
+	private final StringProperty phone = new SimpleStringProperty("");
+    private final StringProperty dateBirth = new SimpleStringProperty("");
+    private final StringProperty sex = new SimpleStringProperty("");
 
     public void completeStoreFields(String login)
     {
     	GenericDao genericDAO = new GenericDao();
     	StoreDao storeDao = new StoreDao(genericDAO);
-    	UserDao userDao = new UserDao(genericDAO);
     	try
     	{
-    		User user = new User();
-    		user.setLogin(login);
-    		user = userDao.consult(user);
     		Store store = storeDao.consult(new Store(login));
-    		store.setEmail(user.getEmail());
-    		store.setTelephone(user.getTelephone());
     		setFields(store);
     	}catch (Exception e) {
     		e.printStackTrace();
@@ -53,15 +46,9 @@ public class AccountMenuController
     {
     	GenericDao genericDAO = new GenericDao();
     	ClientDao clientDao = new ClientDao(genericDAO);
-    	UserDao userDao = new UserDao(genericDAO);
     	try
     	{
-    		User user = new User();
-    		user.setLogin(login);
-    		user = userDao.consult(user);
     		Client client = clientDao.consult(new Client(login));
-    		client.setEmail(user.getEmail());
-    		client.setTelephone(user.getTelephone());
     		setFields(client);
     	}catch (Exception e) {
     		e.printStackTrace();

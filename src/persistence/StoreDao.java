@@ -68,7 +68,12 @@ public class StoreDao implements CrudDao<Store>
 	public Store consult(Store store) throws SQLException
 	{
 		Connection connection = gDao.getConnection();
-		String querySql = "SELECT * FROM store WHERE user_name = ?";
+		String querySql = """
+				SELECT u.user_name AS login, u.email, u.telephone,
+					   s.store_name, s.cnpj
+				FROM user_tbl u, store s
+				WHERE u.user_name = ? AND s.user_name = u.user_name
+				""";
 		PreparedStatement ps = connection.prepareStatement(querySql);
 		ps.setString(1, store.getLogin());
 
@@ -76,6 +81,8 @@ public class StoreDao implements CrudDao<Store>
 
 		if (result.next())
 		{
+			store.setEmail(result.getString("email"));
+			store.setTelephone(result.getString("telephone"));
 			store.setNameStore(result.getString("store_name"));
 			store.setCnpj(result.getString("cnpj"));
 		}
@@ -90,7 +97,12 @@ public class StoreDao implements CrudDao<Store>
 	{
 		List<Store> stores = new ArrayList<>();
 		Connection connection = gDao.getConnection();
-		String querySql = "SELECT * FROM store WHERE user_name = ?";
+		String querySql = """
+				SELECT u.user_name AS login, u.email, u.telephone,
+					   s.store_name, s.cnpj
+				FROM user_tbl u, store s
+				WHERE u.user_name = s.user_name AND s.user_name = u.user_name
+				""";
 		PreparedStatement ps = connection.prepareStatement(querySql);
 
 		ResultSet result = ps.executeQuery();
