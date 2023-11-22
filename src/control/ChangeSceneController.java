@@ -63,17 +63,6 @@ public class ChangeSceneController
 						winRegClientInfo = (WinRegClientInfoConstructor) windowns.get(sceneName);
 					winRegClientInfo.addElements(pWin);
 					break;
-				case REG_CLIENT_ADDRESS:
-					if (!windowns.containsKey(sceneName))
-					{
-						System.out.println("login novo");
-						winRegClientAddress = new WinRegClientAddressConstructor();
-						windowns.put(sceneName, winRegClientAddress);
-					}
-					else
-						winRegClientAddress= (WinRegClientAddressConstructor) windowns.get(sceneName);
-					winRegClientAddress.addElements(pWin);
-					break;
 				case REG_STORE_INFO:
 					if (!windowns.containsKey(sceneName))
 					{

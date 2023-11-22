@@ -26,6 +26,7 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 {
 	Pane pWin;
 	private RegisterUserController login = new RegisterUserController();
+	private WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(login);
     private ToggleGroup group;
 	public void addElements(Pane pane)
 	{
@@ -171,10 +172,13 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 	// avançando para tela de endereco e validando inserçoes
 	private void toClientAddress()
 	{
-			if (login.checkValuesClient()) {
-				pWin.getChildren().clear();
-				WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(login);
-				ClienA.addElements(pWin);
+			try {
+				if (login.checkValuesClient()) {
+					pWin.getChildren().clear();
+					ClienA.addElements(pWin);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 	}
 }
