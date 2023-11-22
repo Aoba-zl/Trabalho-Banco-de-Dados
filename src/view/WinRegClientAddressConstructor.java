@@ -22,10 +22,15 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	
 	public WinRegClientAddressConstructor (RegisterUserController login) {
 		this.login = login;
-	}
+    }
 
 	
-    public void addElements(Pane pane)
+    public WinRegClientAddressConstructor() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public void addElements(Pane pane)
 	{
     	this.pWin = pane;
     	

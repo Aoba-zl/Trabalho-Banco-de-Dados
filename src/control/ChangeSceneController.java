@@ -26,7 +26,8 @@ public class ChangeSceneController
 		WinConsultProductConstructor winConsultProduct;
 		WinShoppingCartConstructor winCart;
 		WinPurchaseDetailsConstruct winPurchaseDetails;
-		
+		WinPurchaseHistoryConstructor winPurchaseHistory;
+
 		//login store
 		WinStoreConstructor winStore;
 		WinRegProductConstructor winRegProduct;
@@ -62,6 +63,17 @@ public class ChangeSceneController
 					else
 						winRegClientInfo = (WinRegClientInfoConstructor) windowns.get(sceneName);
 					winRegClientInfo.addElements(pWin);
+					break;
+				case REG_CLIENT_ADDRESS:
+					if (!windowns.containsKey(sceneName))
+					{
+						System.out.println("login novo");
+						winRegClientAddress = new WinRegClientAddressConstructor();
+						windowns.put(sceneName, winRegClientAddress);
+					}
+					else
+						winRegClientAddress= (WinRegClientAddressConstructor) windowns.get(sceneName);
+					winRegClientAddress.addElements(pWin);
 					break;
 				case REG_STORE_INFO:
 					if (!windowns.containsKey(sceneName))
@@ -137,6 +149,16 @@ public class ChangeSceneController
 					else
 						winPurchaseDetails = (WinPurchaseDetailsConstruct) windowns.get(sceneName);
 					winPurchaseDetails.addElements(pWin);
+					break;
+				case PURCHASE_HISTORY:
+					if (!windowns.containsKey(sceneName))
+					{
+						winPurchaseHistory = new WinPurchaseHistoryConstructor();
+						windowns.put(sceneName, winPurchaseHistory);
+					}
+					else
+						winPurchaseHistory  = (WinPurchaseHistoryConstructor) windowns.get(sceneName);
+					winPurchaseHistory.addElements(pWin);
 					break;
 					
 				//Store
