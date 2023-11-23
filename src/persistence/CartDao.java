@@ -92,7 +92,9 @@ public class CartDao {
         try {
             connection = genericDao.getConnection();
             String sql= """
-                    select order_prod.quantity,
+                    select prod.name_product,
+                           prod.description,
+                           order_prod.quantity,
                            prod.unity_price * order_prod.quantity as Price,
                            prod.id_product,
                            order_tab.id_order,
@@ -115,15 +117,19 @@ public class CartDao {
             while (rs.next()){
                 Product product= new Product();
                 Item item= new Item();
-                item.setQuantity(1);
-                item.setSubTotal(2);
-                product.setCod(3);
-                order.setId(rs.getInt(4));
-                product.setShipping(5);
-                product.setTotalStock(6);
 
+                product.setName(rs.getString(1));
+                product.setDescription(rs.getString(2));
+                item.setQuantity(rs.getInt(3));
+                item.setSubTotal(rs.getDouble(4));
+                product.setCod(rs.getInt(5));
+                order.setId(rs.getInt(6));
+                product.setShipping(rs.getDouble(7));
+                product.setTotalStock(rs.getInt(8));
                 item.setProduct(product);
+
                 items.add(0, item);
+
 
             }
             order.setItems(items);

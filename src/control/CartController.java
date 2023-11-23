@@ -47,7 +47,8 @@ public class CartController {
             double portageCal= 0;
             double totalPrice= 0;
 
-            for (int i = 0; i < items.size(); i++) {
+            int listSize= items.size();
+            for (int i = 0; i < listSize; i++) {
                 Item item= items.get(i);
                 portageCal+= item.getProduct().getShipping();
                 totalPrice+= item.getSubTotal();
@@ -77,7 +78,7 @@ public class CartController {
      */
     public Order getOrder(){
         client= new Client();
-        client.setLogin("teste2"); //todo alterar ---------
+        client.setLogin(UserSession.getUserName());
 
         order= cartDao.getOrder(client.getLogin());
 

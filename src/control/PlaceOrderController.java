@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import model.Client;
 import model.Item;
 import model.Order;
+import persistence.CartDao;
 import persistence.GenericDao;
 import persistence.PurchaseDetailsDao;
 import persistence.PurchaseHistoryDao;
@@ -21,6 +22,8 @@ import java.util.List;
 public class PlaceOrderController {
 
     Client client;
+
+    Order order;
     private GenericDao genericDao= new GenericDao();
 
     private PurchaseDetailsDao purchaseDetailsDao= new PurchaseDetailsDao(genericDao);
@@ -29,21 +32,29 @@ public class PlaceOrderController {
 
     private StringProperty totalPurchase= new SimpleStringProperty("Total:");
 
-    private ObservableList<Item> items= FXCollections.observableArrayList();
+    private ObservableList<Item> itemsList = FXCollections.observableArrayList();
+
+    private CartDao cartDao= new CartDao(genericDao);
 
     /**
      * Carrega um lista de items para tela detalhes de compra e seus Labels
      */
     public void populateWinPurchase(){
-        if (!items.isEmpty()){
+        order= new Order();
+        order= cartDao.getOrder(UserSession.getUserName());
+
+        if (order.getItems() != null){
+            List<Item> items= order.getItems();
             double portageCal= 0;
             double totalPrice= 0;
 
-            int listsize= items.size();
-            for (int i = 0; i < listsize; i++) {
-                Item item= items.get(i);
-                portageCal+= item.getProduct().getShipping();
-                totalPrice+= item.getSubTotal();
+            int listSize= items.size();
+            for (int i = 0; i < listSize; i++) {
+                    Item item= items.get(i);
+                    portageCal+= item.getProduct().getShipping();
+                    totalPrice+= item.getSubTotal();
+
+                    itemsList.add(item);
             }
             totalPrice+= portageCal;
             DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -56,7 +67,28 @@ public class PlaceOrderController {
             String totalValue= ("R$ " + formatedvalue);
 
             totalPurchase.set("Total: " + totalValue);
+
         }
+
+//            for (int i = 0; i < listsize; i++) {
+//                Item item= items.get(i);
+//                portageCal+= item.getProduct().getShipping();
+//                totalPrice+= item.getSubTotal();
+//
+//                items.add(0, item);
+//            }
+//            totalPrice+= portageCal;
+//            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+//            String formatedvalue= decimalFormat.format(portageCal);
+//            String portageTotal= ("R$ " + formatedvalue);
+//
+//            portage.set("Frete: " + portageTotal);
+//
+//            formatedvalue= decimalFormat.format(totalPrice);
+//            String totalValue= ("R$ " + formatedvalue);
+//
+//            totalPurchase.set("Total: " + totalValue);
+
     }
 
     /**
@@ -64,7 +96,7 @@ public class PlaceOrderController {
      * @return A verificação.
      */
     public Boolean cart(){
-        if (items.size() > 1){
+        if (itemsList.size() > 1){
             return true;
         }
         else {
@@ -76,7 +108,7 @@ public class PlaceOrderController {
      * Esvazia a lista de items.
      */
     public void clearItems(){
-        items.clear();
+        itemsList.clear();
     }
 
     /**
@@ -90,7 +122,7 @@ public class PlaceOrderController {
 
     /**
      * Cria um pedido e seu pagamento, verificando o meio de pagamento de um determinado cliente.
-     * @param client O cliente.
+     * @param username O username do cliente.
      * @param item O item do pedido.
      * @param pix O meio de pagamento.
      */
@@ -104,12 +136,10 @@ public class PlaceOrderController {
     }
 
     public ObservableList<Item> getItems() {
-        return items;
+        return itemsList;
     }
 
-    public void setItems(ObservableList<Item> items) {
-        this.items = items;
-    }
+
 
     public StringProperty portageProperty() {
         return portage;

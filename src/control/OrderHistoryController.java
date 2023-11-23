@@ -47,7 +47,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
 
         List<Order> listOrder= purchaseHistoryDao.listPurchaseHistory(client);
 
-        if (listOrder != null){
+        if (!listOrder.isEmpty()){
             for (int i = 0; i < listOrder.size(); i++) {
                 Order order= (Order) listOrder.get(i);
 

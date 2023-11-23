@@ -87,9 +87,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         btnReturn.setOnMouseClicked(event -> {
             if (controllerPlaceOrder.cart()){
-                winShoppingCartConstructor= new WinShoppingCartConstructor();
-                pane.getChildren().clear();
-                winShoppingCartConstructor.addElements(pane);
+                toCart();
             }
             else {
                 //todo retorna para a tela do produto se cart == false
@@ -227,9 +225,8 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         columnPrice.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
 
         tablePurchase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        controllerPlaceOrder.populateWinPurchase();
         tablePurchase.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
+        controllerPlaceOrder.populateWinPurchase();
         tablePurchase.setItems(controllerPlaceOrder.getItems());
     }
 
@@ -255,9 +252,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         button.setStyle(styleExit);
     }
 
-    private void toCart()
-    {
-    	ChangeSceneController.changeScene(SceneName.CART, pWin);
+
+    private void toCart() {
+        tablePurchase.getColumns().clear();
+        controllerPlaceOrder.getItems().clear();
+        ChangeSceneController.changeScene(SceneName.CART, this.pWin);
     }
 
 
