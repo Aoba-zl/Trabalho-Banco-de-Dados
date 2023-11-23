@@ -27,17 +27,17 @@ import java.util.List;
 public class WinShoppingCartConstructor implements GenericWindownInterface {
 	Pane pWin;
 	
-    private Label lblTittle= new Label("Carrinho");
-    private Label lblTotalPrice= new Label("Total:");
-    private Label lblPortage= new Label("Frete:");
-    private Label lblQuantity= new Label("Alterar \nQuantidade:");
-    private Button btnRemove= new Button("Remover");
-    private Button btnPlaceOrder= new Button("Realizar Pedido");
-    private Button btnMinus= new Button("-");
-    private Button btnPlus= new Button("+");
+    private final Label lblTittle= new Label("Carrinho");
+    private final Label lblTotalPrice= new Label("Total:");
+    private final Label lblPortage= new Label("Frete:");
+    private final Label lblQuantity= new Label("Alterar \nQuantidade:");
+    private final Button btnRemove= new Button("Remover");
+    private final Button btnPlaceOrder= new Button("Realizar Pedido");
+    private final Button btnMinus= new Button("-");
+    private final Button btnPlus= new Button("+");
 
 
-    private TableView<Item> tableCart= new TableView<>();
+    private final TableView<Item> tableCart= new TableView<>();
 
     CartController controllerCart= new CartController();
 
@@ -67,7 +67,6 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         btnRemove.relocate(30, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
-        btnPlaceOrder.setDisable(true);
         btnMinus.relocate(230, 355);
         btnMinus.setFont(Font.font(13));
         btnMinus.setDisable(true);
@@ -82,7 +81,6 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         setOverButtonStyle(btnReturn, styleEnter, styleExit);
         setOverButtonStyle(btnQuit, styleEnter, styleExit);
         setOverButtonStyle(btnAccount, styleEnter, styleExit);
-
 
 
         lblTittle.setFont(Font.font(26));
@@ -176,29 +174,30 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
 
     }
 
+    private final TableColumn<Item, String> columnProductName= new TableColumn<>("Nome");
+    private final TableColumn<Item, String> columnDescription= new TableColumn<>("Descrição");
+    private final TableColumn<Item, String> columnQuantity= new TableColumn<>("Quantidade");
+    private final TableColumn<Item, String> columnPrice= new TableColumn<>("Preço");
+
     private void populateTable(){
-        TableColumn<Item, String> columnProductName= new TableColumn<>("Nome");
         columnProductName.setCellValueFactory(itemData -> {
             Product product = itemData.getValue().getProduct();
             String nameProduct = String.valueOf(product.getName());
             return new ReadOnlyStringWrapper(nameProduct);
         });
 
-        TableColumn<Item, String> columnDescription= new TableColumn<>("Descrição");
         columnDescription.setCellValueFactory(itemData -> {
             Product product = itemData.getValue().getProduct();
             String productDescription = String.valueOf(product.getDescription());
             return new ReadOnlyStringWrapper(productDescription);
         });
 
-        TableColumn<Item, String> columnQuantity= new TableColumn<>("Quantidade");
         columnQuantity.setCellValueFactory(itemData -> {
             String productQuantity= String.valueOf(itemData.getValue().getQuantity());
             return new ReadOnlyStringWrapper(productQuantity);
         });
 
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        TableColumn<Item, String> columnPrice= new TableColumn<>("Preço");
         columnPrice.setCellValueFactory(itemData -> {
             String formatedvalue= decimalFormat.format(itemData.getValue().getSubTotal());
             String productPrice= ("R$ " + formatedvalue);
@@ -249,21 +248,29 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
 
     private void toLogin()
 	{
+        tableCart.getColumns().clear();
+        controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 
 	private void toAccount()
 	{
+        tableCart.getColumns().clear();
+        controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 
     private void toHome()
     {
+        tableCart.getColumns().clear();
+        controllerCart.getListCart().clear();
     	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
     private void toDetails()
     {
+        tableCart.getColumns().clear();
+        controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 	}
 }
