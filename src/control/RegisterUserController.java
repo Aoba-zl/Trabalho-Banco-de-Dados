@@ -16,19 +16,21 @@ import model.Client;
 import model.ClientAddress;
 import model.Store;
 import model.User;
+import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.ClientDao;
 import persistence.GenericDao;
+import persistence.StoreDao;
 import persistence.UserDao;
 import utils.ServicoDeCep;
 
 public class RegisterUserController {
-    Store loja;
+    Store loja = new Store();
     Client cliente = new Client();
     Address novoEndereco = new Address();
 	User newUser = new User();
     
-    // cliente
+    // dados
     private StringProperty spName = new SimpleStringProperty("");
     private StringProperty spCpf = new SimpleStringProperty("");
     private StringProperty spEmail = new SimpleStringProperty("");
@@ -41,7 +43,8 @@ public class RegisterUserController {
     private BooleanProperty spMale = new SimpleBooleanProperty();
     private BooleanProperty spFem = new SimpleBooleanProperty();
     private BooleanProperty spOther = new SimpleBooleanProperty();
-    
+    private StringProperty spCnpj = new SimpleStringProperty("");
+    private StringProperty spStore = new SimpleStringProperty("");
     // endereco
     
     private StringProperty spAddressName = new SimpleStringProperty("");
@@ -107,10 +110,17 @@ public class RegisterUserController {
     		}
     	}
     }
-    public Store generateStore() {
-        Store newStore = new Store();
+    public void generateStore() throws SQLException {
         //TODO: CtrlCadastroUsuario. Corpo da operacao
-        return newStore;
+		GenericDao gDao = new GenericDao();
+		UserDao uDao = new UserDao(gDao);
+		StoreDao sDao = new StoreDao(gDao);
+		AddressDao aDao = new AddressDao(gDao, newUser);
+		novoEndereco.setDoorNumber(Integer.parseInt(getNumberValue()));
+		novoEndereco.setComplement(getComplementValue());
+        uDao.insert(newUser);
+        sDao.insert(loja);
+        aDao.insert(novoEndereco);
     }
     public Client updateClient() {
         Client client = null;
@@ -193,6 +203,7 @@ public class RegisterUserController {
     			Sex = getSexValue ();
     		}
     	} 
+    	
         cliente.setLogin(getNameValue());
         cliente.setSocialName(getSocialNameValue());
         cliente.setCpf(getCpfValue());
@@ -200,12 +211,16 @@ public class RegisterUserController {
         cliente.setSex(Sex);
     	return true;
     }
-    public boolean checkValuesAddress () {
-    	
+    public boolean checkAddressName() {
     	if (getAddressNameValue().trim().isBlank() || getAddressNameValue().length() > 50) {
     		spWarning.setValue("Nome Invalido");
     		return false;
     	}
+    	return true;
+    }
+    
+    public boolean checkValuesAddress () {
+    	
     	if(getCepValue().trim().isBlank() || getCepValue().length() != 9 || !getCepValue().contains("-")) {
     		spWarning.setValue("CEP Deve Estar no formato: 00000-000");
     		return false;
@@ -224,7 +239,69 @@ public class RegisterUserController {
     	}
     	return true;
     }
-    // Conexão com cliente
+    public boolean checkValuesStore() throws SQLException {
+    	if (getPasswdValue ().trim().isBlank() || getPasswdValue ().length() > 60) {
+    		spWarning.setValue("Senha Invalido");
+        	return false;
+    	}
+    	if (getStoreValue().trim().isBlank() || getStoreValue().length() > 100) {
+    		spWarning.setValue("Nome da Loja Invalido");
+    		return false;
+    	}
+    	if (getNameValue().trim().isBlank() || getNameValue().length() > 60) {
+    		spWarning.setValue("Nome Invalido");
+    		return false;
+    	}
+    	User user = new User(getNameValue());
+    	if ( validateUserLogin(user)) {
+    		spWarning.setValue("Nome já Cadastrado");
+        	return false;
+    	}
+    	if(getCnpjValue().trim().isBlank() || getCnpjValue().length() != 14 || !getCnpjValue().matches("\\d+") ) {
+    		spWarning.setValue("CNPJ Invalido");
+    		return false;
+    	}
+    	if (getEmailValue().trim().isBlank() || getEmailValue().length() > 100 || !getEmailValue().contains("@") || !getEmailValue().contains(".com") ) {
+    		spWarning.setValue("Email Invalido");
+        	return false;
+    	}
+    	if (getPhoneValue().trim().isBlank() || !getPhoneValue().matches("\\d+") || getPhoneValue().length() <9 || getPhoneValue().length() > 10 ) {
+    		spWarning.setValue("Telefone Invalido");
+        	return false;
+    	}
+    	newUser.setLogin(getNameValue());
+    	newUser.setEmail(getEmailValue());
+    	newUser.setPassword(getPasswdValue());
+    	newUser.setPermission("store");
+    	newUser.setTelephone(getPhoneValue());
+    	
+    	loja.setLogin(getNameValue());
+    	loja.setNameStore(getStoreValue());
+    	loja.setCnpj(getCnpjValue());
+    	return true;
+    }
+    public void clean () {
+        spAddressName.setValue("");
+        spBirthDate.setValue("");
+        spCep.setValue("");
+        spCity.setValue("");
+        spComplement.setValue("");
+        spCpf.setValue("");
+        spEmail.setValue("");
+        spEstate.setValue("");
+        spName.setValue("");
+        spNeighborhood.setValue("");
+        spNumber.setValue("");
+        spPasswd.setValue("");
+        spPhone.setValue("");
+        spSex.setValue("");
+        spSocialName.setValue("");
+        spStreet.setValue("");
+        spWarning.setValue("");
+        spCnpj.setValue("");
+        spStore.setValue("");
+    }
+    // Conexão com dados
     public StringProperty getName () { return spName; }
     public StringProperty getCpf () { return spCpf; }
     public StringProperty getEmail () { return spEmail; }
@@ -237,6 +314,9 @@ public class RegisterUserController {
     public BooleanProperty getMale () { return spMale; }
     public BooleanProperty getFem () { return spFem; }
     public BooleanProperty getOther () { return spOther; }
+    public StringProperty getCnpj () { return spCnpj; }
+    public StringProperty getStore () { return spStore; }
+    
     
     public String getNameValue () { return spName.getValue(); }
     public String getCpfValue () { return spCpf.getValue(); }
@@ -246,6 +326,8 @@ public class RegisterUserController {
     public String getPhoneValue () { return spPhone.getValue(); }
     public String getBirthDateValue () { return spBirthDate.getValue(); }
     public String getSexValue () { return spSex.getValue(); }
+    public String getCnpjValue () { return spCnpj.getValue(); }
+    public String getStoreValue () { return spStore.getValue(); }
     // Conexão com endereco
     public StringProperty getAddressName () { return spAddressName; }
     public StringProperty getCep () { return spCep; }

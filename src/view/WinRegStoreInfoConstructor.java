@@ -1,6 +1,10 @@
 package view;
 
+import java.sql.SQLException;
+
 import control.ChangeSceneController;
+import control.RegisterUserController;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +18,8 @@ import utils.UserSession;
 public class WinRegStoreInfoConstructor implements GenericWindownInterface
 {
 	Pane pWin;
-	
+	private RegisterUserController uCon = new RegisterUserController();
+	private WinRegStoreAddressConstructor sAddress = new WinRegStoreAddressConstructor(uCon);
 	public void addElements(Pane pane) 
 	{
 		this.pWin = pane;
@@ -76,7 +81,16 @@ public class WinRegStoreInfoConstructor implements GenericWindownInterface
 		setAlignment(tfEmail);
 		TextField tfSenha = new TextField();
 		setAlignment(tfSenha);
-
+		
+		// ----- Criando property com o controller ----- //
+		
+		Bindings.bindBidirectional(tfName.textProperty(), uCon.getName());
+		Bindings.bindBidirectional(tfStore.textProperty(), uCon.getStore());
+		Bindings.bindBidirectional(tfPhone.textProperty(),uCon.getPhone());
+		Bindings.bindBidirectional(tfCNPJ.textProperty(),uCon.getCnpj());
+		Bindings.bindBidirectional(tfEmail.textProperty(),uCon.getEmail());
+		Bindings.bindBidirectional(tfSenha.textProperty(),uCon.getPasswd());
+		Bindings.bindBidirectional(lblWarning.textProperty(),uCon.getWarning());
 
 		// ----- Inserindo em Vbox/Hbox ----- //
 
@@ -117,6 +131,14 @@ public class WinRegStoreInfoConstructor implements GenericWindownInterface
 	
 	private void toStoreAddress()
 	{
-		ChangeSceneController.changeScene(SceneName.REG_STORE_ADDRESS, this.pWin);
+		try {
+			if(uCon.checkValuesStore()) {
+				pWin.getChildren().clear();
+				sAddress.addElements(pWin);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

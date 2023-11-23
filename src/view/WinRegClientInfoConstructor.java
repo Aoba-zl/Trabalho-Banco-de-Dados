@@ -25,8 +25,8 @@ import utils.UserSession;
 public class WinRegClientInfoConstructor implements GenericWindownInterface
 {
 	Pane pWin;
-	private RegisterUserController login = new RegisterUserController();
-	private WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(login);
+	private RegisterUserController uCon = new RegisterUserController();
+	private WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(uCon);
     private ToggleGroup group;
 	public void addElements(Pane pane)
 	{
@@ -96,15 +96,15 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		
 		// ----- Criando property com o controller ----- //
 		
-		Bindings.bindBidirectional(tfName.textProperty(), login.getName());
-		Bindings.bindBidirectional(tfCPF.textProperty(), login.getCpf());
-		Bindings.bindBidirectional(tfEmail.textProperty(), login.getEmail());
-		Bindings.bindBidirectional(tfPasswd.textProperty(), login.getPasswd());
-		Bindings.bindBidirectional(tfSocialName.textProperty(), login.getSocialName());
-		Bindings.bindBidirectional(tfPhone.textProperty(), login.getPhone());
-		Bindings.bindBidirectional(tfBirthDate.textProperty(), login.getBirthDate());
-		Bindings.bindBidirectional(tfSex.textProperty(), login.getSex());
-		Bindings.bindBidirectional(lblWarning.textProperty(), login.getWarning());
+		Bindings.bindBidirectional(tfName.textProperty(), uCon.getName());
+		Bindings.bindBidirectional(tfCPF.textProperty(), uCon.getCpf());
+		Bindings.bindBidirectional(tfEmail.textProperty(), uCon.getEmail());
+		Bindings.bindBidirectional(tfPasswd.textProperty(), uCon.getPasswd());
+		Bindings.bindBidirectional(tfSocialName.textProperty(), uCon.getSocialName());
+		Bindings.bindBidirectional(tfPhone.textProperty(), uCon.getPhone());
+		Bindings.bindBidirectional(tfBirthDate.textProperty(), uCon.getBirthDate());
+		Bindings.bindBidirectional(tfSex.textProperty(), uCon.getSex());
+		Bindings.bindBidirectional(lblWarning.textProperty(), uCon.getWarning());
 		
 		
 		// ----- Criando optionPanes ----- //
@@ -113,9 +113,9 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		RadioButton rbFem = new RadioButton("Feminino");
 		RadioButton rbOther = new RadioButton("Outro");
 		
-		Bindings.bindBidirectional(rbMale.selectedProperty(), login.getMale());
-		Bindings.bindBidirectional(rbFem.selectedProperty(), login.getFem());
-		Bindings.bindBidirectional(rbOther.selectedProperty(), login.getOther());
+		Bindings.bindBidirectional(rbMale.selectedProperty(), uCon.getMale());
+		Bindings.bindBidirectional(rbFem.selectedProperty(), uCon.getFem());
+		Bindings.bindBidirectional(rbOther.selectedProperty(), uCon.getOther());
 		group = new ToggleGroup();
 		rbMale.setToggleGroup(group);
 		rbFem.setToggleGroup(group);
@@ -163,17 +163,16 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 		}
 	}
 	
-	// Voltando para tela de login
-	private void toLogin()
-	{
+	// Voltando para tela de Login
+	private void toLogin() {
+		uCon.clean();
 		UserSession.clearSession();
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	// avançando para tela de endereco e validando inserçoes
-	private void toClientAddress()
-	{
+	private void toClientAddress() {
 			try {
-				if (login.checkValuesClient()) {
+				if (uCon.checkValuesClient()) {
 					pWin.getChildren().clear();
 					ClienA.addElements(pWin);
 				}
