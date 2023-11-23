@@ -130,7 +130,7 @@ public class PurchaseDetailsDao {
      * @param item O item do pedido.
      * @param pix O meio de pagamento.
      */
-    public void insertOrder(Client client, Item item, Boolean pix){
+    public void insertOrder(String username, Item item, Boolean pix){
         Order order= new Order();
         try {
             Connection connection= genericDao.getConnection();
@@ -139,7 +139,7 @@ public class PurchaseDetailsDao {
                     values
                         (?)""";
             PreparedStatement insertOrder= connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            insertOrder.setString(1, client.getLogin());
+            insertOrder.setString(1, username);
 
             insertOrder.executeUpdate();
 

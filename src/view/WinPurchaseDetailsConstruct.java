@@ -14,6 +14,8 @@ import javafx.scene.text.Font;
 import utils.SceneName;
 import model.Item;
 import model.Product;
+import utils.UserSession;
+
 import java.text.DecimalFormat;
 
 /**
@@ -44,13 +46,10 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     }
 
     /**
-     * Adiciona os elementos ao Painel, utilizando uma lista de items e verifica se transição de tela
-     * veio apartir da tela do carrinho ou da tela do produto.
+     * Adiciona os elementos ao Painel.
      * @param pane O painel.
-     * @param listItems A lista.
-     * @param cart A verificação.
      */
-    public void addElements(Pane pane, ObservableList<Item> listItems, Boolean cart) {
+    public void addElements(Pane pane) {
     	this.pWin = pane;
 
         Button btnReturn= new Button();
@@ -87,7 +86,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         //EVENTS --------------------------------------------------------------
 
         btnReturn.setOnMouseClicked(event -> {
-            if (cart){
+            if (controllerPlaceOrder.cart()){
                 winShoppingCartConstructor= new WinShoppingCartConstructor();
                 pane.getChildren().clear();
                 winShoppingCartConstructor.addElements(pane);
@@ -99,7 +98,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         btnBuy.setOnMouseClicked(event -> {
 
-            if (cart){
+            if (controllerPlaceOrder.cart()){
                 if (cbPaymentMethod.getValue() == "Pix"){
                     controllerPlaceOrder.placePayment(cartController.getOrder(), true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
@@ -108,6 +107,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.setContentText("Codigo do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
+                    controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
                     winShoppingCartConstructor= new WinShoppingCartConstructor();
                     winShoppingCartConstructor.addElements(pane);
@@ -120,6 +120,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.setContentText("Codigo do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
+                    controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
                     winShoppingCartConstructor= new WinShoppingCartConstructor();
                     winShoppingCartConstructor.addElements(pane);
@@ -136,25 +137,27 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
             else{
                 //todo operação para a tela do produto
                 if (cbPaymentMethod.getValue() == "Pix"){
-//                    controllerPlaceOrder.createOrderAndPayment(); //todo alterar
+                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
                     alert.setContentText("Codigo do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
+                    controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
                     winShoppingCartConstructor= new WinShoppingCartConstructor();
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrder(), false); //todo alterar
+                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
                     alert.setContentText("Codigo do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
+                    controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
                     winShoppingCartConstructor= new WinShoppingCartConstructor();
                     winShoppingCartConstructor.addElements(pane);
@@ -180,12 +183,12 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
 
         bindings();
-        populateTable(listItems);
+        populateTable();
         pane.getChildren().addAll(tablePurchase, btnBuy, btnReturn, lblPaymentMethod,lblPortage,lblTotalPurchaseValue,lblTittle, cbPaymentMethod);
 
     }
 
-    private void populateTable(ObservableList<Item> listItems){
+    private void populateTable(){
         TableColumn<Item, String> columnProductName= new TableColumn<>("Nome");
         columnProductName.setCellValueFactory(itemData -> {
             Product product = itemData.getValue().getProduct();
@@ -225,9 +228,9 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         tablePurchase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        controllerPlaceOrder.populateWinPurchase(listItems);
+        controllerPlaceOrder.populateWinPurchase();
         tablePurchase.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
-        tablePurchase.setItems(listItems);
+        tablePurchase.setItems(controllerPlaceOrder.getItems());
     }
 
     private void setBtnBackImage(Button btnBack) {
@@ -257,8 +260,5 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     	ChangeSceneController.changeScene(SceneName.CART, pWin);
     }
 
-    @Override
-    public void addElements(Pane pane) {
 
-    }
 }

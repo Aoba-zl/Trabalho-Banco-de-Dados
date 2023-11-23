@@ -1,4 +1,5 @@
 package view;
+import control.PlaceOrderController;
 import utils.SceneName;
 import control.ChangeSceneController;
 import control.CartController;
@@ -39,6 +40,8 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     private TableView<Item> tableCart= new TableView<>();
 
     CartController controllerCart= new CartController();
+
+    PlaceOrderController placeOrderController= new PlaceOrderController();
 
     WinPurchaseDetailsConstruct winPurchaseDetailsConstruct;
 
@@ -133,7 +136,12 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
                         controllerCart.alterQuantity(selectedProduct);
                     }
                     else {
-                        //TODO menssagem de erro informando que o produto não possui esse total no estoque
+                        Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Informação");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Não é possivel addicionar mais desse produto!");
+                        alert.getDialogPane().setStyle("-fx-font-size: 15");
+                        alert.showAndWait();
                     }
                 });
 
@@ -148,7 +156,8 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         btnPlaceOrder.setOnMouseClicked(event -> {
             winPurchaseDetailsConstruct= new WinPurchaseDetailsConstruct();
             pane.getChildren().clear();
-            winPurchaseDetailsConstruct.addElements(pane, controllerCart.getListCart(), true);
+            placeOrderController.setItems(controllerCart.getListCart());
+            winPurchaseDetailsConstruct.addElements(pane);
         });
 
         btnReturn.setOnAction(e -> toHome());

@@ -2,6 +2,8 @@ package control;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Client;
 import model.Item;
 import model.Order;
@@ -27,18 +29,19 @@ public class PlaceOrderController {
 
     private StringProperty totalPurchase= new SimpleStringProperty("Total:");
 
+    private ObservableList<Item> items= FXCollections.observableArrayList();
+
     /**
-     * Carrega um lista de items para tela detalhes de compra.
-     * @param listItems A lista.
+     * Carrega um lista de items para tela detalhes de compra e seus Labels
      */
-    public void populateWinPurchase(List<Item> listItems){
-        if (!listItems.isEmpty()){
+    public void populateWinPurchase(){
+        if (!items.isEmpty()){
             double portageCal= 0;
             double totalPrice= 0;
 
-            int listsize= listItems.size();
+            int listsize= items.size();
             for (int i = 0; i < listsize; i++) {
-                Item item= listItems.get(i);
+                Item item= items.get(i);
                 portageCal+= item.getProduct().getShipping();
                 totalPrice+= item.getSubTotal();
             }
@@ -57,6 +60,26 @@ public class PlaceOrderController {
     }
 
     /**
+     * Verifica se a tela veio da tela carrinho ou da tela do produto.
+     * @return A verificação.
+     */
+    public Boolean cart(){
+        if (items.size() > 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Esvazia a lista de items.
+     */
+    public void clearItems(){
+        items.clear();
+    }
+
+    /**
      * Adiciona o pagamento ao pedido, verificando o meio de pagamento.
      * @param order O pedido.
      * @param pix O meio de pagamento.
@@ -71,16 +94,22 @@ public class PlaceOrderController {
      * @param item O item do pedido.
      * @param pix O meio de pagamento.
      */
-    public void createOrderAndPayment(Client client, Item item, Boolean pix){
-        purchaseDetailsDao.insertOrder(client, item, pix);
+    public void createOrderAndPayment(String username, Item item, Boolean pix){
+        purchaseDetailsDao.insertOrder(username, item, pix);
     }
 
     public Client getClient(){
-//        client.setLogin(); todo adicionar metodo para pegar login
+        client.setLogin(UserSession.getUserName());
         return client;
     }
 
+    public ObservableList<Item> getItems() {
+        return items;
+    }
 
+    public void setItems(ObservableList<Item> items) {
+        this.items = items;
+    }
 
     public StringProperty portageProperty() {
         return portage;

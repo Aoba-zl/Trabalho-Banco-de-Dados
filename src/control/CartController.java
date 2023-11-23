@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import model.*;
 import persistence.CartDao;
 import persistence.GenericDao;
+import utils.UserSession;
 
 /**
  * Esta é uma classe de Controller que realiza as operações da classe WinShoppingCartConstructor.
@@ -36,7 +37,7 @@ public class CartController {
      */
     public void populateWinCart(){
         client= new Client();
-        client.setLogin("teste2"); //todo alterar -------------------
+        client.setLogin(UserSession.getUserName());
 
         order= new Order();
         order= cartDao.listCart(client);
