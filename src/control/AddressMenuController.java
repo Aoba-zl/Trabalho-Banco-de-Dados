@@ -15,6 +15,9 @@ import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
 
+/**
+ * Controlador responsável pelas operações dos endereços do usuário.
+ */
 public class AddressMenuController
 {
 	private final StringProperty name = new SimpleStringProperty();
@@ -125,15 +128,6 @@ public class AddressMenuController
 	 */
 	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)
 	{
-		/*
-		Address address = new Address(currentAddress.getCep(), currentAddress.getStreet(), getComplementValue(),
-				currentAddress.getNeighborhood(), currentAddress.getEstate(),
-				currentAddress.getCity(), getNumberValue());
-		 */
-
-//		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-//				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
-
 		Address address = new Address(currentAddress.getCep(), currentAddress.getStreet(), getComplementValue(),
 				currentAddress.getNeighborhood(), currentAddress.getEstate(),
 				currentAddress.getCity(), getNumberValue());
@@ -209,7 +203,7 @@ public class AddressMenuController
 		String estate = getCityEstateValue().substring(getCityEstateValue().indexOf('(')+1,
 				getCityEstateValue().indexOf(')'));
 
-		Address address = new Address(getCepText(), getStreetText(), getComplementValue(), getNeighborhoodText()
+		Address address = new Address(getCepValue(), getStreetValue(), getComplementValue(), getNeighborhoodValue()
 				, estate, city, getNumberValue());
 		ClientAddress clientAddress = new ClientAddress(address, getNameValue());
 
@@ -218,43 +212,43 @@ public class AddressMenuController
 	}
 
 	/**
-	 * Obtém a propriedade do StringProperty name.
+	 * Obtém a propriedade StringProperty name.
 	 * @return A propriedade do name.
 	 */
 	public StringProperty getNameProperty() { return name; }
 
 	/**
-	 * Obtém a propriedade do StringProperty CEP.
+	 * Obtém a propriedade StringProperty CEP.
 	 * @return A propriedade do CEP.
 	 */
 	public StringProperty getCepProperty() { return cep; }
 
 	/**
-	 * Obtém a propriedade do StringProperty CityEstate.
+	 * Obtém a propriedade StringProperty CityEstate.
 	 * @return A propriedade do CityEstate.
 	 */
 	public StringProperty getCityEstateProperty() { return cityEstate; }
 
 	/**
-	 * Obtém a propriedade do StringProperty Neighborhood.
+	 * Obtém a propriedade StringProperty Neighborhood.
 	 * @return A propriedade do Neighborhood.
 	 */
 	public StringProperty getNeighborhoodProperty() { return neighborhood; }
 
 	/**
-	 * Obtém a propriedade do StringProperty street.
+	 * Obtém a propriedade StringProperty street.
 	 * @return A propriedade do street.
 	 */
 	public StringProperty getStreetProperty() { return street; }
 
 	/**
-	 * Obtém a propriedade do StringProperty number.
+	 * Obtém a propriedade StringProperty number.
 	 * @return A propriedade do number.
 	 */
 	public StringProperty getNumberProperty() { return number; }
 
 	/**
-	 * Obtém a propriedade do StringProperty complement.
+	 * Obtém a propriedade StringProperty complement.
 	 * @return A propriedade do complement.
 	 */
 	public StringProperty getComplementProperty() { return complement; }
@@ -262,17 +256,33 @@ public class AddressMenuController
 	// -----------------------------------------------
 
 	/**
-	 * Obtém o valor atual de propriedade do name.
-	 * @return O valor do nome.
+	 * Obtém o valor atual de propriedade name.
+	 * @return O valor do name.
 	 */
 	public String getNameValue() { return name.getValue(); }
-    public String getCepText() { return cep.getValue(); }
+	/**
+	 * Obtém o valor atual de propriedade cep.
+	 * @return O valor do cep.
+	 */
+    public String getCepValue() { return cep.getValue(); }
+	/**
+	 * Obtém o valor atual de propriedade CityEstate.
+	 * @return O valor do CityEstate.
+	 */
     public String getCityEstateValue() { return cityEstate.getValue(); }
-    public String getNeighborhoodText() { return neighborhood.getValue(); }
-    public String getStreetText() { return street.getValue(); }
+	/**
+	 * Obtém o valor atual de propriedade Neighborhood.
+	 * @return O valor do Neighborhood.
+	 */
+    public String getNeighborhoodValue() { return neighborhood.getValue(); }
+	/**
+	 * Obtém o valor atual de propriedade Street.
+	 * @return O valor do Street.
+	 */
+    public String getStreetValue() { return street.getValue(); }
 
 	/**
-	 * Obtém o valor atual de propriedade do number.
+	 * Obtém o valor atual de propriedade number.
 	 * @return O valor do número.
 	 */
 	public String getNumberValue() { return number.getValue(); }
