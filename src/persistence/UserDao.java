@@ -27,6 +27,12 @@ public class UserDao implements CrudDao<User>
 		this.gDao = gDao;
 	}
 	
+	/**
+	 * Faz a busca de usuario no banco de dados.
+	 * @param u Armazena o objeto User.
+	 * @return True para caso tenha encontrado o usuário no banco de dados, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean signInUser(User u) throws SQLException
 	{
 		Connection c = gDao.getConnection();

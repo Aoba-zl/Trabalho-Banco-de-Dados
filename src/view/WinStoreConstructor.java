@@ -20,12 +20,19 @@ import javafx.scene.layout.VBox;
 import model.Product;
 import utils.SceneName;
 
+/**
+ * Construtor da tela de pagina da loja do lojista, com a implementação da interface GenericWindownInterface.
+ */
 public class WinStoreConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 	private List<Product> listProduct;
 	
-	@Override
+	/**
+     * Adiciona elementos à interface gráfica da janela de conta.
+     *
+     * @param pane O painel ao qual os elementos serão adicionados.
+     */
 	public void addElements(Pane pane)
 	{
 		pWin = pane;

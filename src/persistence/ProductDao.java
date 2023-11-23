@@ -15,11 +15,21 @@ public class ProductDao
 {
 	GenericDao gDao;
 	
+	/**
+	 * Construtor da classe ProductDao.
+	 * @param gDao Objeto responsável pela comunicação com o banco de dados.
+	 */
 	public ProductDao(GenericDao gDao)
 	{
 		this.gDao = gDao;
 	}
-
+	
+	/**
+	 * Faz a inserção do produto no banco de dados.
+	 * @param p Armazena o objeto Product.
+	 * @return True para caso tenha inserido o produto no banco de dados, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean insert(Product p) throws SQLException //
 	{
 		Connection c = gDao.getConnection();
@@ -42,7 +52,13 @@ public class ProductDao
 		
 		return linha > 0;
 	}
-
+	
+	/**
+	 * Faz a alteração do produto no banco de dados.
+	 * @param p p Armazena o objeto Product.
+	 * @return True para caso tenha alterado o produto no banco de dados, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean update(Product p) throws SQLException 
 	{
 		
@@ -63,8 +79,7 @@ public class ProductDao
 		ps.setDouble(4, p.getShipping());
 		ps.setString(5, p.getCategory());
 		ps.setString(6, p.getDescription());
-//		ps.setInt(7, p.getCod());
-		ps.setInt(7, 7);
+		ps.setInt(7, p.getCod());
 		
 		int linha = ps.executeUpdate();
 		
@@ -95,6 +110,11 @@ public class ProductDao
 		return null;
 	}
 
+	/**
+	 * Busca a lista de produto no banco de dados.
+	 * @return A lista de produto.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public List<Product> list() throws SQLException 
 	{
 		List<Product> products = new ArrayList<Product>();
@@ -120,6 +140,11 @@ public class ProductDao
 		return products;
 	}
 	
+	/**
+	 * Busca a lista de produto para o lojista no banco de dados.
+	 * @return A lista de produto do lojista.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public List<Product> listStore() throws SQLException 
 	{
 		List<Product> products = new ArrayList<Product>();
@@ -146,8 +171,4 @@ public class ProductDao
 		
 		return products;
 	}
-	
-	
-	
-
 }
