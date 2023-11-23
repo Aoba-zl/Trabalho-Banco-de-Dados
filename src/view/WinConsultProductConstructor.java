@@ -16,14 +16,12 @@ import javafx.scene.layout.VBox;
 import utils.SceneName;
 
 
-public class WinConsultProductConstructor implements GenericWindownInterface
-{
+public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
 	
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
-	public void addElements(Pane pane) 
-	{
+	public void addElements(Pane pane) {
 		this.pWin = pane;
 		
 		// ----- Creating General Bord ----- //
@@ -193,18 +191,15 @@ public class WinConsultProductConstructor implements GenericWindownInterface
 		txQuantity.setText(quant+"");
 	}
 	
-	private void toHomePage()
-	{
+	private void toHomePage(){
 		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
-	private void toCart()
-	{
+	private void toCart(){
 		ChangeSceneController.changeScene(SceneName.CART, this.pWin);
 	}
 	
-	private void toDetails() //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
-	{
+	private void toDetails() { //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
 		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
 	}
 	
@@ -223,8 +218,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface
     }
 
 
-    private void setOverButtonStyle(Button button) 
-    {
+    private void setOverButtonStyle(Button button) {
     	String styleEnter = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
                 "-fx-background-color: rgba(94,94,94,0.26); -fx-background-radius: 1000px";
     	String styleExit = "-fx-border-color: rgba(255,255,255,0); -fx-cursor: hand; " +
