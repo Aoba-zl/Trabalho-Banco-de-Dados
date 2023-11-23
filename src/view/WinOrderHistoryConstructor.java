@@ -1,5 +1,6 @@
 package view;
 
+import control.ChangeSceneController;
 import control.OrderHistoryController;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.scene.text.Font;
 import model.Item;
 import model.Order;
 import model.Product;
+import utils.SceneName;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,8 +24,8 @@ import java.util.List;
 /**
  * Esta é uma classe de Boundary que representa a tela histórico de pedidos.
  */
-public class WinOrderHistoryConstructor implements GenericWindownInterface
-{
+public class WinOrderHistoryConstructor implements GenericWindownInterface {
+    Pane pWin;
     private Button btnSearch= new Button("\uD83D\uDD0D");
     private TextField tfSearch= new TextField();
     private Label lblTitle= new Label("Histórico de Pedidos");
@@ -41,6 +43,7 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface
      * @param pane O painel usado para inserir o elementos.
      */
     public void addElements(Pane pane){
+        this.pWin = pane;
         Button btnReturn= new Button();
         Button btnQuit= new Button("Sair❌");
         Button btnAccount= new Button("Conta");
@@ -83,6 +86,10 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface
             });
 
         });
+
+        btnReturn.setOnAction(e -> toHome());
+        btnAccount.setOnAction(e -> toAccount());
+        btnQuit.setOnAction(e -> toLogin());
 
         // ---------------------------------------------------------
         populateTable();
@@ -161,5 +168,25 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface
         button.setOnMouseEntered(e -> setBtnStyle(button, styleEnter));
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
+    }
+
+    private void toLogin()
+    {
+        tableOrderHistory.getColumns().clear();
+        controllerOrder.getListHistory().clear();
+        ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+    }
+    private void toAccount()
+    {
+        tableOrderHistory.getColumns().clear();
+        controllerOrder.getListHistory().clear();
+        ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+    }
+
+    private void toHome()
+    {
+        tableOrderHistory.getColumns().clear();
+        controllerOrder.getListHistory().clear();
+        ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 }

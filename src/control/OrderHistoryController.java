@@ -9,6 +9,7 @@ import model.*;
 import persistence.GenericDao;
 import persistence.OrderHistoryDao;
 import persistence.PurchaseHistoryDao;
+import utils.UserSession;
 import view.WinPurchaseHistoryConstructor;
 
 import java.sql.SQLException;
@@ -40,7 +41,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
      */
     public ObservableList populateWinHistory() throws SQLException {
         Client client= new Client();
-        client.setLogin("teste1");
+        client.setLogin(UserSession.getUserName());
         GenericDao genericDao= new GenericDao();
         PurchaseHistoryDao purchaseHistoryDao= new PurchaseHistoryDao(genericDao);
 
@@ -97,7 +98,7 @@ public class OrderHistoryController extends TextFieldTableCell<Order, List<Item>
      */
     public ObservableList<Order> populateWinOrderHistory() throws SQLException {
         Store store= new Store();
-        store.setNameStore("teste1vendedor");
+        store.setNameStore(UserSession.getUserName());
         GenericDao genericDao= new GenericDao();
         OrderHistoryDao orderHistoryDao= new OrderHistoryDao(genericDao);
 
