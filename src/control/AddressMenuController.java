@@ -111,8 +111,9 @@ public class AddressMenuController
 		AddressDao addrD = new AddressDao(genericDAO, new Store(login));
 
 		Address currentAddress = addrD.consult(new Address());
-		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
+		Address address = new Address(currentAddress.getCep(), currentAddress.getStreet(), getComplementValue(),
+				currentAddress.getNeighborhood(), currentAddress.getEstate(),
+				currentAddress.getCity(), getNumberValue());
 		addrD.update(address);
 	}
 
@@ -124,8 +125,19 @@ public class AddressMenuController
 	 */
 	public ClientAddress editClientAddress(ClientAddress currentAddress , String login)
 	{
-		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
-				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
+		/*
+		Address address = new Address(currentAddress.getCep(), currentAddress.getStreet(), getComplementValue(),
+				currentAddress.getNeighborhood(), currentAddress.getEstate(),
+				currentAddress.getCity(), getNumberValue());
+		 */
+
+//		Address address = new Address(currentAddress.getCep(), currentAddress.getEstate(), currentAddress.getCity(),
+//				currentAddress.getStreet(), currentAddress.getNeighborhood(), getNumberValue(), getComplementValue());
+
+		Address address = new Address(currentAddress.getCep(), currentAddress.getStreet(), getComplementValue(),
+				currentAddress.getNeighborhood(), currentAddress.getEstate(),
+				currentAddress.getCity(), getNumberValue());
+
 		ClientAddress newAddress = new ClientAddress(address, getNameValue());
 
 		GenericDao genericDAO = new GenericDao();
@@ -181,16 +193,24 @@ public class AddressMenuController
 		addrD.delete(new Address());
 	}
 
+	/**
+	 * Cria e insere um novo endereço de cliente no banco de dados.
+	 *
+	 * @param login O nome de usuário associado ao cliente para o qual o endereço está sendo criado.
+	 * @return O novo objeto ClientAddress criado e inserido no banco de dados.
+	 * @throws SQLException Se ocorrer um erro ao acessar o banco de dados durante a inserção do novo endereço.
+	 */
 	public ClientAddress newClientAddress(String login) throws SQLException
 	{
 		GenericDao genericDAO = new GenericDao();
 		ClientAddressDao addrD = new ClientAddressDao(genericDAO, new Client(login));
 
-		String city = getCityEstateText().substring(0, getCityEstateText().indexOf('('));
-		String estate = getCityEstateText().substring(getCityEstateText().indexOf('(')+1,
-				getCityEstateText().indexOf(')'));
-		Address address = new Address(getCepText(), estate, city, getStreetText(), getNeighborhoodText(),
-				getNumberValue(), getComplementValue());
+		String city = getCityEstateValue().substring(0, getCityEstateValue().indexOf('('));
+		String estate = getCityEstateValue().substring(getCityEstateValue().indexOf('(')+1,
+				getCityEstateValue().indexOf(')'));
+
+		Address address = new Address(getCepText(), getStreetText(), getComplementValue(), getNeighborhoodText()
+				, estate, city, getNumberValue());
 		ClientAddress clientAddress = new ClientAddress(address, getNameValue());
 
 		addrD.insert(clientAddress);
@@ -247,7 +267,7 @@ public class AddressMenuController
 	 */
 	public String getNameValue() { return name.getValue(); }
     public String getCepText() { return cep.getValue(); }
-    public String getCityEstateText() { return cityEstate.getValue(); }
+    public String getCityEstateValue() { return cityEstate.getValue(); }
     public String getNeighborhoodText() { return neighborhood.getValue(); }
     public String getStreetText() { return street.getValue(); }
 
@@ -265,7 +285,7 @@ public class AddressMenuController
 	{
 		String result = complement.getValue();
 		if (result == null || result.isEmpty())
-			return "";
+			return "  ";
 		return result;
 	}
 }

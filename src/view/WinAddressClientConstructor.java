@@ -41,9 +41,8 @@ public class WinAddressClientConstructor
      * Construtor da classe.
      *
      * @param mainBox          O VBox principal da interface gráfica.
-     * @param selectedAddress  O endereço do cliente selecionado para edição.
      */
-    public WinAddressClientConstructor(VBox mainBox, ClientAddress selectedAddress)
+    public WinAddressClientConstructor(VBox mainBox)
     {
         this.mainBox = mainBox;
         userName = UserSession.getUserName();
