@@ -1,6 +1,10 @@
 package view;
 
+import java.sql.SQLException;
+
 import control.ChangeSceneController;
+import control.RegisterUserController;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,12 +17,15 @@ import utils.UserSession;
 
 
 
-public class WinRegStoreAddressConstructor implements GenericWindownInterface
-{
+public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 	Pane pWin;
-	
-	public void addElements(Pane pane) 
-	{
+	private RegisterUserController uCon;
+	public WinRegStoreAddressConstructor(RegisterUserController uCon) {
+		this.uCon = uCon;
+	}
+	public WinRegStoreAddressConstructor() {}
+
+	public void addElements(Pane pane) {
 		this.pWin = pane;
 		
 		Label lblHomePage = new Label("Cadastro de Loja");
@@ -59,6 +66,8 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface
 		setAlignment(lblStreet);
 		Label lblComplement = new Label("Complemento:");
 		setAlignment(lblComplement);
+		Label lblEstate = new Label("Estado");
+		setAlignment(lblEstate);
 		Label lblWarning = new Label("");
 		lblWarning.relocate(29, 245);
 		Label lblDescription = new Label("Por favor, digite os seus dados");
@@ -68,24 +77,39 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface
 
 		TextField tfCEP = new TextField();
 		setAlignment(tfCEP);
+		tfCEP.setOnKeyReleased(e -> uCon.completeAddress());
 		TextField tfNeighborhood = new TextField();
+		tfNeighborhood.setDisable(true);
 		TextField tfNumber = new TextField();
 		TextField tfCity = new TextField();
+		tfCity.setDisable(true);
 		setAlignment(tfCity);
 		TextField tfStreet = new TextField();
+		tfStreet.setDisable(true);
 		TextField tfComplement = new TextField();
+		TextField tfEstate = new TextField();
+		tfEstate.setDisable(true);
+		
+		Bindings.bindBidirectional(tfEstate .textProperty(), uCon.getState());
+		Bindings.bindBidirectional(tfNeighborhood.textProperty(), uCon.getNeighborhood());
+		Bindings.bindBidirectional(tfNumber.textProperty(), uCon.getNumber());
+		Bindings.bindBidirectional(tfCEP.textProperty(), uCon.getCep());
+		Bindings.bindBidirectional(tfCity.textProperty(), uCon.getCity());
+		Bindings.bindBidirectional(tfStreet.textProperty(), uCon.getStreet());
+		Bindings.bindBidirectional(tfComplement.textProperty(), uCon.getComplement());
+		Bindings.bindBidirectional(lblWarning.textProperty(), uCon.getWarning());
 
 
 		// ----- Inserindo em Vbox/Hbox ----- //
 
-		VBox vblb1 = new VBox(40, lblCEP, lblNeighborhood, lblNumber);
-		VBox vbtf1 = new VBox(33, tfCEP, tfNeighborhood, tfNumber);
+		VBox vblb1 = new VBox(40, lblCEP, lblNeighborhood,lblEstate, lblNumber);
+		VBox vbtf1 = new VBox(33, tfCEP, tfNeighborhood, tfEstate, tfNumber);
 		VBox vblb2 = new VBox(40, lblCity,lblStreet, lblComplement);
 		VBox vbtf2 = new VBox(33, tfCity,tfStreet, tfComplement);
 		HBox hbClient = new HBox(3,vblb1, vbtf1, vblb2, vbtf2);
 		hbClient.setPrefHeight(270);
 		hbClient.setPrefWidth(600);
-		hbClient.relocate(-30, 60);
+		hbClient.relocate(-30, 40);
 
 		paneCli.getChildren().addAll(hbClient, lblDescription, lblWarning);
 
@@ -108,14 +132,23 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface
 		tf.setStyle("-fx-font-size: 12px;");
 	}
 	
-	private void toStoreInfo()
-	{
+	private void toStoreInfo() {
+		uCon.clean();
 		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
-	private void toLogin()
-	{
-		UserSession.clearSession();
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	private void toLogin() {
+		if (uCon.checkValuesAddress()) {
+			try {
+				uCon.generateStore();
+				uCon.clean();
+				UserSession.clearSession();
+				ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 }

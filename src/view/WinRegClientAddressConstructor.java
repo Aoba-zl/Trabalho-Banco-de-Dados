@@ -18,10 +18,10 @@ import utils.UserSession;
 public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
-	private RegisterUserController login;
+	private RegisterUserController uCon;
 	
-	public WinRegClientAddressConstructor (RegisterUserController login) {
-		this.login = login;
+	public WinRegClientAddressConstructor (RegisterUserController uCon) {
+		this.uCon = uCon;
     }
 
 	
@@ -90,22 +90,22 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		tfNeighborhood.setDisable(true);
 		TextField tfNumber = new TextField();
 		TextField tfCEP = new TextField();
-		tfCEP.setOnKeyReleased(e -> login.completeAddress());
+		tfCEP.setOnKeyReleased(e -> uCon.completeAddress());
 		TextField tfCity= new TextField();
 		tfCity.setDisable(true);
 		TextField tfStreet= new TextField();
 		tfStreet.setDisable(true);
 		TextField tfComplement= new TextField();
 		
-		Bindings.bindBidirectional(tfName.textProperty(), login.getAddressName());
-		Bindings.bindBidirectional(tfState .textProperty(), login.getState());
-		Bindings.bindBidirectional(tfNeighborhood.textProperty(), login.getNeighborhood());
-		Bindings.bindBidirectional(tfNumber.textProperty(), login.getNumber());
-		Bindings.bindBidirectional(tfCEP.textProperty(), login.getCep());
-		Bindings.bindBidirectional(tfCity.textProperty(), login.getCity());
-		Bindings.bindBidirectional(tfStreet.textProperty(), login.getStreet());
-		Bindings.bindBidirectional(tfComplement.textProperty(), login.getComplement());
-		Bindings.bindBidirectional(lblWarning.textProperty(), login.getWarning());
+		Bindings.bindBidirectional(tfName.textProperty(), uCon.getAddressName());
+		Bindings.bindBidirectional(tfState .textProperty(), uCon.getState());
+		Bindings.bindBidirectional(tfNeighborhood.textProperty(), uCon.getNeighborhood());
+		Bindings.bindBidirectional(tfNumber.textProperty(), uCon.getNumber());
+		Bindings.bindBidirectional(tfCEP.textProperty(), uCon.getCep());
+		Bindings.bindBidirectional(tfCity.textProperty(), uCon.getCity());
+		Bindings.bindBidirectional(tfStreet.textProperty(), uCon.getStreet());
+		Bindings.bindBidirectional(tfComplement.textProperty(), uCon.getComplement());
+		Bindings.bindBidirectional(lblWarning.textProperty(), uCon.getWarning());
 
 		
 		// ----- Inserindo em Vbox/Hbox ----- //
@@ -124,7 +124,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		//ChangeScene
 		btnBack.setOnAction(e -> toClientInfo());
 		
-		btnNext.setOnAction(e -> toLogin());
+		btnNext.setOnAction(e -> touCon());
 		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
 		
@@ -140,11 +140,13 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
 	}
 	
-	private void toLogin()
+	private void touCon()
 	{
-		if(login.checkValuesAddress()) {
+
+		if(uCon.checkValuesAddress() && uCon.checkAddressName()) {
 			try {
-				login.generateClient();
+				uCon.generateClient();
+				uCon.clean();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
