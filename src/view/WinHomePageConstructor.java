@@ -41,12 +41,9 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		
 		Button btnQuit = new Button("Sair❌");
 		Button btnAccount = new Button("Conta");
-		Button btnReturn = new Button();
 		Button btnCartStore;
-		setBtnBackImage(btnReturn);
 		setOverButtonStyle(btnQuit);
 		setOverButtonStyle(btnAccount);
-		setOverButtonStyle(btnReturn);
 		if(UserSession.getUserType().contains("client"))
         {
         	btnCartStore = new Button("Carrinho🛒");
@@ -245,18 +242,6 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			vbProduct.getChildren().add(hbProductInfo);
 		}
 	}
-	
-	
-	
-	private void setBtnBackImage(Button btnBack) {
-        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
-        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
-        int widthHeight = 25;
-        ivGoBackBtn.setFitHeight(widthHeight);
-        ivGoBackBtn.setFitWidth(widthHeight);
-
-        btnBack.setGraphic(ivGoBackBtn);
-    }
 
     private void setBtnStyle(Button button, String style) {
         button.setStyle(style);
@@ -273,5 +258,5 @@ public class WinHomePageConstructor implements GenericWindownInterface
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
     }
-	
+
 }
