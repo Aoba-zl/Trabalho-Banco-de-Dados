@@ -16,6 +16,11 @@ import javafx.scene.layout.VBox;
 
 import control.AddressMenuController;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * gerenciamento de endeços do cliente.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinAllAddressClientConstructor implements GerericAccountMenuWinInterface
 {
 	private TableView<ClientAddress> tvAddress;
@@ -188,14 +193,29 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
         Bindings.bindBidirectional(returnPopUp, win.returnPopUpProperty());
     }
 
+    /**
+     * Obtém a propriedade que contém a mensagem exibida no menu pop-up.
+     *
+     * @return A propriedade que contém a mensagem exibida no menu pop-up.
+     */
     StringProperty getMessageMenuPopUp()
     {
         return messageMenuPopUp;
     }
+    /**
+     * Obtém a propriedade que indica se o menu pop-up está ativo.
+     *
+     * @return A propriedade que indica se o menu pop-up está ativo.
+     */
     BooleanProperty getIsMenuPopupActive()
     {
         return isMenuPopupActive;
     }
+    /**
+     * Obtém a propriedade que indica se houve um retorno no menu pop-up.
+     *
+     * @return A propriedade que indica se houve um retorno no menu pop-up.
+     */
     BooleanProperty getReturnPopUp()
     {
         return returnPopUp;

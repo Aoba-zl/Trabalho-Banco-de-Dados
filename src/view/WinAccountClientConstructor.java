@@ -17,10 +17,15 @@ import utils.UserSession;
 
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * gerenciamento de conta do cliente.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinAccountClientConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
-    private StringProperty sexText = new SimpleStringProperty("");
+    private final StringProperty sexText = new SimpleStringProperty("");
     private ToggleGroup group;
     private BorderPane bpButtons;
     private RadioButton rbMale, rbFemale, rbOther;
@@ -33,9 +38,14 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
     private String action = null;
     private String userName;
     
-    private AccountMenuController control = new AccountMenuController();
-    private Pane pWin;
+    private final AccountMenuController control = new AccountMenuController();
+    private final Pane pWin;
 
+    /**
+     * Construtor da classe.
+     *
+     * @param mainPane O painel principal da interface gráfica.
+     */
     public WinAccountClientConstructor(Pane mainPane)
     {
         this.pWin = mainPane;
@@ -243,7 +253,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
                 .forEach(toggle -> ((RadioButton)toggle).setDisable(isDisable));
     }
 
-    void changeCancelDeleteButtons(Button button)
+    private void changeCancelDeleteButtons(Button button)
     {
         bpButtons.setLeft(button);
     }
@@ -260,17 +270,32 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
     	
     	Bindings.bindBidirectional(tfOtherSex.textProperty(), sexText);
     }
-    
+
+    /**
+     * Obtém a propriedade que indica se o menu pop-up está ativo.
+     *
+     * @return A propriedade que indica se o menu pop-up está ativo.
+     */
     BooleanProperty getIsMenuPopupActive()
     {
         return isMenuPopupActive;
     }
 
+    /**
+     * Obtém a propriedade que contém a mensagem exibida no menu pop-up.
+     *
+     * @return A propriedade que contém a mensagem exibida no menu pop-up.
+     */
     StringProperty getMessageMenuPopUp()
     {
         return messageMenuPopUp;
     }
 
+    /**
+     * Obtém a propriedade que indica se houve um retorno no menu pop-up.
+     *
+     * @return A propriedade que indica se houve um retorno no menu pop-up.
+     */
     BooleanProperty getReturnPopUp()
     {
         return returnPopUp;

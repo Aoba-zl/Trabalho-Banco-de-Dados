@@ -20,31 +20,35 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+/**
+ * Construtor para a janela de conta do usuário, implementando a interface GenericWindownInterface.
+ */
 public class WinAccountMenuConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 
-    String user;
     private final String pageBack = "goBack";
     private final String pageOrderRecord = "orderRecord";
-    // TODO: Fazer frescurite nos textFields
     private VBox vbContent;
-    private Label lblPopUpMessage = new Label();
-    private StringProperty messagePopUp = new SimpleStringProperty(null);
-    private BooleanProperty isPopupActive = new SimpleBooleanProperty(false);
-    private BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
+    private final Label lblPopUpMessage = new Label();
+    private final StringProperty messagePopUp = new SimpleStringProperty(null);
+    private final BooleanProperty isPopupActive = new SimpleBooleanProperty(false);
+    private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
 
-    private HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
+    private final HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
 
+    /**
+     * Adiciona elementos à interface gráfica da janela de conta.
+     *
+     * @param pane O painel ao qual os elementos serão adicionados.
+     */
     public void addElements(Pane pane)
     {
     	pWin = pane;
 
-    	user = UserSession.getUserType();
+        String user = UserSession.getUserType();
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
         setBtnBackImage(btnBack);

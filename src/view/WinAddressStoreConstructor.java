@@ -15,6 +15,11 @@ import utils.UserSession;
 
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * gerenciamento do endereço da Loja.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinAddressStoreConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfCep, tfEstateCity, tfNeighborhood, tfStreet, tfNumber, tfComplement;
@@ -23,7 +28,7 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
     private final StringProperty messageMenuPopUp = new SimpleStringProperty(null);
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
-    private AddressMenuController control = new AddressMenuController();
+    private final AddressMenuController control = new AddressMenuController();
 
     private VBox mainBox;
     private boolean editMode = false;
@@ -168,14 +173,29 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
         btnCancel.setVisible(isEnable);
     }
 
+    /**
+     * Obtém a propriedade que contém a mensagem exibida no menu pop-up.
+     *
+     * @return A propriedade que contém a mensagem exibida no menu pop-up.
+     */
     StringProperty getMessageMenuPopUp()
     {
         return messageMenuPopUp;
     }
+    /**
+     * Obtém a propriedade que indica se o menu pop-up está ativo.
+     *
+     * @return A propriedade que indica se o menu pop-up está ativo.
+     */
     BooleanProperty getIsMenuPopupActive()
     {
         return isMenuPopupActive;
     }
+    /**
+     * Obtém a propriedade que indica se houve um retorno no menu pop-up.
+     *
+     * @return A propriedade que indica se houve um retorno no menu pop-up.
+     */
     BooleanProperty getReturnPopUp()
     {
         return returnPopUp;

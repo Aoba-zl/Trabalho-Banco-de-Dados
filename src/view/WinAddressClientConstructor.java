@@ -14,6 +14,10 @@ import javafx.scene.layout.VBox;
 import model.ClientAddress;
 import utils.UserSession;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * gerenciamento de um endereço espacífico do cliente.
+ */
 public class WinAddressClientConstructor
 {
     private String textBtnEditAccount;
@@ -25,12 +29,18 @@ public class WinAddressClientConstructor
     private final BooleanProperty isMenuPopupActive = new SimpleBooleanProperty(false);
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
     private final BooleanProperty editionMode = new SimpleBooleanProperty(true);
-    private StringProperty action = new SimpleStringProperty(null);
+    private final StringProperty action = new SimpleStringProperty(null);
     private final VBox mainBox;
-    private String userName;
-    private AddressMenuController control = new AddressMenuController();
-    private ClientAddress selectedAddress;
+    private final String userName;
+    private final AddressMenuController control = new AddressMenuController();
+    private final ClientAddress selectedAddress;
 
+    /**
+     * Construtor da classe.
+     *
+     * @param mainBox          O VBox principal da interface gráfica.
+     * @param selectedAddress  O endereço do cliente selecionado para edição.
+     */
     public WinAddressClientConstructor(VBox mainBox, ClientAddress selectedAddress)
     {
         this.mainBox = mainBox;
@@ -168,9 +178,34 @@ public class WinAddressClientConstructor
         isMenuPopupActive.setValue(true);
     }
 
+    /**
+     * Obtém a propriedade que contém a mensagem exibida no menu pop-up.
+     *
+     * @return A propriedade que contém a mensagem exibida no menu pop-up.
+     */
     StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
+    /**
+     * Obtém a propriedade que indica se o menu pop-up está ativo.
+     *
+     * @return A propriedade que indica se o menu pop-up está ativo.
+     */
     BooleanProperty isMenuPopupActiveProperty() { return isMenuPopupActive; }
+    /**
+     * Obtém a propriedade que indica se houve um retorno no menu pop-up.
+     *
+     * @return A propriedade que indica se houve um retorno no menu pop-up.
+     */
     BooleanProperty returnPopUpProperty() { return returnPopUp; }
+    /**
+     * Obtém a propriedade que indica se o modo de edição está ativo.
+     *
+     * @return A propriedade que indica se o modo de edição está ativo.
+     */
     BooleanProperty editionModeProperty() { return editionMode; }
+    /**
+     * Obtém a propriedade que indica a ação em andamento.
+     *
+     * @return A propriedade que indica a ação em andamento.
+     */
     StringProperty actionProperty() { return action; }
 }

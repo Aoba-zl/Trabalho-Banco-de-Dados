@@ -18,6 +18,11 @@ import utils.UserSession;
 
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * gerenciamento de conta da Loja.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinAccountStoreConstructor implements GerericAccountMenuWinInterface
 {
     private TextField tfLogin, tfName, tfCnpj, tfEmail, tfPhone;
@@ -31,9 +36,14 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
     private String action = null;
     private String userName;
     
-    private AccountMenuController control = new AccountMenuController();
-    private Pane pWin;
+    private final AccountMenuController control = new AccountMenuController();
+    private final Pane pWin;
 
+    /**
+     * Construtor da classe.
+     *
+     * @param mainPane O painel principal da interface gráfica.
+     */
     public WinAccountStoreConstructor(Pane mainPane)
     {
         this.pWin = mainPane;
@@ -198,12 +208,27 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         tfPhone.setDisable(isDisable);
     }
 
-    void changeCancelDeleteButtons(Button button)
+    private void changeCancelDeleteButtons(Button button)
     {
         bpButtons.setLeft(button);
     }
-    
+
+    /**
+     * Obtém a propriedade que contém a mensagem exibida no menu pop-up.
+     *
+     * @return A propriedade que contém a mensagem exibida no menu pop-up.
+     */
     StringProperty getMessageMenuPopUp() { return messageMenuPopUp; }
+    /**
+     * Obtém a propriedade que indica se o menu pop-up está ativo.
+     *
+     * @return A propriedade que indica se o menu pop-up está ativo.
+     */
     BooleanProperty getIsMenuPopupActive() { return isMenuPopupActive; }
+    /**
+     * Obtém a propriedade que indica se houve um retorno no menu pop-up.
+     *
+     * @return A propriedade que indica se houve um retorno no menu pop-up.
+     */
     BooleanProperty getReturnPopUp() { return returnPopUp; }
 }
