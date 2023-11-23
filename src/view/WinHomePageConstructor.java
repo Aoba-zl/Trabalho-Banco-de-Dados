@@ -1,6 +1,7 @@
 package view;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import control.ChangeSceneController;
@@ -12,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,6 +25,8 @@ public class WinHomePageConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 
+	private List<Product> listProduct;
+	
 	@Override
 	public void addElements(Pane pane)
 	{
@@ -37,12 +41,9 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		
 		Button btnQuit = new Button("Sair❌");
 		Button btnAccount = new Button("Conta");
-		Button btnReturn = new Button();
 		Button btnCartStore;
-		setBtnBackImage(btnReturn);
 		setOverButtonStyle(btnQuit);
 		setOverButtonStyle(btnAccount);
-		setOverButtonStyle(btnReturn);
 		if(UserSession.getUserType().contains("client"))
         {
         	btnCartStore = new Button("Carrinho🛒");
@@ -76,7 +77,6 @@ public class WinHomePageConstructor implements GenericWindownInterface
 		
 		//Montagem da lista de acordo com o banco de dados para poder puxar todos os produtos direto para a pane
 		ProductController pControl = new ProductController();
-		List<Product> listProduct = null;
 		
 		try {
 			listProduct = pControl.listProduct();
@@ -84,14 +84,110 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			e.printStackTrace();
 		}
 		
-		int sizeProductRow = listProduct.size();
-		int sizeProductColumn = sizeProductRow;
-		int countProduct = 0;
-		
 		VBox vbProduct = new VBox();
 		vbProduct.setMinHeight(276);
 		vbProduct.setMinWidth(586);
 		vbProduct.setMaxWidth(586);
+		
+		ScrollPane spProduct = new ScrollPane();
+		spProduct.setPrefHeight(282);
+		spProduct.setPrefWidth(605);
+		spProduct.setLayoutX(18);
+		spProduct.setLayoutY(91);
+		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
+		spProduct.setContent(vbProduct);		
+		
+		completeListProduct(vbProduct);
+		
+		btnSearch.setOnAction(e -> 
+		{
+			if(tfSearch.getText().trim().isEmpty())
+			{
+				completeListProduct(vbProduct);
+			}
+			else
+			{
+				searchListProduct(vbProduct, tfSearch);
+			}
+		});
+		
+		tfSearch.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnSearch.fire();
+			}
+		});
+		
+		
+		//------------mudança de scene---------------
+		btnQuit.setOnAction(e -> toLogin());
+		btnCartStore.setOnAction(e -> toCartStore(btnCartStore));
+		btnAccount.setOnAction(e -> toAccount());
+		
+		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct);
+		
+		
+	}
+
+	private void toLogin() 
+	{
+		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+	}
+	
+	private void toAccount() 
+	{
+		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+	}
+	
+	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
+	{ //Só avisando que o professor disse que ensinaria um jeito melhor do que enviar os parametros dessa forma.
+		System.out.println(cod + " " + name + " " + desc + " " + price);
+		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
+	}
+	
+	private void toCartStore(Button btnCartStore)
+	{
+		if(btnCartStore.getText().equals("Carrinho🛒"))
+		{
+			ChangeSceneController.changeScene(SceneName.CART, this.pWin);
+		}
+		else
+		{
+			ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+		}
+	}
+	
+	private void completeListProduct(VBox vbProduct)
+	{
+		vbProduct.getChildren().clear();
+		
+		tableProduct(listProduct, vbProduct);
+	}
+	
+	private void searchListProduct(VBox vbProduct, TextField tfSearch)
+	{
+		vbProduct.getChildren().clear();
+		
+		List<Product> searchListProduct = new ArrayList<>();
+		
+		for(Product pList : listProduct)
+		{
+			if(pList.getName().toLowerCase().contains(tfSearch.getText().toLowerCase()))
+			{
+				searchListProduct.add(pList);
+			}
+		}
+		
+		tableProduct(searchListProduct, vbProduct);
+	}
+	
+	private void tableProduct(List<Product> list, VBox vbProduct)
+	{
+		int sizeProductRow = list.size();
+		int sizeProductColumn = sizeProductRow;
+		int countProduct = 0;
+		
 		for(int i = 0; i < (sizeProductRow / 4) + 1; i++) //Aqui é feito a contagem da linha para descer de acordo com o tanto de produto no DB
 		{
 			HBox hbProductInfo = new HBox();
@@ -102,7 +198,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			{
 				if(sizeProductColumn > 0)
 				{
-					Product p = listProduct.get(countProduct);
+					Product p = list.get(countProduct);
 					Label lblNameProduct = new Label(p.getName());
 					Label lblDescProduct = new Label(p.getDescription());
 					Label lblPrice = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ",") + "R$");
@@ -145,64 +241,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 			
 			vbProduct.getChildren().add(hbProductInfo);
 		}
-		
-		
-		ScrollPane spProduct = new ScrollPane();
-		spProduct.setPrefHeight(282);
-		spProduct.setPrefWidth(605);
-		spProduct.setLayoutX(18);
-		spProduct.setLayoutY(91);
-		spProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
-		spProduct.setContent(vbProduct);
-		
-		
-		//------------mudança de scene---------------
-		btnQuit.setOnAction(e -> toLogin());
-		btnCartStore.setOnAction(e -> toCartStore(btnCartStore));
-		btnAccount.setOnAction(e -> toAccount());
-		
-		pane.getChildren().addAll(hbOption, lblHomePage, hbSearch, spProduct);
-		
-		
 	}
-
-	private void toLogin() 
-	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
-	}
-	
-	private void toAccount() 
-	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
-	}
-	
-	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
-	{ //Só avisando que o professor disse que ensinaria um jeito melhor do que enviar os parametros dessa forma.
-		System.out.println(cod + " " + name + " " + desc + " " + price);
-		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
-	}
-	
-	private void toCartStore(Button btnCartStore)
-	{
-		if(btnCartStore.getText().equals("Carrinho🛒"))
-		{
-			ChangeSceneController.changeScene(SceneName.CART, this.pWin);
-		}
-		else
-		{
-			ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
-		}
-	}
-	
-	private void setBtnBackImage(Button btnBack) {
-        Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
-        ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
-        int widthHeight = 25;
-        ivGoBackBtn.setFitHeight(widthHeight);
-        ivGoBackBtn.setFitWidth(widthHeight);
-
-        btnBack.setGraphic(ivGoBackBtn);
-    }
 
     private void setBtnStyle(Button button, String style) {
         button.setStyle(style);
@@ -219,5 +258,5 @@ public class WinHomePageConstructor implements GenericWindownInterface
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
     }
-	
+
 }

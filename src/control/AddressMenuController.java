@@ -181,6 +181,22 @@ public class AddressMenuController
 		addrD.delete(new Address());
 	}
 
+	public ClientAddress newClientAddress(String login) throws SQLException
+	{
+		GenericDao genericDAO = new GenericDao();
+		ClientAddressDao addrD = new ClientAddressDao(genericDAO, new Client(login));
+
+		String city = getCityEstateText().substring(0, getCityEstateText().indexOf('('));
+		String estate = getCityEstateText().substring(getCityEstateText().indexOf('(')+1,
+				getCityEstateText().indexOf(')'));
+		Address address = new Address(getCepText(), estate, city, getStreetText(), getNeighborhoodText(),
+				getNumberValue(), getComplementValue());
+		ClientAddress clientAddress = new ClientAddress(address, getNameValue());
+
+		addrD.insert(clientAddress);
+		return clientAddress;
+	}
+
 	/**
 	 * Obtém a propriedade do StringProperty name.
 	 * @return A propriedade do name.
@@ -230,6 +246,10 @@ public class AddressMenuController
 	 * @return O valor do nome.
 	 */
 	public String getNameValue() { return name.getValue(); }
+    public String getCepText() { return cep.getValue(); }
+    public String getCityEstateText() { return cityEstate.getValue(); }
+    public String getNeighborhoodText() { return neighborhood.getValue(); }
+    public String getStreetText() { return street.getValue(); }
 
 	/**
 	 * Obtém o valor atual de propriedade do number.

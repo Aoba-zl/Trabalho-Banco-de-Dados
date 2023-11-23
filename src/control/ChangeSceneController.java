@@ -26,7 +26,8 @@ public class ChangeSceneController
 		WinConsultProductConstructor winConsultProduct;
 		WinShoppingCartConstructor winCart;
 		WinPurchaseDetailsConstruct winPurchaseDetails;
-		
+		WinPurchaseHistoryConstructor winPurchaseHistory;
+
 		//login store
 		WinStoreConstructor winStore;
 		WinRegProductConstructor winRegProduct;
@@ -148,6 +149,16 @@ public class ChangeSceneController
 					else
 						winPurchaseDetails = (WinPurchaseDetailsConstruct) windowns.get(sceneName);
 					winPurchaseDetails.addElements(pWin);
+					break;
+				case PURCHASE_HISTORY:
+					if (!windowns.containsKey(sceneName))
+					{
+						winPurchaseHistory = new WinPurchaseHistoryConstructor();
+						windowns.put(sceneName, winPurchaseHistory);
+					}
+					else
+						winPurchaseHistory  = (WinPurchaseHistoryConstructor) windowns.get(sceneName);
+					winPurchaseHistory.addElements(pWin);
 					break;
 					
 				//Store

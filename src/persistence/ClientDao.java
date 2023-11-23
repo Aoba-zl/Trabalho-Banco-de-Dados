@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,9 +51,9 @@ public class ClientDao implements CrudDao<Client>
 
 	private java.sql.Date convertDate(String strDate)throws ParseException
 	{
-		Date date = currentFormat.parse(strDate);
-		String sqlFormattedDate = sqlFormat.format(date);
-		java.sql.Date sqlDate = java.sql.Date.valueOf(sqlFormattedDate);
+		SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+		Date date = (Date) df.parse(strDate);
+		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		return sqlDate;
 	}
 

@@ -223,8 +223,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             case "storeAddress"      -> openWinAddressStoreMenu();
             case "storeAccountData"  -> openWinStoreMenu();
             case "goBack" -> toPreviousPage();
-            // TODO: implementar transicao para pagina de histórico
-            case "orderRecord" -> System.out.println("Vai pra pagina de histórioco");
+            case "orderRecord" -> ChangeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
         }
     }
 

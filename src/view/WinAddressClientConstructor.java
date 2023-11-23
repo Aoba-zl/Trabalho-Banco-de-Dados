@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import model.ClientAddress;
 import utils.UserSession;
 
+import java.sql.SQLException;
+
 /**
  * Classe responsável por construir e adicionar os elementos a interface gráfica de
  * gerenciamento de um endereço espacífico do cliente.
@@ -33,7 +35,7 @@ public class WinAddressClientConstructor
     private final VBox mainBox;
     private final String userName;
     private final AddressMenuController control = new AddressMenuController();
-    private final ClientAddress selectedAddress;
+    private ClientAddress selectedAddress;
 
     /**
      * Construtor da classe.
@@ -44,15 +46,38 @@ public class WinAddressClientConstructor
     public WinAddressClientConstructor(VBox mainBox, ClientAddress selectedAddress)
     {
         this.mainBox = mainBox;
-        this.selectedAddress = selectedAddress;
         userName = UserSession.getUserName();
-        textBtnEditAccount = "Editar";
+    }
+
+    public void addElements(ClientAddress selectedAddress)
+    {
+        this.selectedAddress = selectedAddress;
+
+        System.out.println(actionValue());
+
+        if (actionValue() == ("edit"))
+            textBtnEditAccount = "Editar";
+        else if (actionValue() == ("add"))
+            textBtnEditAccount = "Adicionar";
 
         setElements();
         setEvents();
         setPropertiesConnections();
+        if (action.getValue() == ("edit"))
+            control.fillClientAddressFields(this.selectedAddress);
+        else if (actionValue() == ("add"))
+            clearFields();
+    }
 
-        control.fillClientAddressFields(this.selectedAddress);
+    private void clearFields()
+    {
+        tfName.setText("");
+        tfCep.setText("");
+        tfCityEstate.setText("");
+        tfNeighborhood.setText("");
+        tfStreet.setText("");
+        tfNumber.setText("");
+        tfComplement.setText("");
     }
 
     private void setPropertiesConnections()
@@ -73,14 +98,14 @@ public class WinAddressClientConstructor
         btnEditAccount.setOnMouseClicked(e ->
         {
             returnPopUp.setValue(false);
-            openPopUp("Tem certeza de que deseja alterar o endereço?");
+            openPopUp("Tem certeza?");
         });
 
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
             if (newValue)
             {
-                if (action.getValue() == "edit")
+                if (actionValue() == ("edit"))
                 {
                     ClientAddress newaddr = control.editClientAddress(selectedAddress, userName);
                     if (newaddr == null)
@@ -99,6 +124,29 @@ public class WinAddressClientConstructor
                         openPopUp("Editado com Sucesso");
                         editionMode.setValue(false);
                     }
+                }
+                else if (actionValue() == ("add"))
+                {
+                    String msg = "Endereço adicionado com Sucesso!";
+                    try
+                    {
+                        ClientAddress newaddr = control.newClientAddress(userName);
+                        selectedAddress.setName(newaddr.getName());
+                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                        selectedAddress.setStreet(newaddr.getStreet());
+                        selectedAddress.setEstate(newaddr.getEstate());
+                        selectedAddress.setCity(newaddr.getCity());
+                        selectedAddress.setCep(newaddr.getCep());
+                        selectedAddress.setComplement(newaddr.getComplement());
+                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+                        editionMode.setValue(false);
+                    }
+                    catch (SQLException e)
+                    {
+                        msg = "Houve um erro inesperado.\\nPor favor, tente novamente";
+                        throw new RuntimeException(e);
+                    }
+                    openPopUp(msg);
                 }
             }
         }));
@@ -129,17 +177,19 @@ public class WinAddressClientConstructor
 
         tfName         = new TextField();
         tfCep          = new TextField();
-        tfCep.setDisable(true);
         tfCityEstate = new TextField();
-        tfCityEstate.setDisable(true);
         tfNeighborhood = new TextField();
-        tfNeighborhood.setDisable(true);
         tfStreet       = new TextField();
-        tfStreet.setDisable(true);
         tfNumber       = new TextField();
-        tfNumber.setDisable(true);
         tfComplement   = new TextField();
-
+        if (actionValue() == ("edit"))
+        {
+            tfCep.setDisable(true);
+            tfCityEstate.setDisable(true);
+            tfNeighborhood.setDisable(true);
+            tfStreet.setDisable(true);
+            tfNumber.setDisable(true);
+        }
 
         btnEditAccount   = new Button(textBtnEditAccount);
         btnEditAccount
@@ -208,4 +258,6 @@ public class WinAddressClientConstructor
      * @return A propriedade que indica a ação em andamento.
      */
     StringProperty actionProperty() { return action; }
+
+    private String actionValue() { return action.getValue(); }
 }

@@ -7,9 +7,11 @@ import control.LoginController;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -42,9 +44,9 @@ public class WinLoginConstructor implements GenericWindownInterface
 		lblCreateRegister.setStyle("-fx-cursor: hand; -fx-text-fill: #2675ff;");
 		
 		TextField tfUserName = new TextField();
-		TextField tfPassword = new TextField();
+		PasswordField pfPassword = new PasswordField();
 		tfUserName.setPrefWidth(120);
-		tfPassword.setPrefWidth(120);
+		pfPassword.setPrefWidth(120);
 		
 		Label lblMessage = new Label();
 		lblMessage.setMinHeight(25);
@@ -62,7 +64,7 @@ public class WinLoginConstructor implements GenericWindownInterface
 		hbBtnEnter.setStyle("-fx-alignment: bottom-right; -fx-spacing: 10px;");
 		hbBtnEnter.setPrefHeight(50);
 		hbUser.getChildren().addAll(lblUser, tfUserName);
-		hbPassword.getChildren().addAll(lblPassword, tfPassword);
+		hbPassword.getChildren().addAll(lblPassword, pfPassword);
 		hbLblReg.getChildren().addAll(lblHasRegister, lblCreateRegister);
 		hbBtnEnter.getChildren().addAll(lblMessage, btnEnter);
 		
@@ -145,7 +147,24 @@ public class WinLoginConstructor implements GenericWindownInterface
 		btnRegisterStore.setOnAction(e -> toRegStore());
 		
 		//------------mudança de scene---------------
-		btnEnter.setOnAction(e -> signUpUser(tfUserName, tfPassword, lblMessage));
+		btnEnter.setOnAction(e -> signUpUser(tfUserName, pfPassword, lblMessage));
+		
+		tfUserName.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnEnter.fire();
+			}
+		});
+		
+		pfPassword.setOnKeyPressed(e ->
+		{
+			if(e.getCode() == KeyCode.ENTER)
+			{
+				btnEnter.fire();
+			}
+		});
+		
 		
 		pane.getChildren().addAll(lblLogin, paneUser, pTransp);
 		

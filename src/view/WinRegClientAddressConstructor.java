@@ -1,6 +1,10 @@
 package view;
 
+import java.sql.SQLException;
+
 import control.ChangeSceneController;
+import control.RegisterUserController;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,9 +17,20 @@ import utils.UserSession;
 
 public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
-	Pane pWin;
+	private Pane pWin;
+	private RegisterUserController login;
 	
-    public void addElements(Pane pane)
+	public WinRegClientAddressConstructor (RegisterUserController login) {
+		this.login = login;
+    }
+
+	
+    public WinRegClientAddressConstructor() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public void addElements(Pane pane)
 	{
     	this.pWin = pane;
     	
@@ -75,11 +90,22 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		tfNeighborhood.setDisable(true);
 		TextField tfNumber = new TextField();
 		TextField tfCEP = new TextField();
+		tfCEP.setOnKeyReleased(e -> login.completeAddress());
 		TextField tfCity= new TextField();
 		tfCity.setDisable(true);
 		TextField tfStreet= new TextField();
 		tfStreet.setDisable(true);
 		TextField tfComplement= new TextField();
+		
+		Bindings.bindBidirectional(tfName.textProperty(), login.getAddressName());
+		Bindings.bindBidirectional(tfState .textProperty(), login.getState());
+		Bindings.bindBidirectional(tfNeighborhood.textProperty(), login.getNeighborhood());
+		Bindings.bindBidirectional(tfNumber.textProperty(), login.getNumber());
+		Bindings.bindBidirectional(tfCEP.textProperty(), login.getCep());
+		Bindings.bindBidirectional(tfCity.textProperty(), login.getCity());
+		Bindings.bindBidirectional(tfStreet.textProperty(), login.getStreet());
+		Bindings.bindBidirectional(tfComplement.textProperty(), login.getComplement());
+		Bindings.bindBidirectional(lblWarning.textProperty(), login.getWarning());
 
 		
 		// ----- Inserindo em Vbox/Hbox ----- //
@@ -97,6 +123,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 		
 		//ChangeScene
 		btnBack.setOnAction(e -> toClientInfo());
+		
 		btnNext.setOnAction(e -> toLogin());
 		
 		pane.getChildren().addAll(lblHomePage,paneCli,btnBack,btnNext);
@@ -115,8 +142,16 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	
 	private void toLogin()
 	{
-		UserSession.clearSession();
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		if(login.checkValuesAddress()) {
+			try {
+				login.generateClient();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			UserSession.clearSession();
+			ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		}
+
 	}
 	
 }
