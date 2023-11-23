@@ -14,6 +14,12 @@ public class LoginController
 	private TextField tfPassword;
 	private Label lblMessage;
 	
+	/**
+	 * Construtor da classe login.
+	 * @param tfUserName TextField que contém o username
+	 * @param tfPassword TextField que contém o password
+	 * @param lblMessage Mensagem de aviso da tela.
+	 */
 	public LoginController(TextField tfUserName, TextField tfPassword, Label lblMessage)
 	{
 		this.tfUserName = tfUserName;
@@ -21,7 +27,11 @@ public class LoginController
 		this.lblMessage = lblMessage;
 	}
 
-	
+	/**
+	 * Faz o login do usuário.
+	 * @return True para caso tenha ocorrido o login, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean login() throws SQLException
 	{
 		GenericDao gDao = new GenericDao();

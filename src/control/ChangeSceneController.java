@@ -11,6 +11,11 @@ public class ChangeSceneController
 {
 	private static HashMap<SceneName, GenericWindownInterface> windowns = new HashMap<>();
 
+	/**
+	 * Controlador responsável pela troca de tela dentro da aplicação.
+	 * @param sceneName O nome do tipo de tela.
+	 * @param pWin
+	 */
 	public static void changeScene(SceneName sceneName, Pane pWin)
 	{
 		//login
