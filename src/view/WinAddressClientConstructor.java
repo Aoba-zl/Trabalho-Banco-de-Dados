@@ -48,6 +48,9 @@ public class WinAddressClientConstructor
         userName = UserSession.getUserName();
     }
 
+    /**
+     * Adiciona elementos ao contêiner especificado no construtor.
+     */
     public void addElements(ClientAddress selectedAddress)
     {
         this.selectedAddress = selectedAddress;

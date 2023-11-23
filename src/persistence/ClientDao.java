@@ -12,14 +12,21 @@ import java.util.Date;
 import java.util.List;
 
 import model.Client;
-import model.User;
 
+/**
+ * Implementação da interface CrudDao para operações CRUD (Create, Read, Update, Delete) na tabela client
+ * no banco de dados.
+ */
 public class ClientDao implements CrudDao<Client>
 {
-	private GenericDao gDao;
+	private final GenericDao gDao;
 	SimpleDateFormat currentFormat = new SimpleDateFormat("dd/MM/yyyy");
 	SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+	/**
+	 * Construtor da classe ClientDao.
+	 * @param gDao Objeto responsável pela comunicação com o banco de dados.
+	 */
 	public ClientDao(GenericDao gDao)
 	{
 		this.gDao = gDao;
@@ -33,8 +40,6 @@ public class ClientDao implements CrudDao<Client>
 		preparedStatement.setString(1, client.getLogin());
 		preparedStatement.setString(2, client.getSocialName());
 		preparedStatement.setString(3, client.getCpf());
-//		java.sql.Date sqlDate = new java.sql.Date(client.getDateBirth().getTime());
-//		preparedStatement.setDate(4, sqlDate);
 		try
 		{
 			preparedStatement.setDate(4, convertDate(client.getDateBirth()));

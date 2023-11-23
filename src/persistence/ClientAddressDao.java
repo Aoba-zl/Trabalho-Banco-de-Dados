@@ -10,17 +10,24 @@ import java.util.List;
 import model.Client;
 import model.ClientAddress;
 
+/**
+ * Implementação da interface CrudDao para operações CRUD (Create, Read, Update, Delete) na tabela address
+ * associados a um cliente no banco de dados.
+ */
 public class ClientAddressDao implements CrudDao<ClientAddress>
 {
-	private GenericDao gDao;
-	private Client client;
-	private String login;
+	private final GenericDao gDao;
+	private final String login;
 
+	/**
+	 * Construtor da classe ClientAddressDao.
+	 * @param gDao Objeto responsável pela comunicação com o banco de dados.
+	 * @param client Objeto que representa o cliente associado aos endereços.
+	 */
 	public ClientAddressDao(GenericDao gDao, Client client)
 	{
 		this.gDao = gDao;
-		this.client = client;
-		this.login = this.client.getLogin();
+		this.login = client.getLogin();
 	}
 
 	@Override

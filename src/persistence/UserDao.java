@@ -10,10 +10,18 @@ import java.util.List;
 import model.User;
 import utils.UserSession;
 
+/**
+ * Implementação da interface CrudDao para operações CRUD (Create, Read, Update, Delete) na tabela user_tbl
+ * no banco de dados.
+ */
 public class UserDao implements CrudDao<User>
 {
 	private GenericDao gDao;
-	
+
+	/**
+	 * Construtor da classe UserDao.
+	 * @param gDao Objeto responsável pela comunicação com o banco de dados.
+	 */
 	public UserDao(GenericDao gDao)
 	{
 		this.gDao = gDao;

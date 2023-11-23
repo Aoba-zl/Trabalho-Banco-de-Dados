@@ -1,5 +1,8 @@
 package utils;
 
+/**
+ * Enumeração que representa os diferentes nomes de cena associados ao sistema.
+ */
 public enum SceneName 
 {
 	//LOGIN

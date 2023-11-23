@@ -9,10 +9,18 @@ import java.util.List;
 
 import model.Store;
 
+/**
+ * Implementação da interface CrudDao para operações CRUD (Create, Read, Update, Delete) na tabela store
+ * no banco de dados.
+ */
 public class StoreDao implements CrudDao<Store>
 {
 	private GenericDao gDao;
-	
+
+	/**
+	 * Construtor da classe StoreDao.
+	 * @param gDao Objeto responsável pela comunicação com o banco de dados.
+	 */
 	public StoreDao(GenericDao gDao)
 	{
 		this.gDao = gDao;

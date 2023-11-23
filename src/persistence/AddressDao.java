@@ -9,12 +9,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Implementação da interface CrudDao para operações CRUD (Create, Read, Update, Delete) na tabela store_address
+ * associados a uma loja no banco de dados.
+ */
 public class AddressDao implements CrudDao<Address>
 {
     private GenericDao gDao;
     private User user;
     private String login;
 
+    /**
+     * Construtor da classe AddressDao.
+     * @param gDao Objeto responsável pela comunicação com o banco de dados.
+     * @param user Objeto que representa o usuário associado aos endereços.
+     */
     public AddressDao(GenericDao gDao, User user)
     {
         this.gDao = gDao;
