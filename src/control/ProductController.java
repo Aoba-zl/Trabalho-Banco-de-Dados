@@ -157,6 +157,18 @@ public class ProductController
 		}
 		return false;
 	}
+	
+	public int quant (Product product) {
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		try {
+			return pDao.quantProduct(product);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	// \\d+ = apenas numeros
 	// \\.\\d+ = verificação depois da virgula
 	// \\d+(\\.\\d+)? = apenas numeros e casas depois da virgula, após a virgula é opcional "?"
@@ -194,6 +206,4 @@ public class ProductController
 		
 		return false;
 	}
-
-	
 }

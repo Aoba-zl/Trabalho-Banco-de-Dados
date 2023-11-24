@@ -81,7 +81,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating TextField ----- //
 			
-			TextField txTotal = new TextField("");
+			TextField txTotal = new TextField(pCon.quant(product)+"");
 			setAlignment(txTotal);
 			txTotal.setDisable(true);
 			TextField txShipping = new TextField(product.getShipping()+"");
