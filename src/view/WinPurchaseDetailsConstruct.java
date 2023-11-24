@@ -92,7 +92,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                 toCart();
             }
             else {
-                //todo retorna para a tela do produto se cart == false
+                toProduct();
             }
         });
 
@@ -135,7 +135,6 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                 }
             }
             else{
-                //todo operação para a tela do produto
                 if (cbPaymentMethod.getValue() == "Pix"){
                     controllerPlaceOrder.placePayment(true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
@@ -259,6 +258,10 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         tablePurchase.getColumns().clear();
         controllerPlaceOrder.getItems().clear();
         changeSceneController.changeScene(SceneName.CART, this.pWin);
+    }
+
+    private void toProduct(){
+        changeSceneController.changeScene(SceneName.REG_PRODUCT, this.pWin);
     }
 
 
