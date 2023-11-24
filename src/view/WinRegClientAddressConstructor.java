@@ -20,6 +20,8 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	private Pane pWin;
 	private RegisterUserController uCon;
 	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
 	public WinRegClientAddressConstructor (RegisterUserController uCon) {
 		this.uCon = uCon;
     }
@@ -137,7 +139,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	
 	private void toClientInfo()
 	{
-		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
+		changeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
 	}
 	
 	private void touCon()
@@ -151,7 +153,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 				e.printStackTrace();
 			}
 			UserSession.clearSession();
-			ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+			changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 		}
 
 	}

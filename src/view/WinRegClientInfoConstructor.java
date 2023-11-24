@@ -28,6 +28,9 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 	private RegisterUserController uCon = new RegisterUserController();
 	private WinRegClientAddressConstructor ClienA = new WinRegClientAddressConstructor(uCon);
     private ToggleGroup group;
+    
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
+    
 	public void addElements(Pane pane)
 	{
 		this.pWin = pane;
@@ -167,7 +170,7 @@ public class WinRegClientInfoConstructor implements GenericWindownInterface
 	private void toLogin() {
 		uCon.clean();
 		UserSession.clearSession();
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	// avançando para tela de endereco e validando inserçoes
 	private void toClientAddress() {

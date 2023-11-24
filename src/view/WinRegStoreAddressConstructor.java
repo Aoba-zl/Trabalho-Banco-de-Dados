@@ -20,6 +20,9 @@ import utils.UserSession;
 public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 	Pane pWin;
 	private RegisterUserController uCon;
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
 	public WinRegStoreAddressConstructor(RegisterUserController uCon) {
 		this.uCon = uCon;
 	}
@@ -134,7 +137,7 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 	
 	private void toStoreInfo() {
 		uCon.clean();
-		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
+		changeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
 	private void toLogin() {
@@ -143,7 +146,7 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 				uCon.generateStore();
 				uCon.clean();
 				UserSession.clearSession();
-				ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+				changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

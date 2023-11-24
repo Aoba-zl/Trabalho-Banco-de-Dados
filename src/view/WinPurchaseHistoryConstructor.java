@@ -60,6 +60,8 @@ public class WinPurchaseHistoryConstructor implements GenericWindownInterface {
     private TextField tfTotalValue= new TextField();
     private TextField tfMethodPayment = new TextField();
     private TextField tfStatus= new TextField();
+    
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
 
     private void bindings(){
         Bindings.bindBidirectional(tfProductName.textProperty(), controllerOrder.nameProductProperty());
@@ -332,20 +334,20 @@ public class WinPurchaseHistoryConstructor implements GenericWindownInterface {
     {
         tableHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+        changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
     }
     private void toAccount()
     {
         tableHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+        changeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
     }
 
     private void toHome()
     {
         tableHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+        changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
 }

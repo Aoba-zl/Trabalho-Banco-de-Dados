@@ -25,6 +25,8 @@ public class WinLoginConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
 	/**
      * Adiciona elementos à interface gráfica da janela de conta.
      *
@@ -202,21 +204,19 @@ public class WinLoginConstructor implements GenericWindownInterface
 	
 	private void toHomePage()
 	{
-		// TODO: Voltar pra Holme page apos os testes
-//		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 	private void toRegClient()
 	{
 		UserSession.setUser("register", null);;
-		ChangeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
+		changeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
 	}
 	
 	private void toRegStore()
 	{
 		UserSession.setUser("register", null);
-		ChangeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
+		changeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
 }

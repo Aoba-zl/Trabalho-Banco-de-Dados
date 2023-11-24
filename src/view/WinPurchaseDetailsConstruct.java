@@ -32,6 +32,8 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     private Label lblPaymentMethod= new Label("Método de Pagamento:");
 
     private TableView<Item> tablePurchase= new TableView<>();
+    
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
 
     PlaceOrderController controllerPlaceOrder= new PlaceOrderController();
 
@@ -256,7 +258,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     private void toCart() {
         tablePurchase.getColumns().clear();
         controllerPlaceOrder.getItems().clear();
-        ChangeSceneController.changeScene(SceneName.CART, this.pWin);
+        changeSceneController.changeScene(SceneName.CART, this.pWin);
     }
 
 

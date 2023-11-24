@@ -38,7 +38,8 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
     private final BooleanProperty returnPopUp = new SimpleBooleanProperty(false);
 
     private final HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
-
+    
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
     /**
      * Adiciona elementos à interface gráfica da janela de conta.
      *
@@ -223,13 +224,13 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             case "storeAddress"      -> openWinAddressStoreMenu();
             case "storeAccountData"  -> openWinStoreMenu();
             case "goBack" -> toPreviousPage();
-            case "orderRecord" -> ChangeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
+            case "orderRecord" -> changeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
         }
     }
 
 	private void toPreviousPage() 
 	{
-		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
     
     private void openWinClientMenu()

@@ -44,6 +44,8 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     PlaceOrderController placeOrderController= new PlaceOrderController();
 
     WinPurchaseDetailsConstruct winPurchaseDetailsConstruct;
+    
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
 
     private void bindings(){
         Bindings.bindBidirectional(lblPortage.textProperty(), controllerCart.portageProperty());
@@ -257,24 +259,24 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     private void toLogin() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 
 	private void toAccount() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 
     private void toHome() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
-    	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+    	changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
     private void toDetails() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
-		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
+		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 	}
 }

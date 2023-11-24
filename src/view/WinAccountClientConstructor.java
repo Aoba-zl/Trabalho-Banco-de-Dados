@@ -41,6 +41,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
     private final AccountMenuController control = new AccountMenuController();
     private final Pane pWin;
 
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
     /**
      * Construtor da classe.
      *
@@ -92,7 +93,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
                 {
                     control.deleteAccount(userName);
                     UserSession.clearSession();
-                    ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+                    changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
                 }
                 catch (SQLException e)
                 {

@@ -71,7 +71,7 @@ public class ProductDao
 				   + "category = COALESCE(NULLIF(?,''), 'Sem categoria'), "
 				   + "description = ? "
 				   + "WHERE id_product = ?";
-		PreparedStatement ps = c.prepareStatement(sql); //Statement.RETURN_GENERATED_KEYS pode ser utilizado para caso queira pegar a PK que é gerado de forma automatica
+		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, p.getName());
 		ps.setDouble(2, p.getPrice());
 		ps.setInt(3, p.getTotalStock());

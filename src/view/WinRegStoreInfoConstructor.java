@@ -20,6 +20,9 @@ public class WinRegStoreInfoConstructor implements GenericWindownInterface
 	Pane pWin;
 	private RegisterUserController uCon = new RegisterUserController();
 	private WinRegStoreAddressConstructor sAddress = new WinRegStoreAddressConstructor(uCon);
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
 	public void addElements(Pane pane) 
 	{
 		this.pWin = pane;
@@ -126,7 +129,7 @@ public class WinRegStoreInfoConstructor implements GenericWindownInterface
 	private void toLogin()
 	{
 		UserSession.clearSession();
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	
 	private void toStoreAddress()

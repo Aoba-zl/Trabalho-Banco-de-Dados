@@ -3,6 +3,8 @@ package view;
 import control.ChangeSceneController;
 import control.ProductController;
 import control.RegisterUserController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +28,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private RegisterUserController cCon = new RegisterUserController();
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
+	
+	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
 	public void addElements(Pane pane) {
 		this.pWin = pane;
 		
@@ -38,7 +45,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		
 		// ----- Carregando ----- //
 		Product product = new Product();
-		product.setCod(1);
+		product.setCod(ipCod.get());
 		product=pCon.consulta(product);
 		Store store = new Store();
 		store.setLogin(product.getLogin());
@@ -213,16 +220,16 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private void toHomePage(){
 		quant = 0;
 		fpCategory.getChildren().clear();
-		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 	private void toCart(){
 		fpCategory.getChildren().clear();
-		ChangeSceneController.changeScene(SceneName.CART, this.pWin);
+		changeSceneController.changeScene(SceneName.CART, this.pWin);
 	}
 	
 	private void toDetails() { //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
-		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
 	}
 	
 	private void setBtnBackImage(Button btnBack) {
@@ -249,4 +256,10 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
     }
+    
+    /**
+     * Obtém o valor de código de outra tela
+     * @param cod O codigo do produto.
+     */
+    public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

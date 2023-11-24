@@ -3,6 +3,8 @@ package view;
 import control.ChangeSceneController;
 import control.ProductController;
 import control.RegisterUserController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +19,6 @@ import javafx.scene.layout.VBox;
 import model.Product;
 import model.Store;
 import utils.SceneName;
-import utils.UserSession;
 
 
 public class WinAlterProductConstructor implements GenericWindownInterface
@@ -28,7 +29,12 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 	private Product product = new Product();
 	private Store store = new Store();
 	private FlowPane fpCategory = new FlowPane();
-	public void addElements(Pane pane) 
+	
+	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
+	public void addElements(Pane pane) 	
 	{
 		this.pWin = pane;
 		
@@ -40,7 +46,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		paneConsult.relocate(5, 5);
 		// ----- Carregando ----- //
 
-		product.setCod(1);
+		product.setCod(ipCod.get());
 		product=pCon.consulta(product);
 		store.setLogin(product.getLogin());
 		store=cCon.consultStore(store);
@@ -175,19 +181,20 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 	private void delete (Product product) {
 		pCon.delete(product);
 		fpCategory.getChildren().clear();
-		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+		changeSceneController.changeScene(SceneName.STORE, this.pWin);
 	}
 	
 	private void toStore()
 	{
 		fpCategory.getChildren().clear();
-		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+		changeSceneController.changeScene(SceneName.STORE, this.pWin);
 	}
 	
 	private void toEditProduct()
 	{
 		fpCategory.getChildren().clear();
-		ChangeSceneController.changeScene(SceneName.EDIT_PRODUCT, this.pWin);
+		changeSceneController.setCodValue(ipCod);
+		changeSceneController.changeScene(SceneName.EDIT_PRODUCT, this.pWin);
 	}
 	
 	private void setBtnBackImage(Button btnBack) {
@@ -215,4 +222,10 @@ public class WinAlterProductConstructor implements GenericWindownInterface
         button.setOnMouseExited(e -> setBtnStyle(button, styleExit));
         button.setStyle(styleExit);
     }
+    
+    /**
+     * Obtém o valor de código de outra tela
+     * @param cod O codigo do produto.
+     */
+    public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

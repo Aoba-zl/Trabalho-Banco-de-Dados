@@ -36,6 +36,8 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface {
 
     private FilteredList<Order> filteredList; //Filtra os dados da tabela
 
+    private ChangeSceneController changeSceneController = new ChangeSceneController();
+    
     OrderHistoryController controllerOrder= new OrderHistoryController();
 
     /**
@@ -174,19 +176,19 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface {
     {
         tableOrderHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+        changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
     }
     private void toAccount()
     {
         tableOrderHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+        changeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
     }
 
     private void toHome()
     {
         tableOrderHistory.getColumns().clear();
         controllerOrder.getListHistory().clear();
-        ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
+        changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 }
