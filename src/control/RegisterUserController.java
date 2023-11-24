@@ -2,15 +2,10 @@ package control;
 
 import java.sql.SQLException;
 
-import factory.ClientFactory;
-import factory.UserFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import model.Address;
 import model.Client;
 import model.ClientAddress;
@@ -31,23 +26,29 @@ public class RegisterUserController {
 	User newUser = new User();
     
     // dados
+	//User
     private StringProperty spName = new SimpleStringProperty("");
-    private StringProperty spCpf = new SimpleStringProperty("");
-    private StringProperty spEmail = new SimpleStringProperty("");
     private StringProperty spPasswd = new SimpleStringProperty("");
-    private StringProperty spSocialName = new SimpleStringProperty("");
     private StringProperty spPhone = new SimpleStringProperty("");
+    private StringProperty spEmail = new SimpleStringProperty("");
+    
+    //Client
+    private StringProperty spSocialName = new SimpleStringProperty("");
+    private StringProperty spCpf = new SimpleStringProperty("");
     private StringProperty spBirthDate = new SimpleStringProperty("");
     private StringProperty spSex = new SimpleStringProperty("");
-    private StringProperty spWarning = new SimpleStringProperty("");
     private BooleanProperty spMale = new SimpleBooleanProperty();
     private BooleanProperty spFem = new SimpleBooleanProperty();
     private BooleanProperty spOther = new SimpleBooleanProperty();
+
+    //Store
     private StringProperty spCnpj = new SimpleStringProperty("");
     private StringProperty spStore = new SimpleStringProperty("");
-    // endereco
     
-    private StringProperty spAddressName = new SimpleStringProperty("");
+    // generico
+    private StringProperty spWarning = new SimpleStringProperty("");
+
+    // endereco
     private StringProperty spCep = new SimpleStringProperty("");
     private StringProperty spEstate = new SimpleStringProperty("");
     private StringProperty spNeighborhood = new SimpleStringProperty("");
@@ -55,6 +56,9 @@ public class RegisterUserController {
     private StringProperty spCity = new SimpleStringProperty("");
     private StringProperty spComplement = new SimpleStringProperty("");
     private StringProperty spStreet = new SimpleStringProperty("");
+    
+    // endereço cliente
+    private StringProperty spAddressName = new SimpleStringProperty("");
   
     public boolean validateUserLogin(User newUser) throws SQLException {
         //TODO: CtrlCadastroUsuario. Corpo da operacao
@@ -122,6 +126,19 @@ public class RegisterUserController {
         sDao.insert(loja);
         aDao.insert(novoEndereco);
     }
+    public Store consultStore (Store store) {
+		GenericDao gDao = new GenericDao();
+		StoreDao sDao = new StoreDao(gDao);
+		try {
+			store = sDao.consult(store);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+    	return store;
+    }
+    
+    
     public Client updateClient() {
         Client client = null;
         //TODO: CtrlCadastroUsuario. Corpo da operacao

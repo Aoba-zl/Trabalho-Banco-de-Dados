@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,22 +76,44 @@ public class ProductDao
 
 	public boolean delete(Product p) throws SQLException 
 	{
-		
-		//
-		//TODO codigo para delete
-		//
+		Connection connection = gDao.getConnection();
+		String querySql = "DELETE product WHERE id_product = ?";
+		PreparedStatement ps = connection.prepareStatement(querySql);
+		ps.setInt(1, p.getCod());
+
+		ps.execute();
+
+		ps.close();
+		connection.close();
 		
 		return true;
 	}
 
-	public Product consult(Product p) throws SQLException
+	public Product consult(Product product) throws SQLException
 	{
+		Connection c = gDao.getConnection();
+		String sql = """ 
+				SELECT id_product, user_name, name_product, unity_price, total_stock, shipping, category, description 
+				FROM product
+				WHERE id_product = ?
+				""";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, product.getCod());
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			product.setLogin(rs.getString(2));
+			product.setName(rs.getString(3));
+			product.setPrice(rs.getDouble(4));
+			product.setTotalStock(rs.getInt(5));
+			product.setShipping(rs.getDouble(6));
+			product.setCategory(rs.getString(7));
+			product.setDescription(rs.getString(8));
+		}
+		rs.close();
+		ps.close();
+		c.close();
 		
-		//
-		//TODO codigo para conulta do produto
-		//
-		
-		return null;
+		return product;
 	}
 
 	public List<Product> list() throws SQLException 

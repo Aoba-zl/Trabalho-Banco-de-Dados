@@ -1,7 +1,8 @@
 package view;
 
 import control.ChangeSceneController;
-import javafx.geometry.Insets;
+import control.ProductController;
+import control.RegisterUserController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,14 +14,18 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Product;
+import model.Store;
 import utils.SceneName;
 
 
 public class WinAlterProductConstructor implements GenericWindownInterface
 {
 	Pane pWin;
-	
-	private static int quant = 0;
+	private ProductController pCon = new ProductController();
+	private RegisterUserController cCon = new RegisterUserController();
+	private Product product = new Product();
+	private Store store = new Store();
 	private FlowPane fpCategory = new FlowPane();
 	public void addElements(Pane pane) 
 	{
@@ -32,7 +37,12 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		paneConsult.setPrefHeight(390);
 		paneConsult.setPrefWidth(630);
 		paneConsult.relocate(5, 5);
-		
+		// ----- Carregando ----- //
+
+		product.setCod(1);
+		product=pCon.consulta(product);
+		store.setLogin(product.getLogin());
+		store=cCon.consultStore(store);
 		// ----- Creating Info Bord ----- //
 		
 		Pane paneInfo = new Pane();
@@ -46,24 +56,24 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 
 			// ----- Creating Labels ----- //
 		
-			Label lbNameProd = new Label("Goiaba");
+			Label lbNameProd = new Label(product.getName());
 			lbNameProd.setPrefWidth(277);
 			lbNameProd.setAlignment(Pos.CENTER);
 			lbNameProd.setStyle("-fx-font-size: 16px;");
 			lbNameProd.relocate(5, 20);
-			Label lbPrice = new Label("23,48");
+			Label lbPrice = new Label(product.getPrice()+" $");
 			lbPrice.setPrefWidth(277);
 			lbPrice.setAlignment(Pos.CENTER);
 			lbPrice.setStyle("-fx-font-size: 14px;-fx-font-weight: bold");
 			lbPrice.relocate(5, 39);
-			Label lbShop = new Label("Compras:");
-			setAlignment(lbShop);
-			Label lbPurchase = new Label("Frete:");
-			setAlignment(lbPurchase);
-			Label lbFreight = new Label("Estoque:");
-			setAlignment(lbFreight);
-			Label lbRemains = new Label("Reembolsos:");
-			setAlignment(lbRemains);
+			Label lbTotal = new Label("Compras:");
+			setAlignment(lbTotal);
+			Label lbShipping = new Label("Frete:");
+			setAlignment(lbShipping);
+			Label lbStock = new Label("Estoque:");
+			setAlignment(lbStock);
+			Label lbBack = new Label("Reembolsos:");
+			setAlignment(lbBack);
 			Label lbCategory = new Label("Categoria:");
 			setAlignment(lbCategory);
 			fpCategory.getChildren().add(lbCategory);
@@ -72,29 +82,23 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating TextField ----- //
 			
-			TextField txShop = new TextField();
-			setAlignment(txShop);
-			txShop.setDisable(true);
-			TextField txPurchase = new TextField();
-			setAlignment(txPurchase);
-			txPurchase.setDisable(true);
-			TextField txFreight = new TextField();
-			setAlignment(txFreight);
-			txFreight.setDisable(true);
-			TextField txRemains = new TextField();
-			setAlignment(txRemains);
-			txRemains.setDisable(true);
-			TextField txQuantity = new TextField();
-			setAlignment(txQuantity);
-			txQuantity.setPrefWidth(118);
-			txQuantity.setDisable(true);
-			txQuantity.setAlignment(Pos.CENTER);
-			txQuantity.setText(quant+"");
+			TextField txTotal = new TextField("");
+			setAlignment(txTotal);
+			txTotal.setDisable(true);
+			TextField txShipping = new TextField(product.getShipping()+"");
+			setAlignment(txShipping);
+			txShipping.setDisable(true);
+			TextField txStock = new TextField(product.getTotalStock()+"");
+			setAlignment(txStock);
+			txStock.setDisable(true);
+			TextField txBack = new TextField();
+			setAlignment(txBack);
+			txBack.setDisable(true);
 			
 			
 			// ----- Add Info into Screen ----- //
-			VBox vbInfoLb = new VBox(27,lbShop,lbPurchase,lbFreight,lbRemains);
-			VBox vbInfoTx = new VBox(20,txShop, txPurchase, txFreight, txRemains);
+			VBox vbInfoLb = new VBox(27,lbTotal,lbShipping,lbStock,lbBack);
+			VBox vbInfoTx = new VBox(20,txTotal, txShipping, txStock, txBack);
 			HBox hbInfo = new HBox(10,vbInfoLb,vbInfoTx);
 			hbInfo.setPrefHeight(170);
 			hbInfo.setPrefWidth(250);
@@ -127,14 +131,14 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating Label ----- //
 			
-			Label lbDescription = new Label("Descrição:");
+			Label lbDescription = new Label("Descrição");
 			lbDescription.relocate(282.9, 20);
 			lbDescription.setPrefWidth(345);
 			lbDescription.setAlignment(Pos.CENTER);
 			lbDescription.setStyle("-fx-font-size: 18px;-fx-font-weight: bold");
 			// ----- Creating TextArea ----- //
 			
-			TextArea txDescription = new TextArea();
+			TextArea txDescription = new TextArea(product.getDescription());
 			txDescription.relocate(290,50);
 			txDescription.setPrefHeight(300);
 			txDescription.setPrefWidth(332); 
@@ -143,6 +147,8 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			txDescription.setDisable(true);
 			
 		// ----- Add to pane ----- //
+		addCategory(product.getCategory());
+
 			
 		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,btnReturn,fpCategory);
 		paneConsult.getChildren().addAll(paneInfo,btnEdit,btnDelete,lbDescription,txDescription);
@@ -150,6 +156,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		//ChangeScene
 		btnReturn.setOnAction(e -> toStore());
 		btnEdit.setOnAction(e -> toEditProduct());
+		btnDelete.setOnAction(e -> delete(product));
 		
 		pane.getChildren().addAll(paneConsult);
 	}
@@ -168,14 +175,20 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		tf.setPrefWidth(206);
 		tf.setStyle("-fx-font-size: 12px;");
 	}
+	private void delete (Product product) {
+		pCon.delete(product);
+		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+	}
 	
 	private void toStore()
 	{
+		fpCategory.getChildren().clear();
 		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
 	}
 	
 	private void toEditProduct()
 	{
+		fpCategory.getChildren().clear();
 		ChangeSceneController.changeScene(SceneName.EDIT_PRODUCT, this.pWin);
 	}
 	

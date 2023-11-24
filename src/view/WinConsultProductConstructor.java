@@ -1,6 +1,8 @@
 package view;
 
 import control.ChangeSceneController;
+import control.ProductController;
+import control.RegisterUserController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,12 +15,15 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Product;
+import model.Store;
 import utils.SceneName;
 
 
 public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
-	
+	private ProductController pCon = new ProductController();
+	private RegisterUserController cCon = new RegisterUserController();
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
 	public void addElements(Pane pane) {
@@ -31,6 +36,13 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		paneConsult.setPrefWidth(630);
 		paneConsult.relocate(5, 5);
 		
+		// ----- Carregando ----- //
+		Product product = new Product();
+		product.setCod(1);
+		product=pCon.consulta(product);
+		Store store = new Store();
+		store.setLogin(product.getLogin());
+		store=cCon.consultStore(store);
 		// ----- Creating Info Bord ----- //
 		
 		Pane paneInfo = new Pane();
@@ -44,12 +56,12 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 
 			// ----- Creating Labels ----- //
 		
-			Label lbNameProd = new Label("Goiaba");
+			Label lbNameProd = new Label(product.getName());
 			lbNameProd.setPrefWidth(277);
 			lbNameProd.setAlignment(Pos.CENTER);
 			lbNameProd.setStyle("-fx-font-size: 16px;");
 			lbNameProd.relocate(5, 20);
-			Label lbPrice = new Label("23,48");
+			Label lbPrice = new Label(product.getPrice()+" $");
 			lbPrice.setPrefWidth(277);
 			lbPrice.setAlignment(Pos.CENTER);
 			lbPrice.setStyle("-fx-font-size: 14px;-fx-font-weight: bold");
@@ -72,16 +84,16 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			
 			// ----- Creating TextField ----- //
 			
-			TextField txShop = new TextField();
+			TextField txShop = new TextField(store.getNameStore());
 			setAlignment(txShop);
 			txShop.setDisable(true);
 			TextField txPurchase = new TextField();
 			setAlignment(txPurchase);
 			txPurchase.setDisable(true);
-			TextField txFreight = new TextField();
+			TextField txFreight = new TextField(product.getShipping()+"");
 			setAlignment(txFreight);
 			txFreight.setDisable(true);
-			TextField txRemains = new TextField();
+			TextField txRemains = new TextField(product.getTotalStock()+"");
 			setAlignment(txRemains);
 			txRemains.setDisable(true);
 			TextField txQuantity = new TextField();
@@ -151,7 +163,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			lbDescription.setStyle("-fx-font-size: 18px;-fx-font-weight: bold");
 			// ----- Creating TextArea ----- //
 			
-			TextArea txDescription = new TextArea();
+			TextArea txDescription = new TextArea(product.getDescription());
 			txDescription.relocate(290,50);
 			txDescription.setPrefHeight(300);
 			txDescription.setPrefWidth(332); 
@@ -159,7 +171,9 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			txDescription.setWrapText(true);
 			txDescription.setDisable(true);
 			
+
 		// ----- Add to pane ----- //
+		addCategory(product.getCategory());
 			
 		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,btnReturn,fpCategory);
 		paneConsult.getChildren().addAll(paneInfo,btnAddCart,btnBuy,lbDescription,txDescription);
@@ -192,10 +206,13 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toHomePage(){
+		quant = 0;
+		fpCategory.getChildren().clear();
 		ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 	private void toCart(){
+		fpCategory.getChildren().clear();
 		ChangeSceneController.changeScene(SceneName.CART, this.pWin);
 	}
 	

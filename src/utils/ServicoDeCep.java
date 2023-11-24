@@ -25,7 +25,7 @@ public class ServicoDeCep {
 
             BufferedReader resposta = new BufferedReader(new InputStreamReader((conexao.getInputStream())));
             String jsonEmString = converteJsonEmString(resposta);
-
+            System.out.println(jsonEmString);
             Gson gson = new Gson();
             Address endereco = gson.fromJson(jsonEmString, Address.class);
 

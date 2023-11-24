@@ -9,6 +9,7 @@ public class Product
     private double shipping;
     private String Category;
     private String description;
+    private String login;
     
     
 	public String getName()
@@ -80,7 +81,16 @@ public class Product
 	{
 		this.cod = cod;
 	}
-    
+	
+	public String getLogin()
+{
+		return login;
+	}
+
+	public void setLogin(String login) 
+	{
+		this.login = login;
+	}
     
     
     

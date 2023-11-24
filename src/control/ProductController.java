@@ -101,7 +101,30 @@ public class ProductController
 		
 		return products;
 	}
+
+	public Product consulta (Product product) {
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		
+		try {
+			product = pDao.consult(product);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return product;
+	}
 	
+	public boolean delete (Product product) {
+		
+		GenericDao gDao = new GenericDao();
+		ProductDao pDao = new ProductDao(gDao);
+		try {
+			return  pDao.delete(product);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	// \\d+ = apenas numeros
 	// \\.\\d+ = verificação depois da virgula
 	// \\d+(\\.\\d+)? = apenas numeros e casas depois da virgula, após a virgula é opcional "?"
@@ -139,4 +162,6 @@ public class ProductController
 		
 		return false;
 	}
+
+	
 }
