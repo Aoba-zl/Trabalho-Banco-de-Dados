@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import model.Product;
 import model.Store;
 import utils.SceneName;
-
+import utils.UserSession;
 
 public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
@@ -153,6 +153,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			Button btnAddCart = new Button("Adicionar ao Carrinho");
 			btnAddCart.relocate(291, 360);
 			btnAddCart.setPrefWidth(140);
+			
+			if(UserSession.getUserType() == "store") {
+				btnBuy.setDisable(true);
+				btnAddCart.setDisable(true);
+			}
 			
 			// ----- Creating Label ----- //
 			
