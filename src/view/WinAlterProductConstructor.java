@@ -174,6 +174,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 	}
 	private void delete (Product product) {
 		pCon.delete(product);
+		fpCategory.getChildren().clear();
 		ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
 	}
 	

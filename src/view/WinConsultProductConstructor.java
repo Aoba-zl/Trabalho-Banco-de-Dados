@@ -154,7 +154,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			btnAddCart.relocate(291, 360);
 			btnAddCart.setPrefWidth(140);
 			
-			if(UserSession.getUserType() == "store") {
+			if(UserSession.getUserType().contains("store")) {
 				btnBuy.setDisable(true);
 				btnAddCart.setDisable(true);
 			}
