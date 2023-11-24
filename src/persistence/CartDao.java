@@ -37,7 +37,6 @@ public class CartDao {
                            prod.unity_price * order_prod.quantity as Price,
                            prod.id_product,
                            order_tab.id_order,
-                           car.total,
                            prod.shipping,
                            prod.total_stock
                     from order_tbl order_tab, order_product order_prod, product prod,
@@ -59,8 +58,8 @@ public class CartDao {
                 product.setName(rs.getString(1));
                 product.setDescription(rs.getString(2));
                 product.setCod(rs.getInt(5));
-                product.setShipping(rs.getDouble(8));
-                product.setTotalStock(rs.getInt(9));
+                product.setShipping(rs.getDouble(7));
+                product.setTotalStock(rs.getInt(8));
                 item.setProduct(product);
                 item.setQuantity(rs.getInt(3));
                 item.setSubTotal(rs.getDouble(4));
@@ -69,8 +68,40 @@ public class CartDao {
 
                 order.setId(rs.getInt(6));
                 order.setItems(items);
-                order.setTotal(rs.getDouble(7));
+            }
 
+            String sql2= """
+                    select SUM((prod.unity_price * order_prod.quantity) + prod.shipping) as Price
+                    from order_tbl order_tab, order_product order_prod, product prod,
+                         cart car, client cli
+                    where order_tab.id_order = order_prod.id_order
+                      and order_prod.id_product = prod.id_product
+                      and order_tab.id_order = car.id_order
+                      and cli.user_name = order_tab.user_name_client
+                      and cli.user_name= ?""";
+            PreparedStatement ps2= connection.prepareStatement(sql2);
+            ps2.setString(1, client.getLogin());
+            ResultSet rs2= ps2.executeQuery();
+
+            while (rs2.next()){
+                order.setTotal(rs2.getDouble(1));
+            }
+
+            String sql3= """
+                    select SUM(prod.shipping) as Frete
+                    from order_tbl order_tab, order_product order_prod, product prod,
+                         cart car, client cli
+                    where order_tab.id_order = order_prod.id_order
+                      and order_prod.id_product = prod.id_product
+                      and order_tab.id_order = car.id_order
+                      and cli.user_name = order_tab.user_name_client
+                      and cli.user_name= ?""";
+            PreparedStatement ps3= connection.prepareStatement(sql3);
+            ps3.setString(1, client.getLogin());
+            ResultSet rs3= ps3.executeQuery();
+
+            while(rs3.next()){
+                order.setTotalPortage(rs3.getDouble(1));
             }
 
             connection.close();
@@ -152,12 +183,57 @@ public class CartDao {
                 order.setTotal(rs2.getDouble(1));
             }
 
+            String sql3= """
+                    select SUM(prod.shipping) as Frete
+                    from order_tbl order_tab, order_product order_prod, product prod,
+                         cart car, client cli
+                    where order_tab.id_order = order_prod.id_order
+                      and order_prod.id_product = prod.id_product
+                      and order_tab.id_order = car.id_order
+                      and cli.user_name = order_tab.user_name_client
+                      and cli.user_name= ?""";
+            PreparedStatement ps3= connection.prepareStatement(sql3);
+            ps3.setString(1, login);
+            ResultSet rs3= ps3.executeQuery();
+
+            while(rs3.next()){
+                order.setTotalPortage(rs3.getDouble(1));
+            }
+
             connection.close();
 
             return order;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Order getIdOrder(String login){
+        Order order= new Order();
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= """
+                    select order_tab.id_order
+                    from order_tbl order_tab, cart car, client cli
+                    where order_tab.id_order = car.id_order
+                      and cli.user_name = order_tab.user_name_client
+                      and cli.user_name= ?""";
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setString(1, login);
+
+            ResultSet rs= ps.executeQuery();
+
+            while (rs.next()){
+                order.setId(rs.getInt(1));
+            }
+
+            connection.close();
+
+            return order;
+        } catch (SQLException e) {
+            System.out.println("Erro em consultar o id do produto pelo CartDao" + e.getMessage());
+        }
+        return order;
     }
 
     /**

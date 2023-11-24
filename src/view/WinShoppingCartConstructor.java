@@ -158,7 +158,8 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         btnQuit.setOnAction(e -> toLogin());
         btnPlaceOrder.setOnMouseClicked(e -> {
             if (!controllerCart.getListCart().isEmpty()){
-
+                tableCart.getColumns().clear();
+                controllerCart.getListCart().clear();
                 toDetails();
             }
             else {
@@ -230,7 +231,6 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         BooleanBinding isTableEmpty = Bindings.isEmpty(tableCart.getItems());
         btnPlaceOrder.disableProperty().bind(isTableEmpty);
 
-
     }
 
     private void setBtnBackImage(Button btnBack) {
@@ -254,29 +254,25 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         button.setStyle(styleExit);
     }
 
-    private void toLogin()
-	{
+    private void toLogin() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 
-	private void toAccount()
-	{
+	private void toAccount() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 
-    private void toHome()
-    {
+    private void toHome() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
     	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
-    private void toDetails()
-    {
+    private void toDetails() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);

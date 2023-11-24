@@ -23,10 +23,9 @@ public class PlaceOrderController {
 
     Client client;
 
-    Order order;
+    static Order order;
     private GenericDao genericDao= new GenericDao();
 
-    private PurchaseDetailsDao purchaseDetailsDao= new PurchaseDetailsDao(genericDao);
 
     private StringProperty portage= new SimpleStringProperty("Frete:");
 
@@ -35,59 +34,54 @@ public class PlaceOrderController {
     private ObservableList<Item> itemsList = FXCollections.observableArrayList();
 
     private CartDao cartDao= new CartDao(genericDao);
+    private PurchaseDetailsDao purchaseDetailsDao= new PurchaseDetailsDao(genericDao);
+
+    private static boolean cart;
+
+
 
     /**
      * Carrega um lista de items para tela detalhes de compra e seus Labels
      */
     public void populateWinPurchase(){
-        order= new Order();
-        order= cartDao.getOrder(UserSession.getUserName());
+        order= purchaseDetailsDao.selectOrder(UserSession.getUserName());
 
         if (order.getItems() != null){
-            List<Item> items= order.getItems();
-            double portageCal= 0;
-            double totalPrice= 0;
+            cart= false;
+            itemsList.add(order.getItems().get(0));
+        }
+        else {
+            order= cartDao.getOrder(UserSession.getUserName());
+            if (order.getItems() != null){
+                cart= true;
+                List<Item> items= order.getItems();
+                double portageCal= 0;
+                double totalPrice= 0;
 
-            int listSize= items.size();
-            for (int i = 0; i < listSize; i++) {
+                int listSize= items.size();
+                for (int i = 0; i < listSize; i++) {
                     Item item= items.get(i);
                     portageCal+= item.getProduct().getShipping();
                     totalPrice+= item.getSubTotal();
 
                     itemsList.add(item);
+                }
+                totalPrice+= portageCal;
+                DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+                String formatedvalue= decimalFormat.format(portageCal);
+                String portageTotal= ("R$ " + formatedvalue);
+
+                portage.set("Frete: " + portageTotal);
+
+                formatedvalue= decimalFormat.format(totalPrice);
+                String totalValue= ("R$ " + formatedvalue);
+
+                totalPurchase.set("Total: " + totalValue);
+
             }
-            totalPrice+= portageCal;
-            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-            String formatedvalue= decimalFormat.format(portageCal);
-            String portageTotal= ("R$ " + formatedvalue);
-
-            portage.set("Frete: " + portageTotal);
-
-            formatedvalue= decimalFormat.format(totalPrice);
-            String totalValue= ("R$ " + formatedvalue);
-
-            totalPurchase.set("Total: " + totalValue);
 
         }
 
-//            for (int i = 0; i < listsize; i++) {
-//                Item item= items.get(i);
-//                portageCal+= item.getProduct().getShipping();
-//                totalPrice+= item.getSubTotal();
-//
-//                items.add(0, item);
-//            }
-//            totalPrice+= portageCal;
-//            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-//            String formatedvalue= decimalFormat.format(portageCal);
-//            String portageTotal= ("R$ " + formatedvalue);
-//
-//            portage.set("Frete: " + portageTotal);
-//
-//            formatedvalue= decimalFormat.format(totalPrice);
-//            String totalValue= ("R$ " + formatedvalue);
-//
-//            totalPurchase.set("Total: " + totalValue);
 
     }
 
@@ -95,13 +89,8 @@ public class PlaceOrderController {
      * Verifica se a tela veio da tela carrinho ou da tela do produto.
      * @return A verificação.
      */
-    public Boolean cart(){
-        if (itemsList.size() > 1){
-            return true;
-        }
-        else {
-            return false;
-        }
+    public static boolean isCart() {
+        return cart;
     }
 
     /**
@@ -113,21 +102,18 @@ public class PlaceOrderController {
 
     /**
      * Adiciona o pagamento ao pedido, verificando o meio de pagamento.
-     * @param order O pedido.
      * @param pix O meio de pagamento.
      */
-    public void placePayment(Order order, Boolean pix){
-        purchaseDetailsDao.insertPayment(order, pix);
+    public void placePayment(Boolean pix){
+        purchaseDetailsDao.insertPayment(order, pix, cart);
     }
 
     /**
      * Cria um pedido e seu pagamento, verificando o meio de pagamento de um determinado cliente.
-     * @param username O username do cliente.
      * @param item O item do pedido.
-     * @param pix O meio de pagamento.
      */
-    public void createOrderAndPayment(String username, Item item, Boolean pix){
-        purchaseDetailsDao.insertOrder(username, item, pix);
+    public void createOrder(Item item){
+        purchaseDetailsDao.insertOrder(UserSession.getUserName(), item);
     }
 
     public Client getClient(){

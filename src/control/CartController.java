@@ -44,30 +44,26 @@ public class CartController {
 
         if (order.getItems() != null){
             List<Item> items= order.getItems();
-            double portageCal= 0;
-            double totalPrice= 0;
 
             int listSize= items.size();
             for (int i = 0; i < listSize; i++) {
                 Item item= items.get(i);
-                portageCal+= item.getProduct().getShipping();
-                totalPrice+= item.getSubTotal();
 
                 listCart.add(items.get(i));
             }
-            totalPrice+= portageCal;
+
             DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-            String formatedvalue= decimalFormat.format(portageCal);
+            String formatedvalue= decimalFormat.format(order.getTotalPortage());
             String portageTotal= ("R$ " + formatedvalue);
 
             portage.set("Frete: " + portageTotal);
 
-            formatedvalue= decimalFormat.format(totalPrice);
+            formatedvalue= decimalFormat.format(order.getTotal());
             String totalValue= ("R$ " + formatedvalue);
 
             totalCart.set("Total: " + totalValue);
 
-            cartDao.setTotalCart(order.getId(), totalPrice);
+            cartDao.setTotalCart(order.getId(), order.getTotal());
         }
 
     }
@@ -82,6 +78,11 @@ public class CartController {
 
         order= cartDao.getOrder(client.getLogin());
 
+        return order;
+    }
+
+    public Order getIdOrder(){
+        order= cartDao.getIdOrder(UserSession.getUserName());
         return order;
     }
 
@@ -107,7 +108,9 @@ public class CartController {
      */
     public void clearCart(Item item) {
         cartDao.deleteItem(item.getProduct().getCod(), getOrder());
-        if (listCart.size() == 1){
+        listCart.clear();
+        populateWinCart();
+        if (listCart.isEmpty()){
             deleteOrder();
         }
     }
@@ -116,7 +119,9 @@ public class CartController {
      * Deleta o pedido.
      */
     public void deleteOrder () {
-        cartDao.deleteOrder(getOrder());
+        cartDao.deleteOrder(getIdOrder());
+        portage.set("Frete:");
+        totalCart.set("Total:");
     }
 
     public double calculateTotal (List<Item> select) {

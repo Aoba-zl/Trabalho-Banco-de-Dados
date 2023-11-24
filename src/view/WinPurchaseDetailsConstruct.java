@@ -86,7 +86,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         //EVENTS --------------------------------------------------------------
 
         btnReturn.setOnMouseClicked(event -> {
-            if (controllerPlaceOrder.cart()){
+            if (PlaceOrderController.isCart()){
                 toCart();
             }
             else {
@@ -96,13 +96,13 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         btnBuy.setOnMouseClicked(event -> {
 
-            if (controllerPlaceOrder.cart()){
+            if (PlaceOrderController.isCart()){
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.placePayment(cartController.getOrder(), true);
+                    controllerPlaceOrder.placePayment(true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.setContentText("Código do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -111,11 +111,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrder(), false);
+                    controllerPlaceOrder.placePayment(false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.setContentText("Código do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -135,11 +135,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
             else{
                 //todo operação para a tela do produto
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), true);
+                    controllerPlaceOrder.placePayment(true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.setContentText("Código do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -148,11 +148,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), false);
+                    controllerPlaceOrder.placePayment(false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.setContentText("Código do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
