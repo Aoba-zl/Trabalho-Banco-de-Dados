@@ -22,11 +22,24 @@ public class ProductController
 	private TextArea taDescription;
 	private Label lblMessage;
 	
+	/**
+	 * Construtor da classe ProductController para caso não precise de parâmetros.
+	 */
 	public ProductController()
 	{
 		
 	}
 	
+	/**
+	 * Construtor da classe ProductController para caso precise de parâmetros.
+	 * @param tfName TextField que contém o nome do produto.
+	 * @param tfPrice TextField que contém o preço do produto.
+	 * @param tfInStock TextField que contém o estoque do produto.
+	 * @param tfShipping TextField que contém o frete do produto.
+	 * @param tfCategory TextField que contém a categoria do produto.
+	 * @param taDescription TextField que contém a descrição do produto.
+	 * @param lblMessage Mensagem de aviso da tela.
+	 */
 	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage) 
 	{
 		this.tfName = tfName;
@@ -38,6 +51,11 @@ public class ProductController
 		this.lblMessage = lblMessage;
 	}
 	
+	/**
+	 * Faz a inserção do produto no banco de dados.
+	 * @return True para caso tenha inserido o produto, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean insert() throws SQLException
 	{
 		if(checkValues())
@@ -59,6 +77,11 @@ public class ProductController
 		return pDao.insert(p);
 	}
 	
+	/**
+	 * Faz a alteração do produto.
+	 * @return True para tenha alterado o produto, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean update() throws SQLException
 	{
 		if(checkValues())
@@ -81,7 +104,11 @@ public class ProductController
 		
 		return pDao.update(p);
 	}
-	
+	/**
+	 * Busca a lista de produto para o usuário na pagina principal.
+	 * @return Lista de produto.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public List<Product> listProduct() throws SQLException
 	{
 		GenericDao gDao = new GenericDao();
@@ -92,6 +119,11 @@ public class ProductController
 		return products;
 	}
 	
+	/**
+	 * Busca a lista de produto para o usuário lojista na pagina da loja.
+	 * @return Lista de produto do lojista.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public List<Product> listProductStore() throws SQLException
 	{
 		GenericDao gDao = new GenericDao();

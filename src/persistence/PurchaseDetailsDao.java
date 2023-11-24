@@ -3,8 +3,10 @@ package persistence;
 import model.Client;
 import model.Item;
 import model.Order;
+import model.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +24,65 @@ public class PurchaseDetailsDao {
         this.genericDao= genericDao;
     }
 
+
+    public Order selectOrder(String login){
+        Order order= new Order();
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= """
+                    select prod.id_product,
+                           prod.name_product,
+                           prod.description,
+                           order_prod.quantity,
+                           order_prod.sub_total,
+                           order_prod.sub_total + prod.shipping as total,
+                           order_tab.id_order
+                    from order_tbl order_tab inner join order_product order_prod on order_tab.id_order = order_prod.id_order
+                         inner join product prod on order_prod.id_product = prod.id_product
+                         inner join client cli on cli.user_name = order_tab.user_name_client
+                         left join cart c on order_tab.id_order = c.id_order
+                         left join payment p on p.id_order = order_tab.id_order
+                    where c.id_order is null
+                        and p.id_order is null
+                        and cli.user_name = ?""";
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setString(1, login);
+
+            ResultSet rs= ps.executeQuery();
+
+            List<Item> items= new ArrayList<>();
+            while(rs.next()){
+                Product product= new Product();
+                Item item= new Item();
+
+                product.setCod(rs.getInt(1));
+                product.setName(rs.getString(2));
+                product.setDescription(rs.getString(3));
+                item.setQuantity(rs.getInt(4));
+                item.setSubTotal(rs.getDouble(5));
+                order.setTotal(rs.getDouble(6));
+                order.setId(rs.getInt(7));
+
+                item.setProduct(product);
+                items.add(0, item);
+                order.setItems(items);
+            }
+
+            connection.close();
+
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar o pedido sem pagamento e sem interação com o carrinho" + e.getMessage());
+        }
+        return order;
+    }
+
     /**
      * Inseri o pagamento de um pedido, verificando o meio de pagamento.
      * @param order O pedido.
      * @param pix O meio de pagamento.
      */
-    public void insertPayment(Order order, Boolean pix){
+    public void insertPayment(Order order, Boolean pix, Boolean cart){
         try {
             Connection connection= genericDao.getConnection();
             String sql= """
@@ -66,7 +121,9 @@ public class PurchaseDetailsDao {
             connection.close();
 
             reduceStock(order.getItems());
-            deleteCart(order.getId());
+            if (cart){
+                deleteCart(order.getId());
+            }
         } catch (SQLException e) {
             System.out.println("Erro ao inserir payment");
             throw new RuntimeException(e);
@@ -125,12 +182,11 @@ public class PurchaseDetailsDao {
     }
 
     /**
-     * Inseri um pagamento de um pedido de um determinado cliente, verificando o meio de pagamento.
-     * @param client O cliente.
+     * Inseri um pedido sem pagamento no banco de dados de um determinado cliente.
+     * @param username O username do cliente.
      * @param item O item do pedido.
-     * @param pix O meio de pagamento.
      */
-    public void insertOrder(String username, Item item, Boolean pix){
+    public void insertOrder(String username, Item item){
         Order order= new Order();
         try {
             Connection connection= genericDao.getConnection();
@@ -164,61 +220,13 @@ public class PurchaseDetailsDao {
 
             insertItems.executeUpdate();
 
-            if (pix){
-                String sqlPix= """
-                        insert into pix (id_order, qr_code)
-                        values
-                            (?, ?)""";
-                PreparedStatement insertPix= connection.prepareStatement(sqlPix);
-                insertPix.setInt(1, order.getId());
-                insertPix.setString(2, "pixCodigo");
-
-                insertPix.executeUpdate();
-            }
-            else {
-                String sqlPaySlip= """
-                        insert into payment_slip (id_order, qr_code)
-                        values
-                            (?, ?)""";
-                PreparedStatement insertPaySlip= connection.prepareStatement(sqlPaySlip);
-                insertPaySlip.setInt(1, order.getId());
-                insertPaySlip.setString(2, "boletoCodigo");
-
-                insertPaySlip.executeUpdate();
-            }
-
             connection.close();
 
-            reduceStock(item);
 
         } catch (SQLException e) {
             System.out.println("Erro ao inserir Order e pagamento pelo pagamento" + e.getMessage());
         }
     }
 
-    /**
-     * Reduz o stock dos produtos comprados, utilizando a quantidade do item.
-     * @param item O item.
-     */
-    public void reduceStock(Item item){
-        try {
-            Connection connection= genericDao.getConnection();
-            String sql= """
-                    update product
-                     set
-                         total_stock= total_stock - ?
-                     where id_product = ?
-                    """;
 
-            PreparedStatement ps= connection.prepareStatement(sql);
-            ps.setInt(1, item.getQuantity());
-            ps.setInt(2, item.getProduct().getCod());
-            ps.executeUpdate();
-
-            connection.close();
-
-        } catch (SQLException e) {
-            System.out.println("Erro ao reduzir estoque dos produtos comprados!" + e.getMessage());
-        }
-    }
 }

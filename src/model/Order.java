@@ -6,6 +6,8 @@ import java.util.List;
 public class Order {
     private List<Item> items;
     private double total;
+
+    private double totalPortage;
     private Payment payment;
     private Integer id;
 
@@ -39,5 +41,13 @@ public class Order {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public double getTotalPortage() {
+        return totalPortage;
+    }
+
+    public void setTotalPortage(double totalPortage) {
+        this.totalPortage = totalPortage;
     }
 }

@@ -6,7 +6,9 @@ import utils.UserSession;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
-
+/**
+ * Classe principal que gera a execução do aplicativo.
+ */
 public class Main extends Application 
 {
 	private Stage stage;
@@ -35,7 +37,9 @@ public class Main extends Application
 	}
 	
 
-	
+	/**
+	 * Iniciação do launch do aplicativo.
+	 */
 	public static void main(String[] args) 
 	{
 		launch(args);

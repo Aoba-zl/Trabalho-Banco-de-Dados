@@ -21,13 +21,21 @@ import model.Product;
 import utils.SceneName;
 import utils.UserSession;
 
+/**
+ * Construtor da tela de pagina inicial, com a implementação da interface GenericWindownInterface.
+ */
 public class WinHomePageConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 
 	private List<Product> listProduct;
 	
-	@Override
+	
+	/**
+     * Adiciona elementos à interface gráfica da janela de conta.
+     *
+     * @param pane O painel ao qual os elementos serão adicionados.
+     */
 	public void addElements(Pane pane)
 	{
 		this.pWin = pane;

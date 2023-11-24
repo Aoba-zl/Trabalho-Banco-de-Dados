@@ -18,11 +18,18 @@ import javafx.scene.layout.VBox;
 import utils.SceneName;
 import utils.UserSession;
 
+/**
+ * Construtor para a tela de login, com a implementação da interface GenericWindownInterface.
+ */
 public class WinLoginConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 
-	@Override
+	/**
+     * Adiciona elementos à interface gráfica da janela de conta.
+     *
+     * @param pane O painel ao qual os elementos serão adicionados.
+     */
 	public void addElements (Pane pane)
 	{
 		this.pWin = pane;

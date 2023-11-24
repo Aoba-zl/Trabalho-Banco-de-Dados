@@ -16,10 +16,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 
+/**
+ * Construtor da tela de registro de produto do lojista, com a implementação GenericWindownInterface.
+ */
 public class WinRegProductConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 	
+	/**
+     * Adiciona elementos à interface gráfica da janela de conta.
+     *
+     * @param pane O painel ao qual os elementos serão adicionados.
+     */
 	public void addElements(Pane pane)
 	{
 		this.pWin = pane;

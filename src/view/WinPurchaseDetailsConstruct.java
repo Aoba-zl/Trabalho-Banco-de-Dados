@@ -86,10 +86,8 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         //EVENTS --------------------------------------------------------------
 
         btnReturn.setOnMouseClicked(event -> {
-            if (controllerPlaceOrder.cart()){
-                winShoppingCartConstructor= new WinShoppingCartConstructor();
-                pane.getChildren().clear();
-                winShoppingCartConstructor.addElements(pane);
+            if (PlaceOrderController.isCart()){
+                toCart();
             }
             else {
                 //todo retorna para a tela do produto se cart == false
@@ -98,13 +96,13 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         btnBuy.setOnMouseClicked(event -> {
 
-            if (controllerPlaceOrder.cart()){
+            if (PlaceOrderController.isCart()){
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.placePayment(cartController.getOrder(), true);
+                    controllerPlaceOrder.placePayment(true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.setContentText("Código do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -113,11 +111,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.placePayment(cartController.getOrder(), false);
+                    controllerPlaceOrder.placePayment(false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.setContentText("Código do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -137,11 +135,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
             else{
                 //todo operação para a tela do produto
                 if (cbPaymentMethod.getValue() == "Pix"){
-                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), true);
+                    controllerPlaceOrder.placePayment(true);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Pix enviado ao seu email.");
+                    alert.setContentText("Código do Pix enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -150,11 +148,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     winShoppingCartConstructor.addElements(pane);
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
-                    controllerPlaceOrder.createOrderAndPayment(UserSession.getUserName(), controllerPlaceOrder.getItems().get(0), false);
+                    controllerPlaceOrder.placePayment(false);
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informação");
                     alert.setHeaderText(null);
-                    alert.setContentText("Codigo do Boleto enviado ao seu email.");
+                    alert.setContentText("Código do Boleto enviado ao seu email.");
                     alert.getDialogPane().setStyle("-fx-font-size: 15");
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
@@ -227,9 +225,8 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         columnPrice.setStyle("-fx-alignment: CENTER; -fx-font-size: 13;");
 
         tablePurchase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        controllerPlaceOrder.populateWinPurchase();
         tablePurchase.getColumns().addAll(columnProductName, columnDescription, columnQuantity, columnPrice);
+        controllerPlaceOrder.populateWinPurchase();
         tablePurchase.setItems(controllerPlaceOrder.getItems());
     }
 
@@ -255,9 +252,11 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         button.setStyle(styleExit);
     }
 
-    private void toCart()
-    {
-    	ChangeSceneController.changeScene(SceneName.CART, pWin);
+
+    private void toCart() {
+        tablePurchase.getColumns().clear();
+        controllerPlaceOrder.getItems().clear();
+        ChangeSceneController.changeScene(SceneName.CART, this.pWin);
     }
 
 

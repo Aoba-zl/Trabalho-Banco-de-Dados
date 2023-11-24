@@ -67,6 +67,7 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         btnRemove.relocate(30, 350);
         btnPlaceOrder.setMinSize(130, 30);
         btnPlaceOrder.relocate(460, 350);
+//        btnPlaceOrder.setDisable(true);
         btnMinus.relocate(230, 355);
         btnMinus.setFont(Font.font(13));
         btnMinus.setDisable(true);
@@ -151,17 +152,25 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
             }
         });
 
-        btnPlaceOrder.setOnMouseClicked(event -> {
-            winPurchaseDetailsConstruct= new WinPurchaseDetailsConstruct();
-            pane.getChildren().clear();
-            placeOrderController.setItems(controllerCart.getListCart());
-            winPurchaseDetailsConstruct.addElements(pane);
-        });
 
         btnReturn.setOnAction(e -> toHome());
         btnAccount.setOnAction(e -> toAccount());
         btnQuit.setOnAction(e -> toLogin());
-        btnPlaceOrder.setOnAction(e -> toDetails());
+        btnPlaceOrder.setOnMouseClicked(e -> {
+            if (!controllerCart.getListCart().isEmpty()){
+                tableCart.getColumns().clear();
+                controllerCart.getListCart().clear();
+                toDetails();
+            }
+            else {
+                Alert alert= new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Informação");
+                alert.setHeaderText(null);
+                alert.setContentText("Não há items do carrinho!");
+                alert.getDialogPane().setStyle("-fx-font-size: 15");
+                alert.showAndWait();
+            }
+        });
 
 
         // ----------------------------------------------------------------
@@ -222,7 +231,6 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         BooleanBinding isTableEmpty = Bindings.isEmpty(tableCart.getItems());
         btnPlaceOrder.disableProperty().bind(isTableEmpty);
 
-
     }
 
     private void setBtnBackImage(Button btnBack) {
@@ -246,29 +254,25 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         button.setStyle(styleExit);
     }
 
-    private void toLogin()
-	{
+    private void toLogin() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 
-	private void toAccount()
-	{
+	private void toAccount() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 
-    private void toHome()
-    {
+    private void toHome() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
     	ChangeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
-    private void toDetails()
-    {
+    private void toDetails() {
         tableCart.getColumns().clear();
         controllerCart.getListCart().clear();
 		ChangeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
