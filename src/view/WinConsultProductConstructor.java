@@ -87,7 +87,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			TextField txShop = new TextField(store.getNameStore());
 			setAlignment(txShop);
 			txShop.setDisable(true);
-			TextField txPurchase = new TextField();
+			TextField txPurchase = new TextField(pCon.quant(product)+"");
 			setAlignment(txPurchase);
 			txPurchase.setDisable(true);
 			TextField txFreight = new TextField(product.getShipping()+"");

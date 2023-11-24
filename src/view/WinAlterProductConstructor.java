@@ -73,8 +73,6 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			setAlignment(lbShipping);
 			Label lbStock = new Label("Estoque:");
 			setAlignment(lbStock);
-			Label lbBack = new Label("Reembolsos:");
-			setAlignment(lbBack);
 			Label lbCategory = new Label("Categoria:");
 			setAlignment(lbCategory);
 			fpCategory.getChildren().add(lbCategory);
@@ -83,7 +81,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			
 			// ----- Creating TextField ----- //
 			
-			TextField txTotal = new TextField("");
+			TextField txTotal = new TextField(pCon.quant(product)+"");
 			setAlignment(txTotal);
 			txTotal.setDisable(true);
 			TextField txShipping = new TextField(product.getShipping()+"");
@@ -92,14 +90,12 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			TextField txStock = new TextField(product.getTotalStock()+"");
 			setAlignment(txStock);
 			txStock.setDisable(true);
-			TextField txBack = new TextField();
-			setAlignment(txBack);
-			txBack.setDisable(true);
+
 			
 			
 			// ----- Add Info into Screen ----- //
-			VBox vbInfoLb = new VBox(27,lbTotal,lbShipping,lbStock,lbBack);
-			VBox vbInfoTx = new VBox(20,txTotal, txShipping, txStock, txBack);
+			VBox vbInfoLb = new VBox(40,lbTotal,lbShipping,lbStock);
+			VBox vbInfoTx = new VBox(33,txTotal, txShipping, txStock);
 			HBox hbInfo = new HBox(10,vbInfoLb,vbInfoTx);
 			hbInfo.setPrefHeight(170);
 			hbInfo.setPrefWidth(250);

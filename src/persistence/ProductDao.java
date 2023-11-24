@@ -172,7 +172,7 @@ public class ProductDao
 		Connection c = gDao.getConnection();
 		String sql = "SELECT id_product, name_product, unity_price, total_stock, description FROM product WHERE user_name = ?;";
 		PreparedStatement ps = c.prepareStatement(sql);
-		ps.setString(1, UserSession.getUserName());
+		ps.setString(1, UserSession.getUserName());	
 		ResultSet rs = ps.executeQuery();
 		while(rs.next())
 		{
@@ -191,5 +191,20 @@ public class ProductDao
 		c.close();
 		
 		return products;
+	}
+	public int quantProduct(Product product) throws SQLException {
+		Connection c = gDao.getConnection();
+		String sql = """ 
+				SELECT SUM(o.quantity)
+				FROM product p, order_product o, payment pa
+				WHERE p.id_product = o.id_product AND o.id_order = pa.id_order AND p.id_product = ?
+				""";
+		PreparedStatement ps = c.prepareStatement(sql);
+		ps.setInt(1, product.getCod());
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return rs.getInt(1);
+		} else
+		return 0;
 	}
 }
