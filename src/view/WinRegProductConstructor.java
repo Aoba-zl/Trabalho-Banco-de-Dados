@@ -162,16 +162,19 @@ public class WinRegProductConstructor implements GenericWindownInterface
 	
 	private void toLogin() 
 	{
+		pControll.clean();
 		changeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
+		pControll.clean();
 		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toStore()
 	{
+		pControll.clean();
 		changeSceneController.changeScene(SceneName.STORE, pWin);
 	}
 	

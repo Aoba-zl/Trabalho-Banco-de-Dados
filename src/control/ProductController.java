@@ -190,6 +190,17 @@ public class ProductController
 		
 		return false;
 	}
+	
+	public void clean()
+	{
+		spName.set("");
+		spPrice.set("");
+		spInStock.set("");
+		spShipping.set("");
+		spCategory.set("");
+		spDescription.set("");
+		lblMessage.set("");
+	}
 
 	public StringProperty getNameProperty() { return spName; }
 	
