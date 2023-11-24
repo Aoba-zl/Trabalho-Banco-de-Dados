@@ -1,5 +1,7 @@
 package control;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import utils.SceneName;
 import utils.UserSession;
@@ -10,13 +12,15 @@ import java.util.HashMap;
 public class ChangeSceneController
 {
 	private static HashMap<SceneName, GenericWindownInterface> windowns = new HashMap<>();
-
+	
+	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
+	
 	/**
 	 * Controlador responsável pela troca de tela dentro da aplicação.
 	 * @param sceneName O nome do tipo de tela.
 	 * @param pWin
 	 */
-	public static void changeScene(SceneName sceneName, Pane pWin)
+	public void changeScene(SceneName sceneName, Pane pWin)
 	{
 		//login
 		WinLoginConstructor winLogin;
@@ -38,7 +42,7 @@ public class ChangeSceneController
 		WinRegProductConstructor winRegProduct;
 		WinAlterProductConstructor winAlterProduct;
 		WinEditProductConstructor winEditProduct;
-
+		
 		pWin.getChildren().clear();
 
 		if(UserSession.isLoggedIn())
@@ -133,6 +137,7 @@ public class ChangeSceneController
 					}
 					else
 						winConsultProduct = (WinConsultProductConstructor) windowns.get(sceneName);
+					winConsultProduct.setCodValue(ipCod);
 					winConsultProduct.addElements(pWin);
 					break;
 				case CART:
@@ -195,6 +200,7 @@ public class ChangeSceneController
 					}
 					else
 						winAlterProduct = (WinAlterProductConstructor) windowns.get(sceneName);
+					winAlterProduct.setCodValue(ipCod);
 					winAlterProduct.addElements(pWin);
 					break;
 				case EDIT_PRODUCT:
@@ -205,6 +211,7 @@ public class ChangeSceneController
 					}
 					else
 						winEditProduct = (WinEditProductConstructor) windowns.get(sceneName);
+					winEditProduct.setCodValue(ipCod);
 					winEditProduct.addElements(pWin);
 					break;
 				
@@ -220,4 +227,6 @@ public class ChangeSceneController
 			winLogin.addElements(pWin);
 		}
 	}
+	
+	public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

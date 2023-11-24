@@ -4,6 +4,9 @@ import java.sql.SQLException;
 
 import control.ChangeSceneController;
 import control.ProductController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +25,12 @@ import utils.SceneName;
 public class WinEditProductConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
+	
+	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
+	
+	ProductController pControll = new ProductController();
 	
 	/**
      * Adiciona elementos à interface gráfica da janela de conta.
@@ -139,7 +148,11 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
-		btnConf.setOnAction(e -> updateProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage));
+		pControll.setValueEdit(ipCod);
+		
+		setBidings(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage);
+		
+		btnConf.setOnAction(e -> updateProduct());
 		
 		//------------mudança de scene---------------
 		lblAccount.setOnMouseClicked(e -> toAccount());
@@ -153,25 +166,24 @@ public class WinEditProductConstructor implements GenericWindownInterface
 	
 	private void toLogin()
 	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toProductStore()
-	{
-		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+	{	
+		changeSceneController.setCodValue(ipCod);
+		changeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
-	private void updateProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
+	private void updateProduct()
 	{
-		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, lblMessage);
-		
 		try {
-			if(pControll.update())
+			if(pControll.update(ipCod))
 			{
 				Label concluded = new Label("Produto Alterado!");
 				concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
@@ -203,6 +215,17 @@ public class WinEditProductConstructor implements GenericWindownInterface
 		
 	}
 	
+	private void setBidings(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
+	{
+		Bindings.bindBidirectional(tfName.textProperty(), pControll.getNameProperty());
+		Bindings.bindBidirectional(tfPrice.textProperty(), pControll.getPriceProperty());
+		Bindings.bindBidirectional(tfInStock.textProperty(), pControll.getInStockProperty());
+		Bindings.bindBidirectional(tfShipping.textProperty(), pControll.getShippingProperty());
+		Bindings.bindBidirectional(tfCategory.textProperty(), pControll.getCategoryProperty());
+		Bindings.bindBidirectional(taDescription.textProperty(), pControll.getDescriptionProperty());
+		Bindings.bindBidirectional(lblMessage.textProperty(), pControll.getMessageProperty());
+	}
+	
 	private void setBtnBackImage(Button btnBack) {
         Image imgGoBackBtn = new Image(getClass().getResource("image/goBack.png").toString());
         ImageView ivGoBackBtn = new ImageView(imgGoBackBtn);
@@ -229,5 +252,6 @@ public class WinEditProductConstructor implements GenericWindownInterface
         button.setStyle(styleExit);
     }
 	
+    public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 
 }

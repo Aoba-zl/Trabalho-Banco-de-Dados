@@ -6,6 +6,8 @@ import java.util.List;
 
 import control.ChangeSceneController;
 import control.ProductController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,6 +29,8 @@ public class WinStoreConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
 	private List<Product> listProduct;
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
 	
 	/**
      * Adiciona elementos à interface gráfica da janela de conta.
@@ -138,29 +142,29 @@ public class WinStoreConstructor implements GenericWindownInterface
 
 	private void toHomePage()
 	{
-		ChangeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
+		changeSceneController.changeScene(SceneName.HOME_PAGE, pWin);
 	}
 	
 	private void toLogin() 
 	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toRegProduct()
 	{
-		ChangeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
+		changeSceneController.changeScene(SceneName.REG_PRODUCT, pWin);
 	}
 	
-	private void toProductStore(int cod, String name, String description, double price)
+	private void toProductStore(IntegerProperty cod)
 	{
-		System.out.println(cod + " " + name + " " + description + " " + price); //test
-		
-		ChangeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
+		System.out.println(cod);
+		changeSceneController.setCodValue(cod);
+		changeSceneController.changeScene(SceneName.ALTER_PRODUCT, pWin);
 	}
 	
 	private void completeListProduct(VBox vbProduct)
@@ -234,7 +238,9 @@ public class WinStoreConstructor implements GenericWindownInterface
 					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
 					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblQuantityProduct, hbLblPrice);
 					
-					vbProductInfo.setOnMouseClicked(e -> toProductStore(p.getCod(), p.getName(), p.getDescription(), p.getPrice()));
+					IntegerProperty codProperty = new SimpleIntegerProperty(p.getCod());
+					
+					vbProductInfo.setOnMouseClicked(e -> toProductStore(codProperty));
 					
 					hbProductInfo.getChildren().add(vbProductInfo);
 					

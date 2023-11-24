@@ -6,13 +6,13 @@ import java.util.List;
 
 import control.ChangeSceneController;
 import control.ProductController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -30,7 +30,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 
 	private List<Product> listProduct;
 	
-	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
 	/**
      * Adiciona elementos à interface gráfica da janela de conta.
      *
@@ -140,29 +140,29 @@ public class WinHomePageConstructor implements GenericWindownInterface
 
 	private void toLogin() 
 	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, this.pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, this.pWin);
 	}
 	
 	private void toAccount() 
 	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
+		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, this.pWin);
 	}
 	
-	private void toProduct(int cod, String name, String desc, double price) //TODO será colocado os parametros para puxar o produto correto
-	{ //Só avisando que o professor disse que ensinaria um jeito melhor do que enviar os parametros dessa forma.
-		System.out.println(cod + " " + name + " " + desc + " " + price);
-		ChangeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
+	private void toProduct(IntegerProperty cod)
+	{
+		changeSceneController.setCodValue(cod);
+		changeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
 	}
 	
 	private void toCartStore(Button btnCartStore)
 	{
 		if(btnCartStore.getText().equals("Carrinho🛒"))
 		{
-			ChangeSceneController.changeScene(SceneName.CART, this.pWin);
+			changeSceneController.changeScene(SceneName.CART, this.pWin);
 		}
 		else
 		{
-			ChangeSceneController.changeScene(SceneName.STORE, this.pWin);
+			changeSceneController.changeScene(SceneName.STORE, this.pWin);
 		}
 	}
 	
@@ -233,7 +233,9 @@ public class WinHomePageConstructor implements GenericWindownInterface
 					vbProductInfo.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px; -fx-cursor: hand;");
 					vbProductInfo.getChildren().addAll(hbLblNameProduct, hbLblDescProduct, hbLblPrice);
 					
-					vbProductInfo.setOnMouseClicked(e -> toProduct(p.getCod(), p.getName(), p.getDescription(), p.getPrice()));
+					IntegerProperty codProperty = new SimpleIntegerProperty(p.getCod());
+					
+					vbProductInfo.setOnMouseClicked(e -> toProduct(codProperty));
 					
 					hbProductInfo.getChildren().add(vbProductInfo);
 					

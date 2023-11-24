@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import control.ChangeSceneController;
 import control.ProductController;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,10 @@ import utils.SceneName;
 public class WinRegProductConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
+	
+	private ProductController pControll = new ProductController();
+	
+	private ChangeSceneController changeSceneController = new ChangeSceneController();
 	
 	/**
      * Adiciona elementos à interface gráfica da janela de conta.
@@ -142,8 +147,9 @@ public class WinRegProductConstructor implements GenericWindownInterface
 		pProduct.setStyle("-fx-border-color: black; -fx-border-radius: 10px; -fx-border-width: 2px;");
 		pProduct.getChildren().addAll(vbDescProduct, vbRegProduct);
 		
-		//TODO quando der insert, deve retornar ao store
-		btnConf.setOnAction(e -> insertProduct(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage));
+		setBidings(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDesc, lblMessage);
+		
+		btnConf.setOnAction(e -> insertProduct());
 		
 		//------------mudança de scene---------------
 		imgViewGoBack.setOnMouseClicked(e -> toStore());
@@ -156,22 +162,21 @@ public class WinRegProductConstructor implements GenericWindownInterface
 	
 	private void toLogin() 
 	{
-		ChangeSceneController.changeScene(SceneName.LOGIN, pWin);
+		changeSceneController.changeScene(SceneName.LOGIN, pWin);
 	}
 	
 	private void toAccount()
 	{
-		ChangeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
+		changeSceneController.changeScene(SceneName.ACCOUNT_MENU, pWin);
 	}
 	
 	private void toStore()
 	{
-		ChangeSceneController.changeScene(SceneName.STORE, pWin);
+		changeSceneController.changeScene(SceneName.STORE, pWin);
 	}
 	
-	private void insertProduct(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
+	private void insertProduct()
 	{
-		ProductController pControll = new ProductController(tfName, tfPrice, tfInStock, tfShipping, tfCategory, taDescription, lblMessage);
 		
 		try {
 			if(pControll.insert())
@@ -204,6 +209,17 @@ public class WinRegProductConstructor implements GenericWindownInterface
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private void setBidings(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage)
+	{
+		Bindings.bindBidirectional(tfName.textProperty(), pControll.getNameProperty());
+		Bindings.bindBidirectional(tfPrice.textProperty(), pControll.getPriceProperty());
+		Bindings.bindBidirectional(tfInStock.textProperty(), pControll.getInStockProperty());
+		Bindings.bindBidirectional(tfShipping.textProperty(), pControll.getShippingProperty());
+		Bindings.bindBidirectional(tfCategory.textProperty(), pControll.getCategoryProperty());
+		Bindings.bindBidirectional(taDescription.textProperty(), pControll.getDescriptionProperty());
+		Bindings.bindBidirectional(lblMessage.textProperty(), pControll.getMessageProperty());
 	}
 	
 }
