@@ -3,53 +3,22 @@ package control;
 import java.sql.SQLException;
 import java.util.List;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import model.Product;
 import persistence.GenericDao;
 import persistence.ProductDao;
 
 public class ProductController
 {
-	private TextField tfName;
-	private TextField tfPrice;
-	private TextField tfInStock;
-	private TextField tfShipping;
-	private TextField tfCategory;
-	private TextArea taDescription;
-	private Label lblMessage;
-	
-	/**
-	 * Construtor da classe ProductController para caso não precise de parâmetros.
-	 */
-	public ProductController()
-	{
-		
-	}
-	
-	/**
-	 * Construtor da classe ProductController para caso precise de parâmetros.
-	 * @param tfName TextField que contém o nome do produto.
-	 * @param tfPrice TextField que contém o preço do produto.
-	 * @param tfInStock TextField que contém o estoque do produto.
-	 * @param tfShipping TextField que contém o frete do produto.
-	 * @param tfCategory TextField que contém a categoria do produto.
-	 * @param taDescription TextField que contém a descrição do produto.
-	 * @param lblMessage Mensagem de aviso da tela.
-	 */
-	public ProductController(TextField tfName, TextField tfPrice, TextField tfInStock, TextField tfShipping, TextField tfCategory, TextArea taDescription, Label lblMessage) 
-	{
-		this.tfName = tfName;
-		this.tfPrice = tfPrice;
-		this.tfInStock = tfInStock;
-		this.tfShipping = tfShipping;
-		this.tfCategory = tfCategory;
-		this.taDescription = taDescription;
-		this.lblMessage = lblMessage;
-	}
+	private StringProperty spName = new SimpleStringProperty("");
+	private StringProperty spPrice = new SimpleStringProperty("");
+	private StringProperty spInStock = new SimpleStringProperty("");
+	private StringProperty spShipping = new SimpleStringProperty("");
+	private StringProperty spCategory = new SimpleStringProperty("");
+	private StringProperty spDescription = new SimpleStringProperty("");
+	private StringProperty lblMessage = new SimpleStringProperty("");
 	
 	/**
 	 * Faz a inserção do produto no banco de dados.
@@ -67,12 +36,12 @@ public class ProductController
 		ProductDao pDao = new ProductDao(gDao);
 		
 		Product p = new Product();
-		p.setName(tfName.getText());
-		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
-		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
-		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
-		p.setCategory(tfCategory.getText());
-		p.setDescription(taDescription.getText());
+		p.setName(spName.get());
+		p.setPrice(Double.parseDouble(spPrice.get().replace(",", ".")));
+		p.setTotalStock(Integer.parseInt(spInStock.get()));
+		p.setShipping(Double.parseDouble(spShipping.get().replace(",", ".")));
+		p.setCategory(spCategory.get());
+		p.setDescription(spDescription.get());
 		
 		return pDao.insert(p);
 	}
@@ -82,7 +51,7 @@ public class ProductController
 	 * @return True para tenha alterado o produto, false caso o contrário.
 	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
 	 */
-	public boolean update() throws SQLException
+	public boolean update(IntegerProperty ipCod) throws SQLException
 	{
 		if(checkValues())
 		{
@@ -93,17 +62,32 @@ public class ProductController
 		ProductDao pDao = new ProductDao(gDao);
 		
 		Product p = new Product();
-		p.setName(tfName.getText());
-		p.setPrice(Double.parseDouble(tfPrice.getText().replace(",", ".")));
-		p.setTotalStock(Integer.parseInt(tfInStock.getText()));
-		p.setShipping(Double.parseDouble(tfShipping.getText().replace(",", ".")));
-		p.setCategory(tfCategory.getText());
-		p.setDescription(taDescription.getText());
-		//TODO falta setCod ainda
-		
+		p.setCod(ipCod.get());
+		p.setName(spName.get());
+		p.setPrice(Double.parseDouble(spPrice.get().replace(",", ".")));
+		p.setTotalStock(Integer.parseInt(spInStock.get()));
+		p.setShipping(Double.parseDouble(spShipping.get().replace(",", ".")));
+		p.setCategory(spCategory.get());
+		p.setDescription(spDescription.get());
 		
 		return pDao.update(p);
 	}
+	
+	public void setValueEdit(IntegerProperty ipCod)
+	{
+		Product p = new Product();
+		
+		p.setCod(ipCod.get());
+		p = consulta(p);
+		
+		spName.set(p.getName());
+		spPrice.set(String.valueOf(p.getPrice()));
+		spInStock.set(String.valueOf(p.getTotalStock()));
+		spShipping.set(String.valueOf(p.getShipping()));
+		spCategory.set(p.getCategory());
+		spDescription.set(p.getDescription());
+	}
+	
 	/**
 	 * Busca a lista de produto para o usuário na pagina principal.
 	 * @return Lista de produto.
@@ -162,38 +146,52 @@ public class ProductController
 	// \\d+(\\.\\d+)? = apenas numeros e casas depois da virgula, após a virgula é opcional "?"
 	private boolean checkValues() //checagem para não enviar valores errados para a DB
 	{
-		if(tfName.getText().trim().isBlank())
+		if(spName.get().trim().isBlank())
 		{
-			lblMessage.setText("Nome Inválido");
+			lblMessage.set("Nome Inválido");
 			return true;
 		}
 		
-		if(tfPrice.getText().trim().isBlank() || !tfPrice.getText().replace(",", ".").matches("\\d+(\\.\\d+)?"))
+		if(spPrice.get().trim().isBlank() || !spPrice.get().replace(",", ".").matches("\\d+(\\.\\d+)?"))
 		{
-			lblMessage.setText("Preço Inválido");
+			lblMessage.set("Preço Inválido");
 			return true;
 		}
 		
-		if(tfInStock.getText().trim().isBlank() || !tfInStock.getText().matches("\\d+"))
+		if(spInStock.get().trim().isBlank() || !spInStock.get().matches("\\d+"))
 		{
-			lblMessage.setText("Estoque Inválido");
+			lblMessage.set("Estoque Inválido");
 			return true;
 		}
 		
-		if(tfShipping.getText().trim().isBlank() || !tfShipping.getText().replace(",", ".").matches("\\d+(\\.\\d+)?"))
+		if(spShipping.get().trim().isBlank() || !spShipping.get().replace(",", ".").matches("\\d+(\\.\\d+)?"))
 		{
-			lblMessage.setText("Frete Inválido");
+			lblMessage.set("Frete Inválido");
 			return true;
 		}
 		
-		if(taDescription.getText().trim().isBlank())
+		if(spDescription.get().trim().isBlank())
 		{
-			lblMessage.setText("Descrição Inválida");
+			lblMessage.set("Descrição Inválida");
 			return true;
 		}
 		
 		return false;
 	}
 
+	public StringProperty getNameProperty() { return spName; }
+	
+	public StringProperty getPriceProperty() { return spPrice; }
+	
+	public StringProperty getInStockProperty() { return spInStock; }
+	
+	public StringProperty getShippingProperty() { return spShipping; }
+	
+	public StringProperty getCategoryProperty() { return spCategory; }
+	
+	public StringProperty getDescriptionProperty() { return spDescription; }
+
+	public StringProperty getMessageProperty() { return lblMessage; }
+	
 	
 }
