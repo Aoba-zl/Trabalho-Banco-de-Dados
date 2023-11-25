@@ -103,6 +103,31 @@ public class WinAddressClientConstructor
             openPopUp("Tem certeza?");
         });
 
+        tfCep.setOnKeyTyped(event ->
+        {
+            if (tfCep.getText().length() < 8)
+            {
+                tfCityEstate.setText("");
+                tfNeighborhood.setText("");
+                tfStreet.setText("");
+                setTextFieldErrorStyle(tfCep);
+            }
+            if (actionValue() == ("add") && cepLengthIsValid())
+            {
+                try
+                {
+                    control.completeAddressByCep();
+                    setTextFieldNormalStyle(tfCep);
+                }
+                catch (Exception e)
+                {
+                    if (e.getMessage().contains("Invalid Cep"))
+                        System.out.println("AHAAA");
+                    setTextFieldErrorStyle(tfCep);
+                }
+            }
+        });
+
         returnPopUp.addListener(((observable, oldValue, newValue) ->
         {
             if (newValue)
@@ -184,12 +209,12 @@ public class WinAddressClientConstructor
         tfStreet       = new TextField();
         tfNumber       = new TextField();
         tfComplement   = new TextField();
+        tfCityEstate.setDisable(true);
+        tfNeighborhood.setDisable(true);
+        tfStreet.setDisable(true);
         if (actionValue() == ("edit"))
         {
             tfCep.setDisable(true);
-            tfCityEstate.setDisable(true);
-            tfNeighborhood.setDisable(true);
-            tfStreet.setDisable(true);
             tfNumber.setDisable(true);
         }
 
@@ -228,6 +253,25 @@ public class WinAddressClientConstructor
         isMenuPopupActive.setValue(false);
         messageMenuPopUp.setValue(message);
         isMenuPopupActive.setValue(true);
+    }
+
+    private boolean cepLengthIsValid()
+    {
+        String cep = tfCep.getText();
+        int len = cep.length();
+        if (len < 8)
+            return false;
+        char hifenChar = cep.charAt(5);
+        return (hifenChar == '-' && len == 9) || (hifenChar != '-' && len == 8);
+    }
+
+    private void setTextFieldErrorStyle(TextField tf)
+    {
+        tf.setStyle("-fx-font-style: italic; -fx-text-fill: red");
+    }
+    private void setTextFieldNormalStyle(TextField tf)
+    {
+        tf.setStyle("");
     }
 
     /**

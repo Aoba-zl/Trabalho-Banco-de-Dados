@@ -14,6 +14,7 @@ import model.Store;
 import persistence.AddressDao;
 import persistence.ClientAddressDao;
 import persistence.GenericDao;
+import utils.ServicoDeCep;
 
 /**
  * Controlador responsável pelas operações dos endereços do usuário.
@@ -54,6 +55,20 @@ public class AddressMenuController
 		return null;
 	}
 
+	public void completeAddressByCep() throws Exception
+	{
+		Address addressCli = ServicoDeCep.buscaEnderecoPelo(getCepValue().replace("-", ""));
+
+		if (addressCli.getCep() == "" || addressCli.getCep() == null)
+			throw new Exception("Invalid Cep");
+
+		cep.setValue(addressCli.getCep());
+		neighborhood.setValue(addressCli.getNeighborhood());
+		street.setValue(addressCli.getStreet());
+		String city = addressCli.getCity();
+		String estate = addressCli.getEstate();
+		cityEstate.setValue(city + " ("+ estate +")");
+	}
 
 	/**
 	 * Preenche os campos de endereço do cliente.
