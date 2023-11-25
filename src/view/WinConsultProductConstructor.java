@@ -26,7 +26,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
 	private ProductController pCon = new ProductController();
 	private RegisterUserController cCon = new RegisterUserController();
-	private static int quant = 0;
+	private static int quant = 1;
 	private FlowPane fpCategory = new FlowPane();
 	
 	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
