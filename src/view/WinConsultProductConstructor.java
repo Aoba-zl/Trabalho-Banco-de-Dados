@@ -1,5 +1,6 @@
 package view;
 
+import control.CartController;
 import control.ChangeSceneController;
 import control.ProductController;
 import control.RegisterUserController;
@@ -17,6 +18,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Client;
+import model.Item;
 import model.Product;
 import model.Store;
 import utils.SceneName;
@@ -24,11 +27,13 @@ import utils.UserSession;
 
 public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
+	private CartController cCon = new CartController();
 	private ProductController pCon = new ProductController();
-	private RegisterUserController cCon = new RegisterUserController();
+	private RegisterUserController uCon = new RegisterUserController();
 	private static int quant = 0;
 	private FlowPane fpCategory = new FlowPane();
-	
+	private Product product = new Product();
+	private Store store = new Store();
 	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
@@ -44,12 +49,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		paneConsult.relocate(5, 5);
 		
 		// ----- Carregando ----- //
-		Product product = new Product();
+
 		product.setCod(ipCod.get());
 		product=pCon.consulta(product);
-		Store store = new Store();
 		store.setLogin(product.getLogin());
-		store=cCon.consultStore(store);
+		store= uCon.consultStore(store);
 		// ----- Creating Info Bord ----- //
 		
 		Pane paneInfo = new Pane();
@@ -224,12 +228,35 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toCart(){
-		fpCategory.getChildren().clear();
-		changeSceneController.changeScene(SceneName.CART, this.pWin);
+		if (quant != 0) {
+			// --- Criando Order --- //
+			//Item item = new Item(product, quant);
+			//Client client = new Client(UserSession.getUserName());
+			//cCon.createOrder(client, item);
+			// --- Mandando codigo --- //
+			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
+			changeSceneController.setCodValue(codProperty); 
+			// -----
+			quant = 0;
+			fpCategory.getChildren().clear();
+			changeSceneController.changeScene(SceneName.CART, this.pWin);
+		}
 	}
 	
-	private void toDetails() { //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
-		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+	private void toDetails() {
+		if (quant != 0) {
+			// --- Criando Order --- //
+			//Item item = new Item(product, quant);
+			//Client client = new Client(UserSession.getUserName());
+			//cCon.createOrder(client, item);
+			// --- Mandando codigo --- //
+			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
+			changeSceneController.setCodValue(codProperty);
+			// -----
+			quant = 0;
+			fpCategory.getChildren().clear();
+			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+		}
 	}
 	
 	private void setBtnBackImage(Button btnBack) {

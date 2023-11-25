@@ -1,32 +1,30 @@
 package view;
 import control.PlaceOrderController;
+import control.ProductController;
 import utils.SceneName;
 import control.ChangeSceneController;
 import control.CartController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import model.Cart;
 import model.Item;
-import model.Order;
 import model.Product;
-
-import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * Esta é uma classe de Boundary que representa a tela do carrinho de compra.
  */
 public class WinShoppingCartConstructor implements GenericWindownInterface {
 	Pane pWin;
-	
+	private IntegerProperty ipCod = new SimpleIntegerProperty(0); //id do produto
     private final Label lblTittle= new Label("Carrinho");
     private final Label lblTotalPrice= new Label("Total:");
     private final Label lblPortage= new Label("Frete:");
@@ -35,8 +33,10 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     private final Button btnPlaceOrder= new Button("Realizar Pedido");
     private final Button btnMinus= new Button("-");
     private final Button btnPlus= new Button("+");
-
-
+    //
+	private ProductController pCon = new ProductController();
+	private Product product = new Product();
+    //
     private final TableView<Item> tableCart= new TableView<>();
 
     CartController controllerCart= new CartController();
@@ -57,6 +57,10 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
      * @param pane O painel usado para inserir o elementos.
      */
     public void addElements(Pane pane) {
+		// ----- Carregando ----- // 
+		product.setCod(ipCod.get()); // Procurando e carregando o produto mandado
+		product = pCon.consulta(product); // Este product é o produto mandado
+		//
     	this.pWin = pane;
 
         Button btnReturn= new Button();
@@ -192,15 +196,15 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
 
     private void populateTable(){
         columnProductName.setCellValueFactory(itemData -> {
-            Product product = itemData.getValue().getProduct();
+        	Product product = itemData.getValue().getProduct();
             String nameProduct = String.valueOf(product.getName());
-            return new ReadOnlyStringWrapper(nameProduct);
+            return new ReadOnlyStringWrapper(product.getName());
         });
 
         columnDescription.setCellValueFactory(itemData -> {
-            Product product = itemData.getValue().getProduct();
+        	Product product = itemData.getValue().getProduct();
             String productDescription = String.valueOf(product.getDescription());
-            return new ReadOnlyStringWrapper(productDescription);
+            return new ReadOnlyStringWrapper(product.getDescription());
         });
 
         columnQuantity.setCellValueFactory(itemData -> {
@@ -279,4 +283,5 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         controllerCart.getListCart().clear();
 		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 	}
+    public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); } // set do id do produto
 }
