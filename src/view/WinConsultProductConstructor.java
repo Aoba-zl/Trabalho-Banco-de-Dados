@@ -229,31 +229,31 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	
 	private void toCart(){
 		if (quant != 0) {
-			Item item = new Item(product, quant);
-			quant = 0;
 			// --- Criando Order --- //
-			Client client = new Client(UserSession.getUserName());
-			cCon.createOrder(client, item);
+			//Item item = new Item(product, quant);
+			//Client client = new Client(UserSession.getUserName());
+			//cCon.createOrder(client, item);
 			// --- Mandando codigo --- //
 			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
 			changeSceneController.setCodValue(codProperty); 
 			// -----
+			quant = 0;
 			fpCategory.getChildren().clear();
 			changeSceneController.changeScene(SceneName.CART, this.pWin);
 		}
 	}
 	
-	private void toDetails() { //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
+	private void toDetails() {
 		if (quant != 0) {
-			Item item = new Item(product, quant);
-			quant = 0;
 			// --- Criando Order --- //
-			Client client = new Client(UserSession.getUserName());
-			cCon.createOrder(client, item);
+			//Item item = new Item(product, quant);
+			//Client client = new Client(UserSession.getUserName());
+			//cCon.createOrder(client, item);
 			// --- Mandando codigo --- //
 			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
 			changeSceneController.setCodValue(codProperty);
 			// -----
+			quant = 0;
 			fpCategory.getChildren().clear();
 			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
 		}

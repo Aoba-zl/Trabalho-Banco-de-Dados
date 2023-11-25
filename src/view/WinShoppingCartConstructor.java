@@ -196,14 +196,14 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
 
     private void populateTable(){
         columnProductName.setCellValueFactory(itemData -> {
-            //product = itemData.getValue().getProduct();
-            //String nameProduct = String.valueOf(product.getName());
+        	Product product = itemData.getValue().getProduct();
+            String nameProduct = String.valueOf(product.getName());
             return new ReadOnlyStringWrapper(product.getName());
         });
 
         columnDescription.setCellValueFactory(itemData -> {
-            //product = itemData.getValue().getProduct();
-            //String productDescription = String.valueOf(product.getDescription());
+        	Product product = itemData.getValue().getProduct();
+            String productDescription = String.valueOf(product.getDescription());
             return new ReadOnlyStringWrapper(product.getDescription());
         });
 
