@@ -9,20 +9,22 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.IntegerStringConverter;
 import model.ClientAddress;
 import utils.UserSession;
-
-import java.sql.SQLException;
 
 /**
  * Classe responsável por construir e adicionar os elementos a interface gráfica de
  * gerenciamento de um endereço espacífico do cliente.
  */
+@SuppressWarnings("ALL")
 public class WinAddressClientConstructor
 {
     private String textBtnEditAccount;
+    private Label lblErrorMsg;
     private TextField tfName, tfCep, tfCityEstate, tfNeighborhood,
             tfStreet, tfNumber, tfComplement;
     private Button btnEditAccount, btnCancel;
@@ -36,6 +38,7 @@ public class WinAddressClientConstructor
     private final String userName;
     private final AddressMenuController control = new AddressMenuController();
     private ClientAddress selectedAddress;
+    private String errorMsg = "";
 
     /**
      * Construtor da classe.
@@ -66,9 +69,19 @@ public class WinAddressClientConstructor
         setEvents();
         setPropertiesConnections();
         if (action.getValue() == ("edit"))
+        {
             control.fillClientAddressFields(this.selectedAddress);
+            setTextFieldNormalStyle(tfNumber);
+            setTextFieldNormalStyle(tfCep);
+            setTextFieldNormalStyle(tfName);
+        }
         else if (actionValue() == ("add"))
+        {
+            setTextFieldErrorStyle(tfCep);
+            setTextFieldErrorStyle(tfNumber);
+            setTextFieldErrorStyle(tfName);
             clearFields();
+        }
     }
 
     private void clearFields()
@@ -103,10 +116,41 @@ public class WinAddressClientConstructor
             openPopUp("Tem certeza?");
         });
 
+        tfNumber.setOnKeyTyped(event ->
+        {
+            if (tfNumber.getText().length() > 0 && tfNumber.getText().length() <= 7)
+                setTextFieldNormalStyle(tfNumber);
+            else
+                setTextFieldErrorStyle(tfNumber);
+            if (tfNumber.getText().length() > 7)
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("Número de Porta inválido!");
+            }
+            else
+                lblErrorMsg.setVisible(false);
+        });
+
+        tfName.setOnKeyTyped(event ->
+        {
+            if (tfName.getText().length() > 0 && tfName.getText().length() <= 100)
+                setTextFieldNormalStyle(tfName);
+            else
+                setTextFieldErrorStyle(tfName);
+            if (tfName.getText().length() > 100)
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("Nome de endereço INVÁLIDO!");
+            }
+            else
+                lblErrorMsg.setVisible(false);
+        });
+
         tfCep.setOnKeyTyped(event ->
         {
-            if (tfCep.getText().length() < 8)
+            if (!cepLengthIsValid())
             {
+                lblErrorMsg.setVisible(false);
                 tfCityEstate.setText("");
                 tfNeighborhood.setText("");
                 tfStreet.setText("");
@@ -116,13 +160,16 @@ public class WinAddressClientConstructor
             {
                 try
                 {
+                    lblErrorMsg.setVisible(false);
                     control.completeAddressByCep();
                     setTextFieldNormalStyle(tfCep);
                 }
                 catch (Exception e)
                 {
+                    lblErrorMsg.setVisible(true);
+                    lblErrorMsg.setText("Erro com endereço!");
                     if (e.getMessage().contains("Invalid Cep"))
-                        System.out.println("AHAAA");
+                        lblErrorMsg.setText("CEP Invalido!!!");
                     setTextFieldErrorStyle(tfCep);
                 }
             }
@@ -155,24 +202,30 @@ public class WinAddressClientConstructor
                 else if (actionValue() == ("add"))
                 {
                     String msg = "Endereço adicionado com Sucesso!";
-                    try
+                    if (addressIsValid())
                     {
-                        ClientAddress newaddr = control.newClientAddress(userName);
-                        selectedAddress.setName(newaddr.getName());
-                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
-                        selectedAddress.setStreet(newaddr.getStreet());
-                        selectedAddress.setEstate(newaddr.getEstate());
-                        selectedAddress.setCity(newaddr.getCity());
-                        selectedAddress.setCep(newaddr.getCep());
-                        selectedAddress.setComplement(newaddr.getComplement());
-                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
-                        editionMode.setValue(false);
+                        try
+                        {
+                            ClientAddress newaddr = control.newClientAddress(userName);
+                            selectedAddress.setName(newaddr.getName());
+                            selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                            selectedAddress.setStreet(newaddr.getStreet());
+                            selectedAddress.setEstate(newaddr.getEstate());
+                            selectedAddress.setCity(newaddr.getCity());
+                            selectedAddress.setCep(newaddr.getCep());
+                            selectedAddress.setComplement(newaddr.getComplement());
+                            selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+                            editionMode.setValue(false);
+                        }
+                        catch (Exception e)
+                        {
+                            msg = "Houve um erro inesperado.\nPor favor, tente novamente";
+                            if (e.getMessage().contains("Violação da restrição PRIMARY KEY"))
+                                msg = "Endereço Duplicado!\nPor favor, tente novamente";
+                        }
                     }
-                    catch (SQLException e)
-                    {
-                        msg = "Houve um erro inesperado.\\nPor favor, tente novamente";
-                        throw new RuntimeException(e);
-                    }
+                    else
+                        msg = "Dados Incorretos.\nPor favor, tente novamente";
                     openPopUp(msg);
                 }
             }
@@ -202,6 +255,10 @@ public class WinAddressClientConstructor
         Label lblNumber       = new Label("Numero da Porta:");
         Label lblComplement   = new Label("Complemento:");
 
+        lblErrorMsg     = new Label("ERRO");
+        lblErrorMsg.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-text-fill: red");
+        lblErrorMsg.setVisible(false);
+
         tfName         = new TextField();
         tfCep          = new TextField();
         tfCityEstate = new TextField();
@@ -209,6 +266,27 @@ public class WinAddressClientConstructor
         tfStreet       = new TextField();
         tfNumber       = new TextField();
         tfComplement   = new TextField();
+
+        TextFormatter<Integer> textFormatterNumericCEP = new TextFormatter<>(new IntegerStringConverter(), 0,
+                change -> {
+                    String newText = change.getControlNewText();
+                    if (newText.matches("\\d*")) {
+                        return change;
+                    }
+                    return null;
+                });
+        TextFormatter<Integer> textFormatterNumericDoorNmbr = new TextFormatter<>(new IntegerStringConverter(), 0,
+                change -> {
+                    String newText = change.getControlNewText();
+                    if (newText.matches("\\d*")) {
+                        return change;
+                    }
+                    return null;
+                });
+
+        tfCep.setTextFormatter(textFormatterNumericCEP);
+        tfNumber.setTextFormatter(textFormatterNumericDoorNmbr);
+
         tfCityEstate.setDisable(true);
         tfNeighborhood.setDisable(true);
         tfStreet.setDisable(true);
@@ -245,7 +323,7 @@ public class WinAddressClientConstructor
         bpButtons.setRight(btnCancel);
 
         mainBox.getChildren().addAll(lblTitle, bpName, bpCep, bpEstateCity, bpNeighborhood,
-                bpStreet, bpNumber, bpComplemet, bpButtons);
+                bpStreet, bpNumber, bpComplemet, bpButtons, lblErrorMsg);
     }
 
     private void openPopUp(String message)
@@ -259,10 +337,7 @@ public class WinAddressClientConstructor
     {
         String cep = tfCep.getText();
         int len = cep.length();
-        if (len < 8)
-            return false;
-        char hifenChar = cep.charAt(5);
-        return (hifenChar == '-' && len == 9) || (hifenChar != '-' && len == 8);
+        return (len == 8);
     }
 
     private void setTextFieldErrorStyle(TextField tf)
@@ -272,6 +347,14 @@ public class WinAddressClientConstructor
     private void setTextFieldNormalStyle(TextField tf)
     {
         tf.setStyle("");
+    }
+
+    private boolean addressIsValid()
+    {
+        int cep = tfCep.getStyle().length();
+        int name = tfName.getStyle().length();
+        int doorNumber = tfNumber.getStyle().length();
+        return (cep == 0 && name == 0 && doorNumber == 0);
     }
 
     /**

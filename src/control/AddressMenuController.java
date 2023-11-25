@@ -55,6 +55,11 @@ public class AddressMenuController
 		return null;
 	}
 
+	/**
+	 * Completa os campos de endereço (com base no CEP fornecido.
+	 *
+	 * @throws Exception Lança uma exceção em caso de CEP inválido ou se ocorrer um erro durante a busca do endereço.
+	 */
 	public void completeAddressByCep() throws Exception
 	{
 		Address addressCli = ServicoDeCep.buscaEnderecoPelo(getCepValue().replace("-", ""));
@@ -62,7 +67,7 @@ public class AddressMenuController
 		if (addressCli.getCep() == "" || addressCli.getCep() == null)
 			throw new Exception("Invalid Cep");
 
-		cep.setValue(addressCli.getCep());
+		cep.setValue(addressCli.getCep().replace("-", ""));
 		neighborhood.setValue(addressCli.getNeighborhood());
 		street.setValue(addressCli.getStreet());
 		String city = addressCli.getCity();
@@ -218,7 +223,7 @@ public class AddressMenuController
 		String estate = getCityEstateValue().substring(getCityEstateValue().indexOf('(')+1,
 				getCityEstateValue().indexOf(')'));
 
-		Address address = new Address(getCepValue(), getStreetValue(), getComplementValue(), getNeighborhoodValue()
+		Address address = new Address(getCepValue().replace("-", ""), getStreetValue(), getComplementValue(), getNeighborhoodValue()
 				, estate, city, getNumberValue());
 		ClientAddress clientAddress = new ClientAddress(address, getNameValue());
 
