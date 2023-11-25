@@ -30,7 +30,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private CartController cCon = new CartController();
 	private ProductController pCon = new ProductController();
 	private RegisterUserController uCon = new RegisterUserController();
-	private static int quant = 0;
+	private static int quant = 1;
 	private FlowPane fpCategory = new FlowPane();
 	private Product product = new Product();
 	private Store store = new Store();
