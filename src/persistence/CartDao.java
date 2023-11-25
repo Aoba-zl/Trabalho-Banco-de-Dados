@@ -208,6 +208,11 @@ public class CartDao {
         }
     }
 
+    /**
+     * Obtêm o Id de um pedido de um determinado cliente.
+     * @param login O login do cliente.
+     * @return O Id do pedido.
+     */
     public Order getIdOrder(String login){
         Order order= new Order();
         try {

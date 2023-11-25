@@ -110,7 +110,9 @@ public class WinAllAddressClientConstructor implements GerericAccountMenuWinInte
                 }
                 if (action.getValue() == "add")
                 {
-                    observableAddressList.add(selectedAddress);
+                    action.setValue(null);
+                    if (selectedAddress.getName() != null)
+                        observableAddressList.add(selectedAddress);
                 }
             }
             if (!editionMode.getValue())

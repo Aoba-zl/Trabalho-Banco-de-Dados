@@ -41,7 +41,7 @@ public class PlaceOrderController {
 
 
     /**
-     * Carrega um lista de items para tela detalhes de compra e seus Labels
+     * Carrega uma lista e labels da tela de compra.
      */
     public void populateWinPurchase(){
         order= purchaseDetailsDao.selectOrder(UserSession.getUserName());
@@ -116,21 +116,28 @@ public class PlaceOrderController {
         purchaseDetailsDao.insertOrder(UserSession.getUserName(), item);
     }
 
-    public Client getClient(){
-        client.setLogin(UserSession.getUserName());
-        return client;
-    }
 
+    /**
+     * Obtêm a lista de items na compra.
+     * @return A lista de items
+     */
     public ObservableList<Item> getItems() {
         return itemsList;
     }
 
 
-
+    /**
+     * Liga o campo de frete com o controller.
+     * @return O campo de frete.
+     */
     public StringProperty portageProperty() {
         return portage;
     }
 
+    /**
+     * Liga o campo de valor total com o controller.
+     * @return O campo de valor total.
+     */
     public StringProperty totalPurchaseProperty() {
         return totalPurchase;
     }
