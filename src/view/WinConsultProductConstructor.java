@@ -126,7 +126,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			btnMinus.setPrefWidth(24.1);
 			btnMinus.addEventFilter(MouseEvent.MOUSE_CLICKED,
 	         (MouseEvent ev) -> {
-	        	 if (quant > 0) {
+	        	 if (quant > 1) {
 	        		 addQuant(-1,txQuantity);
 	        	 }
 	         });
