@@ -179,29 +179,34 @@ public class WinAddressClientConstructor
         {
             if (newValue)
             {
+                String msg;
                 if (actionValue() == ("edit"))
                 {
-                    ClientAddress newaddr = control.editClientAddress(selectedAddress, userName);
-                    if (newaddr == null)
-                        openPopUp("Houve um erro inesperado.\nPor favor, tente novamente");
-                    else
+                    if (addressIsValid())
                     {
-                        selectedAddress.setName(newaddr.getName());
-                        selectedAddress.setNeighborhood(newaddr.getNeighborhood());
-                        selectedAddress.setStreet(newaddr.getStreet());
-                        selectedAddress.setEstate(newaddr.getEstate());
-                        selectedAddress.setCity(newaddr.getCity());
-                        selectedAddress.setCep(newaddr.getCep());
-                        selectedAddress.setComplement(newaddr.getComplement());
-                        selectedAddress.setDoorNumber(newaddr.getDoorNumber());
+                        ClientAddress newaddr = control.editClientAddress(selectedAddress, userName);
+                        msg = "Editado com Sucesso";
+                        if (newaddr != null)
+                        {
+                            selectedAddress.setName(newaddr.getName());
+                            selectedAddress.setNeighborhood(newaddr.getNeighborhood());
+                            selectedAddress.setStreet(newaddr.getStreet());
+                            selectedAddress.setEstate(newaddr.getEstate());
+                            selectedAddress.setCity(newaddr.getCity());
+                            selectedAddress.setCep(newaddr.getCep());
+                            selectedAddress.setComplement(newaddr.getComplement());
+                            selectedAddress.setDoorNumber(newaddr.getDoorNumber());
 
-                        openPopUp("Editado com Sucesso");
-                        editionMode.setValue(false);
+                            editionMode.setValue(false);
+                        }
                     }
+                    else
+                        msg = "Dados Incorretos.\nPor favor, tente novamente";
+                    openPopUp(msg);
                 }
                 else if (actionValue() == ("add"))
                 {
-                    String msg = "Endereço adicionado com Sucesso!";
+                    msg = "Endereço adicionado com Sucesso!";
                     if (addressIsValid())
                     {
                         try
