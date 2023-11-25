@@ -22,8 +22,10 @@ import java.sql.SQLException;
  * gerenciamento de conta do cliente.
  * Implementa a interface GerericAccountMenuWinInterface.
  */
+@SuppressWarnings("ALL")
 public class WinAccountClientConstructor implements GerericAccountMenuWinInterface
 {
+    private Label lblErrorMsg;
     private TextField tfLogin, tfCpf, tfBirthDate, tfOtherSex, tfName, tfEmail, tfPhone;
     private final StringProperty sexText = new SimpleStringProperty("");
     private ToggleGroup group;
@@ -60,7 +62,31 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         setElements();
         setEvents();
         setPropertiesConnections();
+        completeFields();
+    }
+
+    private void completeFields()
+    {
         control.completeClientFields(userName);
+        setSexRDBtn();
+        lblErrorMsg.setVisible(false);
+        setTextFieldNormalStyle(tfPhone);
+        setTextFieldNormalStyle(tfOtherSex);
+        setTextFieldNormalStyle(tfName);
+        setTextFieldNormalStyle(tfEmail);
+    }
+
+    private void setSexRDBtn()
+    {
+        if (sexText.getValue().toUpperCase().charAt(0) == 'M')
+            rbMale.setSelected(true);
+        else if (sexText.getValue().toUpperCase().charAt(0) == 'F')
+            rbFemale.setSelected(true);
+        else
+        {
+            rbOther.setSelected(true);
+            tfOtherSex.setText(sexText.getValue());
+        }
     }
     
     private void setEvents()
@@ -72,6 +98,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
             changeCancelDeleteButtons(btnDeleteAccount);
             setDisableEditableFields(true);
             action = null;
+            completeFields();
         });
 
         btnDeleteAccount.setOnMouseClicked(
@@ -82,9 +109,16 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
             String msg = null;
             if (newValue && action == "edit")
             {
-                setDisableEditableFields(true);
-                changeCancelDeleteButtons(btnDeleteAccount);
-                control.editAccount(userName);
+                msg = "Dados editados com sucesso!";
+                if (fieldsAreValid())
+                {
+                    setDisableEditableFields(true);
+                    changeCancelDeleteButtons(btnDeleteAccount);
+                    control.editAccount(userName);
+                }
+                else
+                    msg = "Dados Incorretos.\nPor favor, tente novamente.";
+                openPopUp(msg);
             }
             else if (newValue && action == "delete")
             {
@@ -108,6 +142,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
             action = null;
         }));
 
+
         rbMale.selectedProperty().addListener(
                 (observable, oldValue, newValue) -> sexText.setValue("masculino"));
         rbFemale.selectedProperty().addListener(
@@ -116,7 +151,69 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         {
         	tfOtherSex.setVisible(newValue);
         });
-        
+
+        tfName.setOnKeyTyped(event ->
+        {
+            int len = tfName.getText().length();
+
+            if (len > 0)
+                setTextFieldNormalStyle(tfName);
+            else
+                setTextFieldErrorStyle(tfName);
+
+        });
+
+        tfOtherSex.setOnKeyTyped(event ->
+        {
+            int len = tfOtherSex.getText().length();
+            if (rbOther.isSelected())
+            {
+                if (len > 0)
+                    setTextFieldNormalStyle(tfOtherSex);
+                else
+                    setTextFieldErrorStyle(tfOtherSex);
+            }
+
+        });
+
+        tfEmail.setOnKeyTyped(event ->
+        {
+            int len = tfEmail.getText().length();
+            String text = tfEmail.getText();
+
+            if (len > 0 && text.contains("@") &&
+                    text.substring(len-4).contains(".com"))
+            {
+                lblErrorMsg.setVisible(false);
+                setTextFieldNormalStyle(tfEmail);
+            }
+            else
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("e-mail Invalido!");
+                setTextFieldErrorStyle(tfEmail);
+            }
+
+        });
+
+        tfPhone.setOnKeyTyped(event ->
+        {
+            int len = tfPhone.getText().length();
+
+            if (len == 11)
+            {
+                lblErrorMsg.setVisible(false);
+                setTextFieldNormalStyle(tfPhone);
+            }
+            else
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("Telefone Invalido!");
+                setTextFieldErrorStyle(tfPhone);
+            }
+
+        });
+
         sexText.addListener(((observable, oldValue, newValue) ->
         {
         	if (newValue != null && newValue.length() > 1)
@@ -133,6 +230,28 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         	}
         }
         ));
+    }
+
+    private void setTextFieldErrorStyle(TextField tf)
+    {
+        tf.setStyle("-fx-font-style: italic; -fx-text-fill: red");
+    }
+    private void setTextFieldNormalStyle(TextField tf)
+    {
+        tf.setStyle("");
+    }
+
+    private boolean fieldsAreValid()
+    {
+        int socialName = tfName.getStyle().length();
+        int email = tfEmail.getStyle().length();
+        int phone = tfPhone.getStyle().length();
+        int sex = tfOtherSex.getStyle().length();
+
+        if (rbOther.isSelected())
+            return (socialName == 0 && email == 0 && phone == 0 && sex == 0);
+
+        return (socialName == 0 && email == 0 && phone == 0);
     }
 
     private void openPopUp(String message)
@@ -163,6 +282,9 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         Label lblPhone     = new Label("Telefone: ");
         Label lblBirthDate = new Label("Data de Nascimento: ");
         Label lblSex       = new Label("Sexo: ");
+        lblErrorMsg = new Label();
+        lblErrorMsg.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-text-fill: red");
+        lblErrorMsg.setVisible(false);
 
         tfLogin     = new TextField();
         tfLogin.setDisable(true);
@@ -187,6 +309,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
 
         HBox sexs = new HBox(rbMale, rbFemale, rbOther);
         VBox rbSex = new VBox(10, sexs, tfOtherSex);
+        VBox box = new VBox(10,lblSex, lblErrorMsg);
 
         btnDeleteAccount = new Button("Excluir Conta");
         btnDeleteAccount
@@ -211,7 +334,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         bpPhone.setRight(tfPhone);
         bpBirthDate.setLeft(lblBirthDate);
         bpBirthDate.setRight(tfBirthDate);
-        bpSex.setLeft(lblSex);
+        bpSex.setLeft(box);
         bpSex.setRight(rbSex);
 
         bpButtons.setLeft(btnDeleteAccount);
