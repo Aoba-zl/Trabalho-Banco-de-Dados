@@ -24,7 +24,11 @@ public class PurchaseDetailsDao {
         this.genericDao= genericDao;
     }
 
-
+    /**
+     * Consulta um pedido apartir do carrinho ou da tela do produto, de um determinado cliente.
+     * @param login O login do cliente.
+     * @return O pedido.
+     */
     public Order selectOrder(String login){
         Order order= new Order();
         try {

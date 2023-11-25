@@ -17,10 +17,6 @@ import utils.UserSession;
  */
 public class CartController {
     private Client client;
-
-
-    private Cart cart;
-
     private Order order;
 
     private ObservableList<Item> listCart= FXCollections.observableArrayList();
@@ -81,17 +77,13 @@ public class CartController {
         return order;
     }
 
+    /**
+     * Obtêm o Id de um pedido.
+     * @return O pedido.
+     */
     public Order getIdOrder(){
         order= cartDao.getIdOrder(UserSession.getUserName());
         return order;
-    }
-
-    public CartController(Client client) {
-        this.client = client;
-        this.cart = client.getCart();
-    }
-
-    public CartController() {
     }
 
     /**
@@ -122,15 +114,6 @@ public class CartController {
         cartDao.deleteOrder(getIdOrder());
         portage.set("Frete:");
         totalCart.set("Total:");
-    }
-
-    public double calculateTotal (List<Item> select) {
-        double totalSelect = 0;
-        for (int i = 0; i < listCart.size(); i++) {
-            Item item= listCart.get(i);
-            totalSelect+= item.getSubTotal() + item.getProduct().getShipping();
-        }
-        return totalSelect;
     }
 
     /**
