@@ -25,6 +25,7 @@ import java.util.HashMap;
 /**
  * Construtor para a janela de conta do usuário, implementando a interface GenericWindownInterface.
  */
+@SuppressWarnings("ALL")
 public class WinAccountMenuConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
@@ -39,7 +40,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
 
     private final HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
     
-    private ChangeSceneController changeSceneController = new ChangeSceneController();
+    private final ChangeSceneController changeSceneController = new ChangeSceneController();
     /**
      * Adiciona elementos à interface gráfica da janela de conta.
      *
@@ -224,7 +225,13 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             case "storeAddress"      -> openWinAddressStoreMenu();
             case "storeAccountData"  -> openWinStoreMenu();
             case "goBack" -> toPreviousPage();
-            case "orderRecord" -> changeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
+            case "orderRecord" ->
+            {
+                if (UserSession.getUserName() == "client")
+                    changeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
+                else
+                    changeSceneController.changeScene(SceneName.ORDER_HISTORY, pWin);
+            }
         }
     }
 

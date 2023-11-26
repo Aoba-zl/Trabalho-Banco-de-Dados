@@ -38,6 +38,7 @@ public class ChangeSceneController
 		WinPurchaseHistoryConstructor winPurchaseHistory;
 
 		//login store
+		WinOrderHistoryConstructor winOrderHistory;
 		WinStoreConstructor winStore;
 		WinRegProductConstructor winRegProduct;
 		WinAlterProductConstructor winAlterProduct;
@@ -172,6 +173,16 @@ public class ChangeSceneController
 					break;
 					
 				//Store
+				case ORDER_HISTORY:
+					if (!windowns.containsKey(sceneName))
+					{
+						winOrderHistory = new WinOrderHistoryConstructor();
+						windowns.put(sceneName, winOrderHistory);
+					}
+					else
+						winOrderHistory = (WinOrderHistoryConstructor) windowns.get(sceneName);
+					winOrderHistory.addElements(pWin);
+					break;
 				case STORE:
 					if (!windowns.containsKey(sceneName))
 					{
