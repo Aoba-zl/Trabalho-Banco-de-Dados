@@ -229,17 +229,21 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	
 	private void toCart(){
 		if (quant != 0) {
+			
+			
 			// --- Criando Order --- //
 			//Item item = new Item(product, quant);
 			//Client client = new Client(UserSession.getUserName());
 			//cCon.createOrder(client, item);
 			// --- Mandando codigo --- //
-			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
-			changeSceneController.setCodValue(codProperty); 
+			showPopup();
+			
+			//IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
+			//changeSceneController.setCodValue(codProperty); 
 			// -----
-			quant = 1;
-			fpCategory.getChildren().clear();
-			changeSceneController.changeScene(SceneName.CART, this.pWin);
+			//quant = 1;
+			//fpCategory.getChildren().clear();
+			//changeSceneController.changeScene(SceneName.CART, this.pWin);
 		}
 	}
 	
@@ -288,5 +292,31 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
      * Obtém o valor de código de outra tela
      * @param cod O codigo do produto.
      */
+    private void showPopup() {
+		Label concluded = new Label("Item Já Esta No Carrinho");
+        concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+        
+        Button btnConfirmed = new Button("Entendido!");
+        btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px; -fx-font-size: 14px;");
+        
+        VBox vbRegister = new VBox(20);
+        vbRegister.setPrefHeight(100);
+        vbRegister.setPrefWidth(180);
+        vbRegister.setLayoutX(220.5);
+        vbRegister.setLayoutY(156);
+        vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 30px;");
+        vbRegister.getChildren().addAll(concluded, btnConfirmed);
+        
+        Pane pTransp = new Pane();
+        pTransp.setPrefWidth(640);
+        pTransp.setPrefHeight(400);
+        pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+        pTransp.getChildren().add(vbRegister);
+        
+        pWin.getChildren().add(pTransp);
+        btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
+        
+    }
+    
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }
