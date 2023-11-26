@@ -2,6 +2,7 @@ package view;
 
 import control.CartController;
 import control.ChangeSceneController;
+import control.PlaceOrderController;
 import control.ProductController;
 import control.RegisterUserController;
 import javafx.beans.property.IntegerProperty;
@@ -18,6 +19,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Client;
+import model.Item;
+import model.Order;
 import model.Product;
 import model.Store;
 import utils.SceneName;
@@ -28,6 +32,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private CartController cCon = new CartController();
 	private ProductController pCon = new ProductController();
 	private RegisterUserController uCon = new RegisterUserController();
+	private PlaceOrderController poCon = new PlaceOrderController();
 	private static int quant = 1;
 	private FlowPane fpCategory = new FlowPane();
 	private Product product = new Product();
@@ -226,38 +231,38 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toCart(){
-		if (quant != 0) {
-			
-			
-			// --- Criando Order --- //
-			//Item item = new Item(product, quant);
-			//Client client = new Client(UserSession.getUserName());
-			//cCon.createOrder(client, item);
-			// --- Mandando codigo --- //
-			showPopup();
-			
-			//IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
-			//changeSceneController.setCodValue(codProperty); 
-			// -----
-			//quant = 1;
-			//fpCategory.getChildren().clear();
-			//changeSceneController.changeScene(SceneName.CART, this.pWin);
+		if (quant < product.getTotalStock()) {
+			Item item = new Item(product, quant);
+			Client client = new Client(UserSession.getUserName());
+			quant = 1;
+			if(cCon.verifyCart(item, client.getLogin())) {
+				showPopup();
+			} else {
+				Order o =  cCon.getIdOrder();
+				if (o.getId() == null) {
+					cCon.createOrder(client, item);			// --- Criando Order --- //
+				}else {
+					cCon.placeOrder(item);
+				}
+				fpCategory.getChildren().clear();
+				changeSceneController.changeScene(SceneName.CART, this.pWin);
+			}
 		}
 	}
 	
 	private void toDetails() {
-		if (quant != 0) {
-			// --- Criando Order --- //
-			//Item item = new Item(product, quant);
-			//Client client = new Client(UserSession.getUserName());
-			//cCon.createOrder(client, item);
-			// --- Mandando codigo --- //
-			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
-			changeSceneController.setCodValue(codProperty);
-			// -----
+		if (quant < product.getTotalStock()) {
+			Item item = new Item(product, quant);
+			Client client = new Client(UserSession.getUserName());
 			quant = 1;
-			fpCategory.getChildren().clear();
-			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+			if(cCon.verifyCart(item, client.getLogin())) {
+				showPopup();
+			} else {
+	
+				poCon.createOrder(item);
+				fpCategory.getChildren().clear();
+				changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+			}
 		}
 	}
 	

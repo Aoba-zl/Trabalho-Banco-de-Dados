@@ -10,7 +10,6 @@ import model.Order;
 import persistence.CartDao;
 import persistence.GenericDao;
 import persistence.PurchaseDetailsDao;
-import persistence.PurchaseHistoryDao;
 import utils.UserSession;
 
 import java.text.DecimalFormat;
