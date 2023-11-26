@@ -128,7 +128,10 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 		paneCli.getChildren().addAll(hbClient, lblDescription, lblWarning);
 
 		//ChangeScene
-		btnBack.setOnAction(e -> toStoreInfo());
+		btnBack.setOnAction(e -> {
+			lblWarning.setText("");
+			toStoreInfo();
+		});
 		btnNext.setOnAction(e -> toLogin());
 		
 		pane.getChildren().addAll(lblHomePage, paneCli, btnBack, btnNext);

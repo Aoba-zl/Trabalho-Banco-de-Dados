@@ -79,6 +79,18 @@ public class RegisterUserController {
 		}
         return false;
     }
+    
+    public boolean validateEmailLogin(User newEmail) throws SQLException {
+    	GenericDao gDao = new GenericDao();
+    	UserDao uDao = new UserDao(gDao);
+    	User u = new User();
+    	u.setEmail(newEmail.getEmail());
+    	if (uDao.verifyEmail(u)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
 	/**
 	 * Cria e insere um novo endereço de cliente, Usuario e Cliente no banco de dados.
 	 *
@@ -213,10 +225,16 @@ public class RegisterUserController {
     		spWarning.setValue("Nome Social Invalido");
         	return false;
     	}
-    	User user = new User(getNameValue());
+    	User user = new User();
+    	user.setLogin(getNameValue());
+    	user.setEmail(getEmailValue());
     	if (validateUserLogin(user)) {
     		spWarning.setValue("Nome Ja Cadastrado");
         	return false;
+    	}
+    	if (validateEmailLogin(user)) {
+    		spWarning.setValue("Email Ja Cadastrado");
+    		return false;
     	}
     	newUser.setLogin(getNameValue());
     	newUser.setEmail(getEmailValue());
@@ -296,10 +314,16 @@ public class RegisterUserController {
     		spWarning.setValue("Nome Invalido");
     		return false;
     	}
-    	User user = new User(getNameValue());
-    	if ( validateUserLogin(user)) {
-    		spWarning.setValue("Nome já Cadastrado");
+    	User user = new User();
+    	user.setLogin(getNameValue());
+    	user.setEmail(getEmailValue());
+    	if (validateUserLogin(user)) {
+    		spWarning.setValue("Nome Ja Cadastrado");
         	return false;
+    	}
+    	if (validateEmailLogin(user)) {
+    		spWarning.setValue("Email Ja Cadastrado");
+    		return false;
     	}
     	if(getCnpjValue().trim().isBlank() || getCnpjValue().length() != 14 || !getCnpjValue().matches("\\d+") ) {
     		spWarning.setValue("CNPJ Invalido");
