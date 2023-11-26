@@ -34,6 +34,8 @@ public class CartController {
      * Carrega os dados para tela do carrinho de compras.
      */
     public void populateWinCart(){
+        portage.set("Frete:");
+        totalCart.set("Total:");
         client= new Client();
         client.setLogin(UserSession.getUserName());
 
@@ -45,8 +47,6 @@ public class CartController {
 
             int listSize= items.size();
             for (int i = 0; i < listSize; i++) {
-                Item item= items.get(i);
-
                 listCart.add(items.get(i));
             }
 
