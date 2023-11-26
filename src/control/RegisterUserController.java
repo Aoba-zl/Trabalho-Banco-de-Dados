@@ -227,6 +227,8 @@ public class RegisterUserController {
         cliente.setCpf(getCpfValue());
         cliente.setDateBirth(getBirthDateValue());
         cliente.setSex(Sex);
+        
+        spWarning.setValue("");
     	return true;
     }
     public boolean checkAddressName() {
@@ -296,6 +298,8 @@ public class RegisterUserController {
     	loja.setLogin(getNameValue());
     	loja.setNameStore(getStoreValue());
     	loja.setCnpj(getCnpjValue());
+    	
+        spWarning.setValue("");
     	return true;
     }
     public void clean () {

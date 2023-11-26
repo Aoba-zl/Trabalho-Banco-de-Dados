@@ -14,7 +14,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 import utils.UserSession;
-
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * Cadastro de Informaçoes da loja.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinRegStoreInfoConstructor implements GenericWindownInterface
 {
 	Pane pWin;
@@ -22,7 +26,11 @@ public class WinRegStoreInfoConstructor implements GenericWindownInterface
 	private WinRegStoreAddressConstructor sAddress = new WinRegStoreAddressConstructor(uCon);
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
-	
+    /**
+     * Construtor da classe.
+     *
+     * @param pane O painel principal da interface gráfica.
+     */
 	public void addElements(Pane pane) 
 	{
 		this.pWin = pane;

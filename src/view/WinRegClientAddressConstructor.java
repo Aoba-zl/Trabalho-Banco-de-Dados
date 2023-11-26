@@ -14,7 +14,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.SceneName;
 import utils.UserSession;
-
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * Cadastro de Endereço do cliente.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinRegClientAddressConstructor implements GenericWindownInterface
 {
 	private Pane pWin;
@@ -22,11 +26,19 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
 	
+    /**
+     * Construtor da classe.
+     *
+     * @param uCon é o construtor onde se encontram as informaçoes do cliente.
+     */
 	public WinRegClientAddressConstructor (RegisterUserController uCon) {
 		this.uCon = uCon;
     }
 
-	
+    /**
+     * Construtor da classe.
+     *
+     */
     public WinRegClientAddressConstructor() {
 		// TODO Auto-generated constructor stub
 	}
@@ -139,6 +151,7 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
 	
 	private void toClientInfo()
 	{
+		
 		changeSceneController.changeScene(SceneName.REG_CLIENT_INFO, this.pWin);
 	}
 	
