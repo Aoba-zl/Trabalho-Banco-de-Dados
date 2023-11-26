@@ -26,7 +26,7 @@ CREATE TABLE user_tbl
 	user_name 			VARCHAR(60) 		NOT NULL,
 	user_password		VARCHAR(60) 		NOT NULL,
 	telephone 			VARCHAR(11) 		NOT NULL,
-	email 				VARCHAR(100)	 	NOT NULL,
+	email 				VARCHAR(100)	 	NOT NULL UNIQUE,
 	permission 			VARCHAR(50) 		NOT NULL
 	PRIMARY KEY (user_name)
 )
@@ -49,7 +49,7 @@ CREATE TABLE store_address
 	neighborhood		VARCHAR(50) 		NOT NULL,
 	street	 			VARCHAR(75) 		NOT NULL,
 	number 				VARCHAR(10) 		NOT NULL,
-	complement	 		VARCHAR(50) 		NULL               -- Alterei nulidade & comprimento do complemento
+	complement	 		VARCHAR(50) 		NULL
 	PRIMARY KEY (user_name)
 	FOREIGN KEY (user_name) REFERENCES store (user_name)
 )
@@ -75,43 +75,42 @@ CREATE TABLE address
 	neighborhood		VARCHAR(50) 		NOT NULL,
 	street	 			VARCHAR(60) 		NOT NULL,
 	number	 			VARCHAR(10) 		NOT NULL,
-	complement	 		VARCHAR(50) 		NULL               -- Alterei nulidade & comprimento do complemento
+	complement	 		VARCHAR(50) 		NULL
 	PRIMARY KEY (user_name, cep, number)
 	FOREIGN KEY (user_name) REFERENCES client (user_name)
 )
 GO
 CREATE TABLE product
 (
-    id_product             INT IDENTITY(1, 1)    NOT NULL,
-    user_name             VARCHAR(60)         NOT NULL,
-    name_product         VARCHAR(100)         NOT NULL,
-    unity_price         DECIMAL(7, 2)         NOT NULL,
-    total_stock         INT                 NOT NULL,
-    shipping             DECIMAL(7, 2)         NOT NULL,
-    category            VARCHAR(30)            NOT NULL,
-    description            VARCHAR(255)         NOT NULL,
-    status                BIT                    NOT NULL
-    PRIMARY KEY (id_product)
-    FOREIGN KEY (user_name) REFERENCES store (user_name)
+	id_product 			INT IDENTITY(1, 1)	NOT NULL,
+	user_name 			VARCHAR(60) 		NOT NULL,
+	name_product 		VARCHAR(100) 		NOT NULL,
+	unity_price 		DECIMAL(8, 2) 		NOT NULL,
+	total_stock 		INT 				NOT NULL,
+	shipping	 		DECIMAL(8, 2) 		NOT NULL,
+	category			VARCHAR(30)			NOT NULL,
+	description			VARCHAR(255) 		NOT NULL,
+	status				BIT					NOT NULL
+	PRIMARY KEY (id_product)
+	FOREIGN KEY (user_name) REFERENCES store (user_name)
 )
 GO
 CREATE TABLE order_tbl
 (
-	id_order 			INT IDENTITY(1, 1)	NOT NULL,
-	user_name_client 	VARCHAR(60) 		NOT NULL,
-	user_name_cart 		VARCHAR(60) 		NOT NULL
-	PRIMARY KEY (id_order)
-	FOREIGN KEY (user_name_client) REFERENCES client (user_name)
+    id_order             INT IDENTITY(1, 1) NOT NULL,
+    user_name_client     VARCHAR(60)        NOT NULL
+    PRIMARY KEY (id_order)
+    FOREIGN KEY (user_name_client) REFERENCES client (user_name)
 )
 GO
 CREATE TABLE cart
 (
-    user_name             VARCHAR(60)         NOT NULL,
-    id_order            int                 not null,
-    total                 DECIMAL(7, 2)         NOT NULL
-        PRIMARY KEY (user_name)
-        FOREIGN KEY (user_name) REFERENCES client (user_name),
-    foreign key (id_order) references order_tbl (id_order)
+    user_name           VARCHAR(60)         NOT NULL,
+    id_order            INT                 NOT NULL,
+    total               DECIMAL(10, 2)      NOT NULL
+    PRIMARY KEY (user_name)
+    FOREIGN KEY (user_name) REFERENCES client (user_name),
+    FOREIGN KEY (id_order) REFERENCES order_tbl (id_order)
 )
 GO
 CREATE TABLE order_product
@@ -119,7 +118,7 @@ CREATE TABLE order_product
 	id_order 			INT 	 			NOT NULL,
 	id_product 			INT 				NOT NULL,
 	quantity			INT 				NOT NULL,
-	sub_total 			DECIMAL(7, 2)
+	sub_total 			DECIMAL(10, 2)
 	PRIMARY KEY (id_order, id_product)
 	FOREIGN KEY (id_order) REFERENCES order_tbl (id_order),
 	FOREIGN KEY (id_product) REFERENCES product(id_product)
@@ -128,8 +127,8 @@ GO
 CREATE TABLE payment
 (
 	id_order 			INT 				NOT NULL,
-	total_pay	 		DECIMAL(7, 2) 		NOT NULL,
-	date_pay 			TIMESTAMP 			NOT NULL,
+	total_pay	 		DECIMAL(10, 2) 		NOT NULL,
+	date_pay 			DATE 				NOT NULL,
 	status 				VARCHAR(50) 		NOT NULL
 	PRIMARY KEY (id_order)
 	FOREIGN KEY (id_order) REFERENCES order_tbl (id_order)
