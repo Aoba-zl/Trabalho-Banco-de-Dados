@@ -52,6 +52,7 @@ public class WinAddressStoreConstructor implements GerericAccountMenuWinInterfac
         {
             editMode = false;
             setEnableEditableElements(false);
+            control.fillStoreAddressFields(userLogin);
         });
         btnEditAddress.setOnMouseClicked(event -> btnEditClicked());
 
