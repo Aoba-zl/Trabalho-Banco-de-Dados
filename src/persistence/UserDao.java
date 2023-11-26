@@ -121,6 +121,24 @@ public class UserDao implements CrudDao<User>
 		
 		return u;
 	}
+	
+	public boolean verifyEmail(User u) throws SQLException
+	{
+		Connection connection = gDao.getConnection();
+		String querySql = "SELECT * FROM user_tbl WHERE email = ?";
+		PreparedStatement ps = connection.prepareStatement(querySql);
+		ps.setString(1, u.getEmail());
+		
+		ResultSet result = ps.executeQuery();
+
+		boolean test = result.next();
+		
+		result.close();
+		ps.close();
+		connection.close();
+		
+		return test;
+	}
 
 	@Override
 	public List<User> list() throws SQLException {
