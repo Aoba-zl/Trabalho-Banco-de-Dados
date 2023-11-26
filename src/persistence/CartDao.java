@@ -268,6 +268,27 @@ public class CartDao {
         }
     }
 
+    public boolean verifyCart(Connection con, Item item) throws SQLException
+    {
+        String sql= """
+                SELECT op.id_product
+                FROM cart c, order_tbl ot, order_product op
+                WHERE c.id_order = ot.id_order
+                  AND ot.id_order = op.id_order
+                  AND op.id_product = ?
+                  and c.user_name = ?
+                """;
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        int linha = ps.executeUpdate();
+
+        ps.close();
+
+        return linha > 0;
+
+    }
+
     /**
      * Inseri um novo pedido de um determinado cliente.
      * @param client O cliente.
