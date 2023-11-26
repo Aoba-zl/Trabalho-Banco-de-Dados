@@ -128,10 +128,10 @@ public class CartController {
         populateWinCart();
     }
 
-    public boolean verifyCart(Connection con, Item item, String username){
+    public boolean verifyCart(Item item, String username){
         boolean verify;
         try {
-            verify= cartDao.verifyCart(con, item, username);
+            verify= cartDao.verifyCart(item, username);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
