@@ -141,6 +141,8 @@ public class WinOrderHistoryConstructor implements GenericWindownInterface {
         columnPaymentDate.setStyle("-fx-alignment: CENTER;");
         columnStatus.setStyle("-fx-alignment: CENTER;");
 
+        tableOrderHistory.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         tableOrderHistory.getColumns().addAll(columnIdOrder, columnProductName, columnPaymentDate, columnStatus);
         try {
             listOrder= controllerOrder.populateWinOrderHistory();

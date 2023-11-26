@@ -3,20 +3,15 @@ package control;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.cell.TextFieldTableCell;
 import model.*;
 import persistence.GenericDao;
 import persistence.OrderHistoryDao;
 import persistence.PurchaseHistoryDao;
 import utils.UserSession;
-import view.WinPurchaseHistoryConstructor;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

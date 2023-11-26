@@ -4,7 +4,6 @@ import control.ChangeSceneController;
 import control.OrderHistoryController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,13 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import model.Item;
 import model.Order;
@@ -26,15 +23,10 @@ import model.Product;
 import utils.SceneName;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.List;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
+
 
 /**
  * Esta é uma classe de Boundary que representa a tela de Historico de Compras.
@@ -295,6 +287,8 @@ public class WinPurchaseHistoryConstructor implements GenericWindownInterface {
         columnProductName.setStyle("-fx-alignment: CENTER;");
         columnPaymentDate.setStyle("-fx-alignment: CENTER;");
         columnStatus.setStyle("-fx-alignment: CENTER;");
+
+        tableHistory.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         tableHistory.getColumns().addAll(columnIdOrder, columnProductName, columnPaymentDate, columnStatus);
         try {

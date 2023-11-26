@@ -1,5 +1,5 @@
 package view;
-import control.PlaceOrderController;
+
 import control.ProductController;
 import utils.SceneName;
 import control.ChangeSceneController;
@@ -40,10 +40,6 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     private final TableView<Item> tableCart= new TableView<>();
 
     CartController controllerCart= new CartController();
-
-    PlaceOrderController placeOrderController= new PlaceOrderController();
-
-    WinPurchaseDetailsConstruct winPurchaseDetailsConstruct;
     
     private ChangeSceneController changeSceneController = new ChangeSceneController();
 
@@ -199,13 +195,11 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
     private void populateTable(){
         columnProductName.setCellValueFactory(itemData -> {
         	Product product = itemData.getValue().getProduct();
-            String nameProduct = String.valueOf(product.getName());
             return new ReadOnlyStringWrapper(product.getName());
         });
 
         columnDescription.setCellValueFactory(itemData -> {
         	Product product = itemData.getValue().getProduct();
-            String productDescription = String.valueOf(product.getDescription());
             return new ReadOnlyStringWrapper(product.getDescription());
         });
 
