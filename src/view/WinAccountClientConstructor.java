@@ -201,7 +201,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
 
             System.out.println(event.getText());
 
-            if (len == 11 && tfPhone.getText().matches("\\d*"))
+            if (len == 9 && tfPhone.getText().matches("\\d*"))
             {
                 lblErrorMsg.setVisible(false);
                 setTextFieldNormalStyle(tfPhone);
