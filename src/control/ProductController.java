@@ -10,6 +10,9 @@ import model.Product;
 import persistence.GenericDao;
 import persistence.ProductDao;
 
+/**
+ * Classe de controller que realiza todas as operações que tem como refência o produto.
+ */
 public class ProductController
 {
 	private StringProperty spName = new SimpleStringProperty("");
@@ -73,6 +76,10 @@ public class ProductController
 		return pDao.update(p);
 	}
 	
+	/**
+	 * Posiciona os valores nos campos para a alteração do produto.
+	 * @param ipCod O codigo do produto.
+	 */
 	public void setValueEdit(IntegerProperty ipCod)
 	{
 		Product p = new Product();
@@ -118,6 +125,11 @@ public class ProductController
 		return products;
 	}
 
+	/**
+	 * Consulta os dados de um produto.
+	 * @param product O produto.
+	 * @return Os dados do produto.
+	 */
 	public Product consulta (Product product) {
 		GenericDao gDao = new GenericDao();
 		ProductDao pDao = new ProductDao(gDao);
@@ -130,8 +142,12 @@ public class ProductController
 		return product;
 	}
 	
+	/**
+	 * Deleta o produto.
+	 * @param product O produto.
+	 * @return true para caso seja deletado, false caso o contrário.
+	 */
 	public boolean delete (Product product) {
-		
 		GenericDao gDao = new GenericDao();
 		ProductDao pDao = new ProductDao(gDao);
 		product.setStatus(1);
@@ -143,13 +159,17 @@ public class ProductController
 		return false;
 	}
 	
+	/**
+	 * Retorna a quantidade do produto.
+	 * @param product O produto.
+	 * @return 0 ou a quantidade do produto.
+	 */
 	public int quant (Product product) {
 		GenericDao gDao = new GenericDao();
 		ProductDao pDao = new ProductDao(gDao);
 		try {
 			return pDao.quantProduct(product);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -165,7 +185,7 @@ public class ProductController
 			return true;
 		}
 		
-		if(spPrice.get().trim().isBlank() || !spPrice.get().replace(",", ".").matches("\\d+(\\.\\d+)?"))
+		if(spPrice.get().trim().isBlank() || !spPrice.get().replace(",", ".").matches("\\d+(\\.\\d+)?") || spInStock.get().equals("0"))
 		{
 			lblMessage.set("Preço Inválido");
 			return true;
@@ -192,6 +212,9 @@ public class ProductController
 		return false;
 	}
 	
+	/**
+	 * Para limpar os campos do textfield.
+	 */
 	public void clean()
 	{
 		spName.set("");
@@ -202,19 +225,46 @@ public class ProductController
 		spDescription.set("");
 		lblMessage.set("");
 	}
-
+	
+	/**
+	 * Obtém o valor atual da propriedade name.
+	 * @return
+	 */
 	public StringProperty getNameProperty() { return spName; }
 	
+	/**
+	 * Obtém o valor atual da propriedade price.
+	 * @return
+	 */
 	public StringProperty getPriceProperty() { return spPrice; }
 	
+	/**
+	 * Obtém o valor atual da propriedade inStock.
+	 * @return
+	 */
 	public StringProperty getInStockProperty() { return spInStock; }
 	
+	/**
+	 * Obtém o valor atual da propriedade shipping.
+	 * @return
+	 */
 	public StringProperty getShippingProperty() { return spShipping; }
-	
+	/**
+	 * Obtém o valor atual da propriedade category.
+	 * @return
+	 */
 	public StringProperty getCategoryProperty() { return spCategory; }
 	
+	/**
+	 * Obtém o valor atual da propriedade description.
+	 * @return
+	 */
 	public StringProperty getDescriptionProperty() { return spDescription; }
 
+	/**
+	 * Obtém o valor atual da propriedade message.
+	 * @return
+	 */
 	public StringProperty getMessageProperty() { return lblMessage; }
 	
 }

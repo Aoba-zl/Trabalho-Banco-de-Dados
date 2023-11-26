@@ -8,6 +8,9 @@ import model.User;
 import persistence.GenericDao;
 import persistence.UserDao;
 
+/**
+ * Classe que realiza operações referente ao login de usuário.
+ */
 public class LoginController
 {
 	private TextField tfUserName;
