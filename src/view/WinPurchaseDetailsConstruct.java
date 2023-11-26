@@ -33,6 +33,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     private Label lblTotalPurchaseValue= new Label("Total:");
     private Label lblPortage= new Label("Frete:");
     private Label lblPaymentMethod= new Label("Método de Pagamento:");
+
     // 
 	private ProductController pCon = new ProductController();
 	private Product product = new Product();
@@ -44,8 +45,6 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
     PlaceOrderController controllerPlaceOrder= new PlaceOrderController();
 
     CartController cartController= new CartController();
-
-    WinShoppingCartConstructor winShoppingCartConstructor;
 
 
     private void bindings(){
@@ -102,6 +101,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
             }
             else {
                 toProduct();
+                controllerPlaceOrder.deleteOrder();
             }
         });
 
@@ -118,8 +118,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    winShoppingCartConstructor= new WinShoppingCartConstructor();
-                    winShoppingCartConstructor.addElements(pane);
+                    toCart();
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
                     controllerPlaceOrder.placePayment(false);
@@ -131,8 +130,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    winShoppingCartConstructor= new WinShoppingCartConstructor();
-                    winShoppingCartConstructor.addElements(pane);
+                    toCart();
                 }
                 else if (cbPaymentMethod.getValue() == null){
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
@@ -154,8 +152,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    winShoppingCartConstructor= new WinShoppingCartConstructor();
-                    winShoppingCartConstructor.addElements(pane);
+                    toHome();
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
                     controllerPlaceOrder.placePayment(false);
@@ -167,8 +164,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    winShoppingCartConstructor= new WinShoppingCartConstructor();
-                    winShoppingCartConstructor.addElements(pane);
+                    toHome();
                 }
                 else if (cbPaymentMethod.getValue() == null){
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);
@@ -269,7 +265,17 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
 
     private void toProduct(){
+        tablePurchase.getColumns().clear();
+        Item item= controllerPlaceOrder.getItems().get(0);
+        IntegerProperty integerProperty= new SimpleIntegerProperty(item.getProduct().getCod());
+        changeSceneController.setCodValue(integerProperty);
         changeSceneController.changeScene(SceneName.CONSULT_PRODUCT, this.pWin);
+    }
+
+    private void toHome(){
+        tablePurchase.getColumns().clear();
+        controllerPlaceOrder.getItems().clear();
+        changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); } // set do id do produto
