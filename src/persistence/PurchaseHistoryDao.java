@@ -105,7 +105,7 @@ public class PurchaseHistoryDao {
                        prod.unity_price,
                        prod.shipping,
                        order_prod.quantity,
-                       prod.shipping + prod.unity_price as Valor_Total_Produto,
+                       prod.shipping +(order_prod.quantity * prod.unity_price)  as Valor_Total_Produto,
                        case when (p.id_order = pay.id_order )
                                 then
                                 'Pix'
