@@ -33,7 +33,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private ProductController pCon = new ProductController();
 	private RegisterUserController uCon = new RegisterUserController();
 	private PlaceOrderController poCon = new PlaceOrderController();
-	private static int quant = 1;
+	private int quant;
 	private FlowPane fpCategory = new FlowPane();
 	private Product product = new Product();
 	private Store store = new Store();
@@ -43,6 +43,9 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	
 	public void addElements(Pane pane) {
 		this.pWin = pane;
+		
+		// ----- init variable ----- //
+		quant = 1;
 		
 		// ----- Creating General Bord ----- //
 		Pane paneConsult = new Pane();
@@ -300,7 +303,9 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
      */
     private void showPopup(String menssagem, int act) {
 		Label concluded = new Label(menssagem);
-        concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+		concluded.setMinHeight(40);
+        concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-alignment: center;");
+        concluded.setWrapText(true);
         
         Button btnConfirmed = new Button("Entendido!");
         btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px; -fx-font-size: 14px;");
@@ -310,7 +315,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         vbRegister.setPrefWidth(180);
         vbRegister.setLayoutX(220.5);
         vbRegister.setLayoutY(156);
-        vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 30px;");
+        vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center;");
         vbRegister.getChildren().addAll(concluded, btnConfirmed);
         
         Pane pTransp = new Pane();
@@ -320,10 +325,10 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         pTransp.getChildren().add(vbRegister);
         
         pWin.getChildren().add(pTransp);
-		fpCategory.getChildren().clear();
 		if (act == 1){
 	        btnConfirmed.setOnAction(e -> pTransp.setVisible(false));
 		} else {
+			fpCategory.getChildren().clear();
 	        btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
 		}
 
