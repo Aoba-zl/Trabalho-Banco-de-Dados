@@ -285,5 +285,10 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
         controllerCart.getListCart().clear();
 		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 	}
+
+    /**
+     * Envia o código do produto.
+     * @param cod O código.
+     */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); } // set do id do produto
 }

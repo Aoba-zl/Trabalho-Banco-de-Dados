@@ -132,6 +132,9 @@ public class PlaceOrderController {
         purchaseDetailsDao.insertOrder(UserSession.getUserName(), item);
     }
 
+    /**
+     * Deleta um pedido.
+     */
     public void deleteOrder(){
         purchaseDetailsDao.deleteOrder(UserSession.getUserName());
         itemsList.clear();

@@ -234,6 +234,10 @@ public class PurchaseDetailsDao {
         }
     }
 
+    /**
+     * Consulta um pedido e deleta esse pedido de um determinado cliente.
+     * @param login O login do cliente.
+     */
     public void deleteOrder(String login){
         try {
             Connection connection= genericDao.getConnection();

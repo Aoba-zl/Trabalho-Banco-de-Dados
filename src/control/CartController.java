@@ -67,7 +67,7 @@ public class CartController {
     }
 
     /**
-     * Obtem o codigo e total do pedido.
+     * Obtem o pedido que esta no carrinho.
      * @return O pedido.
      */
     public Order getOrder(){
@@ -128,6 +128,12 @@ public class CartController {
         populateWinCart();
     }
 
+    /**
+     * Verifica se o um produto ja está no carrinho de um determinado cliente.
+     * @param item O produto
+     * @param username O username do Cliente
+     * @return A verificação.
+     */
     public boolean verifyCart(Item item, String username){
         boolean verify;
         try {

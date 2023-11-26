@@ -278,6 +278,10 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
         changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
     }
 
+    /**
+     * Envia o código do produto.
+     * @param cod O código.
+     */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); } // set do id do produto
     
 }
