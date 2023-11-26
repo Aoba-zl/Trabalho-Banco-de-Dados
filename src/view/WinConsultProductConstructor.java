@@ -225,7 +225,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toHomePage(){
-		quant = 1;
+		//quant = 1;
 		fpCategory.getChildren().clear();
 		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
@@ -234,7 +234,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		if (quant < product.getTotalStock()) {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
-			quant = 1;
+			//quant = 1;
 			if(cCon.verifyCart(item, client.getLogin())) {
 				showPopup();
 			} else {
@@ -254,7 +254,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		if (quant < product.getTotalStock()) {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
-			quant = 1;
+			//quant = 1;
 			if(cCon.verifyCart(item, client.getLogin())) {
 				showPopup();
 			} else {
@@ -317,6 +317,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         pTransp.getChildren().add(vbRegister);
         
         pWin.getChildren().add(pTransp);
+		fpCategory.getChildren().clear();
         btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
         
     }
