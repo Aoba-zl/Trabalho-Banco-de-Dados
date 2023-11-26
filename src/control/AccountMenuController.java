@@ -136,7 +136,6 @@ public class AccountMenuController
     
     private void deleteClientAccount(String login) throws SQLException
     {
-    	// TODO: apagar carrinho + pedidos
 		AddressMenuController controller = new AddressMenuController();
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
