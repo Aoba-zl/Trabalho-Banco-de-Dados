@@ -454,6 +454,30 @@ public class CartDao {
     }
 
     /**
+     * Deleta Todos os itens do carrinho.
+     * @param order O pedido.
+     */
+    public void deleteAllItem(Order order){
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= """
+                    delete from order_product
+                    where id_order = ?""";
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setInt(1, order.getId());
+
+            ps.executeUpdate();
+
+            connection.close();
+
+            deleteOrder(order);
+        } catch (SQLException e) {
+            System.out.println("Erro ao apagar Todos os itens do carrinho");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Deleta um pedido.
      * @param order O pedido.
      */

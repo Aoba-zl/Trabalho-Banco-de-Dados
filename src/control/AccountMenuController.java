@@ -3,14 +3,8 @@ package control;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import model.Client;
-import model.ClientAddress;
-import model.User;
-import model.Store;
-import persistence.ClientDao;
-import persistence.GenericDao;
-import persistence.StoreDao;
-import persistence.UserDao;
+import model.*;
+import persistence.*;
 import utils.UserSession;
 
 import java.sql.SQLException;
@@ -161,6 +155,11 @@ public class AccountMenuController
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	StoreDao storeDao = new StoreDao(genericDAO);
+		CartController cartController = new CartController();
+		CartDao cartDao = new CartDao(genericDAO);
+
+		Order order = cartController.getIdOrder();
+		cartDao.deleteAllItem(order);
 
 		addressMenuController.deleteStoreAddress(login);
 		storeDao.delete(new Store(login));
