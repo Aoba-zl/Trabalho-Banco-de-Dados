@@ -251,7 +251,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toDetails() {
-		if (quant < product.getTotalStock()) {
+		if (quant <= product.getTotalStock()) {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
 			if(cCon.verifyCart(item, client.getLogin())) {
@@ -262,8 +262,6 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 				fpCategory.getChildren().clear();
 				changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 			}
-
-
 		}
 	}
 	
