@@ -1,5 +1,7 @@
 package control;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -124,6 +126,16 @@ public class CartController {
         cartDao.alterQuantity(getOrder(), item);
         listCart.clear();
         populateWinCart();
+    }
+
+    public boolean verifyCart(Connection con, Item item, String username){
+        boolean verify;
+        try {
+            verify= cartDao.verifyCart(con, item, username);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return verify;
     }
 
     /**
