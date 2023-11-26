@@ -191,6 +191,12 @@ public class ProductController
 			return true;
 		}
 		
+		if(Double.parseDouble(spPrice.get()) > 30000)
+		{
+			lblMessage.set("Preço Acima do limite");
+			return true;
+		}
+		
 		if(spInStock.get().trim().isBlank() || !spInStock.get().matches("\\d+") || spInStock.get().equals("0"))
 		{
 			lblMessage.set("Estoque Inválido");
@@ -200,6 +206,12 @@ public class ProductController
 		if(spShipping.get().trim().isBlank() || !spShipping.get().replace(",", ".").matches("\\d+(\\.\\d+)?"))
 		{
 			lblMessage.set("Frete Inválido");
+			return true;
+		}
+		
+		if(Double.parseDouble(spShipping.get()) > 2000)
+		{
+			lblMessage.set("Frete Acima do limite");
 			return true;
 		}
 		
