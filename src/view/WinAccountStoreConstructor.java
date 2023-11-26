@@ -25,6 +25,7 @@ import java.sql.SQLException;
  */
 public class WinAccountStoreConstructor implements GerericAccountMenuWinInterface
 {
+    private Label lblErrorMsg;
     private TextField tfLogin, tfName, tfCnpj, tfEmail, tfPhone;
     private Button btnDeleteAccount, btnEditAccount, btnCancelEdit;
     private BorderPane bpButtons;
@@ -58,8 +59,18 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         setElements();
         setEvents();
         setPropertiesConnections();
-        
+
+        completeFields();
+    }
+
+    private void completeFields()
+    {
         control.completeStoreFields(userName);
+
+        lblErrorMsg.setVisible(false);
+        setTextFieldNormalStyle(tfPhone);
+        setTextFieldNormalStyle(tfName);
+        setTextFieldNormalStyle(tfEmail);
     }
 
     private void setPropertiesConnections()
@@ -79,6 +90,7 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         {
             changeCancelDeleteButtons(btnDeleteAccount);
             setDisableEditableFields(true);
+            completeFields();
             action = null;
         });
 
@@ -90,10 +102,16 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
             String msg = null;
             if (newValue && action == "edit")
             {
-                setDisableEditableFields(true);
-                changeCancelDeleteButtons(btnDeleteAccount);
-                control.editAccount(userName);
-                openPopUp("Dados Alterados com sucesso!");
+                msg = "Dados Alterados com sucesso!";
+                if (fieldsAreValid())
+                {
+                    setDisableEditableFields(true);
+                    changeCancelDeleteButtons(btnDeleteAccount);
+                    control.editAccount(userName);
+                }
+                else
+                    msg = "Dados Incorretos.\nPor favor, tente novamente.";
+                openPopUp(msg);
             }
             else if (newValue && action == "delete")
             {
@@ -115,6 +133,72 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
             }
             action = null;
         }));
+
+        tfName.setOnKeyTyped(event ->
+        {
+            int len = tfName.getText().length();
+
+            if (len > 0)
+                setTextFieldNormalStyle(tfName);
+            else
+                setTextFieldErrorStyle(tfName);
+
+        });
+
+        tfEmail.setOnKeyTyped(event ->
+        {
+            int len = tfEmail.getText().length();
+            String text = tfEmail.getText();
+
+            if (len > 0 && text.contains("@") &&
+                    text.substring(len-4).contains(".com"))
+            {
+                lblErrorMsg.setVisible(false);
+                setTextFieldNormalStyle(tfEmail);
+            }
+            else
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("e-mail Invalido!");
+                setTextFieldErrorStyle(tfEmail);
+            }
+
+        });
+
+        tfPhone.setOnKeyTyped(event ->
+        {
+            int len = tfPhone.getText().length();
+
+            if (len == 11 && tfPhone.getText().matches("\\d*"))
+            {
+                lblErrorMsg.setVisible(false);
+                setTextFieldNormalStyle(tfPhone);
+            }
+            else
+            {
+                lblErrorMsg.setVisible(true);
+                lblErrorMsg.setText("Telefone Invalido!");
+                setTextFieldErrorStyle(tfPhone);
+            }
+
+        });
+    }
+
+    private void setTextFieldErrorStyle(TextField tf)
+    {
+        tf.setStyle("-fx-font-style: italic; -fx-text-fill: red");
+    }
+    private void setTextFieldNormalStyle(TextField tf)
+    {
+        tf.setStyle("");
+    }
+
+    private boolean fieldsAreValid()
+    {
+        int socialName = tfName.getStyle().length();
+        int email = tfEmail.getStyle().length();
+        int phone = tfPhone.getStyle().length();
+        return (socialName == 0 && email == 0 && phone == 0);
     }
     
     private void setElements()
@@ -136,6 +220,9 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         Label lblCnpj       = new Label("CNPJ: ");
         Label lblEmail     = new Label("eMail: ");
         Label lblPhone     = new Label("Telefone: ");
+        lblErrorMsg = new Label();
+        lblErrorMsg.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-text-fill: red");
+        lblErrorMsg.setVisible(false);
         
         tfLogin = new TextField();
         tfLogin.setDisable(true);
@@ -144,6 +231,17 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         tfCnpj.setDisable(true);
         tfEmail = new TextField();
         tfPhone = new TextField();
+
+//        TextFormatter<Integer> textFormatterNumeric = new TextFormatter<>(new IntegerStringConverter(), 0,
+//                change -> {
+//                    String newText = change.getControlNewText();
+//                    if (newText.matches("\\d*")) {
+//                        return change;
+//                    }
+//                    return null;
+//                });
+//
+//        tfPhone.setTextFormatter(textFormatterNumeric);
 
         btnDeleteAccount = new Button("Excluir Conta");
         btnDeleteAccount
@@ -173,7 +271,7 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         setDisableEditableFields(true);
         
         mainBox.getChildren().addAll(lblTitle, bpLogin, bpName, bpCnpj, bpEmail, bpPhone,
-                bpBirthDate, bpButtons);
+                bpBirthDate, bpButtons, lblErrorMsg);
     }
 
     private void openPopUp(String message)

@@ -22,7 +22,6 @@ import java.sql.SQLException;
  * gerenciamento de conta do cliente.
  * Implementa a interface GerericAccountMenuWinInterface.
  */
-@SuppressWarnings("ALL")
 public class WinAccountClientConstructor implements GerericAccountMenuWinInterface
 {
     private Label lblErrorMsg;
@@ -200,7 +199,7 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         {
             int len = tfPhone.getText().length();
 
-            if (len == 11)
+            if (len == 11 && tfPhone.getText().matches("\\d*"))
             {
                 lblErrorMsg.setVisible(false);
                 setTextFieldNormalStyle(tfPhone);
@@ -295,6 +294,17 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         tfName      = new TextField();
         tfEmail     = new TextField();
         tfPhone     = new TextField();
+
+//        TextFormatter<Integer> textFormatterNumeric = new TextFormatter<>(new IntegerStringConverter(), 0,
+//                change -> {
+//                    String newText = change.getControlNewText();
+//                    if (newText.matches("\\d*")) {
+//                        return change;
+//                    }
+//                    return null;
+//                });
+//
+//        tfPhone.setTextFormatter(textFormatterNumeric);
 
         tfOtherSex       = new TextField();
         tfOtherSex.setVisible(false);
