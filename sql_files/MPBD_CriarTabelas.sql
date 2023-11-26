@@ -80,26 +80,19 @@ CREATE TABLE address
 	FOREIGN KEY (user_name) REFERENCES client (user_name)
 )
 GO
-CREATE TABLE cart
-(
-	user_name 			VARCHAR(60) 		NOT NULL,
-	total 				DECIMAL(7, 2) 		NOT NULL
-	PRIMARY KEY (user_name)
-	FOREIGN KEY (user_name) REFERENCES client (user_name)
-)
-GO
 CREATE TABLE product
 (
-	id_product 			INT IDENTITY(1, 1)	NOT NULL,
-	user_name 			VARCHAR(60) 		NOT NULL,
-	name_product 		VARCHAR(100) 		NOT NULL,
-	unity_price 		DECIMAL(7, 2) 		NOT NULL,
-	total_stock 		INT 				NOT NULL,
-	shipping	 		DECIMAL(7, 2) 		NOT NULL,
-	category			VARCHAR(30)			NULL,
-	description			VARCHAR(255) 		NOT NULL
-	PRIMARY KEY (id_product)
-	FOREIGN KEY (user_name) REFERENCES store (user_name)
+    id_product             INT IDENTITY(1, 1)    NOT NULL,
+    user_name             VARCHAR(60)         NOT NULL,
+    name_product         VARCHAR(100)         NOT NULL,
+    unity_price         DECIMAL(7, 2)         NOT NULL,
+    total_stock         INT                 NOT NULL,
+    shipping             DECIMAL(7, 2)         NOT NULL,
+    category            VARCHAR(30)            NOT NULL,
+    description            VARCHAR(255)         NOT NULL,
+    status                BIT                    NOT NULL
+    PRIMARY KEY (id_product)
+    FOREIGN KEY (user_name) REFERENCES store (user_name)
 )
 GO
 CREATE TABLE order_tbl
@@ -108,8 +101,17 @@ CREATE TABLE order_tbl
 	user_name_client 	VARCHAR(60) 		NOT NULL,
 	user_name_cart 		VARCHAR(60) 		NOT NULL
 	PRIMARY KEY (id_order)
-	FOREIGN KEY (user_name_client) REFERENCES client (user_name),
-	FOREIGN KEY (user_name_cart) REFERENCES cart (user_name)
+	FOREIGN KEY (user_name_client) REFERENCES client (user_name)
+)
+GO
+CREATE TABLE cart
+(
+    user_name             VARCHAR(60)         NOT NULL,
+    id_order            int                 not null,
+    total                 DECIMAL(7, 2)         NOT NULL
+        PRIMARY KEY (user_name)
+        FOREIGN KEY (user_name) REFERENCES client (user_name),
+    foreign key (id_order) references order_tbl (id_order)
 )
 GO
 CREATE TABLE order_product
