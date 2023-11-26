@@ -147,7 +147,6 @@ public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 	}
 	
 	private void toStoreInfo() {
-		uCon.clean();
 		changeSceneController.changeScene(SceneName.REG_STORE_INFO, this.pWin);
 	}
 	
