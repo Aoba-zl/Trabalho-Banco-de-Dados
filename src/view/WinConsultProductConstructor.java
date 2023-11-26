@@ -236,7 +236,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			Client client = new Client(UserSession.getUserName());
 			//quant = 1;
 			if(cCon.verifyCart(item, client.getLogin())) {
-				showPopup("Item Já Esta No Carrinho");
+				showPopup("Item Já Esta No Carrinho",2);
 			} else {
 				Order o =  cCon.getIdOrder();
 				if (o.getId() == null) {
@@ -248,7 +248,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 				changeSceneController.changeScene(SceneName.CART, this.pWin);
 			}
 		}else {
-			showPopup("Quantidade Maior Que Estoque");
+			showPopup("Quantidade Maior Que Estoque",1);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
 			if(cCon.verifyCart(item, client.getLogin())) {
-				showPopup("Item Já Esta No Carrinho");
+				showPopup("Item Já Esta No Carrinho",2);
 			}else {
 				poCon.deleteOrder();
 				poCon.createOrder(item);
@@ -265,7 +265,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 				changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 			}
 		}else {
-			showPopup("Quantidade Maior Que Estoque");
+			showPopup("Quantidade Maior Que Estoque",1);
 		}
 	}
 	
@@ -298,8 +298,8 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
      * Obtém o valor de código de outra tela
      * @param cod O codigo do produto.
      */
-    private void showPopup(String menssagem) {
-		Label concluded = new Label();
+    private void showPopup(String menssagem, int act) {
+		Label concluded = new Label(menssagem);
         concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
         
         Button btnConfirmed = new Button("Entendido!");
@@ -321,7 +321,12 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         
         pWin.getChildren().add(pTransp);
 		fpCategory.getChildren().clear();
-        btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
+		if (act == 1){
+	        btnConfirmed.setOnAction(e -> pTransp.setVisible(false));
+		} else {
+	        btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
+		}
+
         
     }
     
