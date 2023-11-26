@@ -1,6 +1,8 @@
 package view;
 
+import control.CartController;
 import control.ChangeSceneController;
+import control.PlaceOrderController;
 import control.ProductController;
 import control.RegisterUserController;
 import javafx.beans.property.IntegerProperty;
@@ -17,6 +19,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import model.Client;
+import model.Item;
+import model.Order;
 import model.Product;
 import model.Store;
 import utils.SceneName;
@@ -24,11 +29,14 @@ import utils.UserSession;
 
 public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
+	private CartController cCon = new CartController();
 	private ProductController pCon = new ProductController();
-	private RegisterUserController cCon = new RegisterUserController();
-	private static int quant = 0;
+	private RegisterUserController uCon = new RegisterUserController();
+	private PlaceOrderController poCon = new PlaceOrderController();
+	private static int quant = 1;
 	private FlowPane fpCategory = new FlowPane();
-	
+	private Product product = new Product();
+	private Store store = new Store();
 	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
@@ -44,12 +52,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		paneConsult.relocate(5, 5);
 		
 		// ----- Carregando ----- //
-		Product product = new Product();
+
 		product.setCod(ipCod.get());
-		product=pCon.consulta(product);
-		Store store = new Store();
+		product = pCon.consulta(product);
 		store.setLogin(product.getLogin());
-		store=cCon.consultStore(store);
+		store = uCon.consultStore(store);
 		// ----- Creating Info Bord ----- //
 		
 		Pane paneInfo = new Pane();
@@ -122,7 +129,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			btnMinus.setPrefWidth(24.1);
 			btnMinus.addEventFilter(MouseEvent.MOUSE_CLICKED,
 	         (MouseEvent ev) -> {
-	        	 if (quant > 0) {
+	        	 if (quant > 1) {
 	        		 addQuant(-1,txQuantity);
 	        	 }
 	         });
@@ -218,18 +225,43 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toHomePage(){
-		quant = 0;
+		//quant = 1;
 		fpCategory.getChildren().clear();
 		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
 	
 	private void toCart(){
-		fpCategory.getChildren().clear();
-		changeSceneController.changeScene(SceneName.CART, this.pWin);
+		if (quant < product.getTotalStock()) {
+			Item item = new Item(product, quant);
+			Client client = new Client(UserSession.getUserName());
+			//quant = 1;
+			if(cCon.verifyCart(item, client.getLogin())) {
+				showPopup();
+			} else {
+				Order o =  cCon.getIdOrder();
+				if (o.getId() == null) {
+					cCon.createOrder(client, item);			// --- Criando Order --- //
+				}else {
+					cCon.placeOrder(item);
+				}
+				fpCategory.getChildren().clear();
+				changeSceneController.changeScene(SceneName.CART, this.pWin);
+			}
+		}
 	}
 	
-	private void toDetails() { //não sei como seria direito como seria, mas acho que adicionaria no carrinho e iria para o details direto. Isso depende da forma como o luan vai fazer.
-		changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
+	private void toDetails() {
+		if (quant < product.getTotalStock()) {
+			Item item = new Item(product, quant);
+			Client client = new Client(UserSession.getUserName());
+
+			poCon.deleteOrder();
+			poCon.createOrder(item);
+			fpCategory.getChildren().clear();
+
+			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
+
+		}
 	}
 	
 	private void setBtnBackImage(Button btnBack) {
@@ -261,5 +293,32 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
      * Obtém o valor de código de outra tela
      * @param cod O codigo do produto.
      */
+    private void showPopup() {
+		Label concluded = new Label("Item Já Esta No Carrinho");
+        concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+        
+        Button btnConfirmed = new Button("Entendido!");
+        btnConfirmed.setStyle("-fx-background-color: #C2FFC2; -fx-background-radius: 10px; -fx-font-size: 14px;");
+        
+        VBox vbRegister = new VBox(20);
+        vbRegister.setPrefHeight(100);
+        vbRegister.setPrefWidth(180);
+        vbRegister.setLayoutX(220.5);
+        vbRegister.setLayoutY(156);
+        vbRegister.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: BLACK; -fx-alignment: center; -fx-spacing: 30px;");
+        vbRegister.getChildren().addAll(concluded, btnConfirmed);
+        
+        Pane pTransp = new Pane();
+        pTransp.setPrefWidth(640);
+        pTransp.setPrefHeight(400);
+        pTransp.setStyle("-fx-background-color: rgba(0, 0, 0, 0.4);");
+        pTransp.getChildren().add(vbRegister);
+        
+        pWin.getChildren().add(pTransp);
+		fpCategory.getChildren().clear();
+        btnConfirmed.setOnAction(e -> changeSceneController.changeScene(SceneName.HOME_PAGE, pWin));
+        
+    }
+    
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

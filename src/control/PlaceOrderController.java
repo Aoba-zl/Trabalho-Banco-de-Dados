@@ -10,7 +10,6 @@ import model.Order;
 import persistence.CartDao;
 import persistence.GenericDao;
 import persistence.PurchaseDetailsDao;
-import persistence.PurchaseHistoryDao;
 import utils.UserSession;
 
 import java.text.DecimalFormat;
@@ -49,6 +48,25 @@ public class PlaceOrderController {
         if (order.getItems() != null){
             cart= false;
             itemsList.add(order.getItems().get(0));
+            double portageCal= 0;
+            double totalPrice= 0;
+            Item item= order.getItems().get(0);
+            System.out.println(item.getProduct().getShipping());
+
+            portageCal+= item.getProduct().getShipping();
+            totalPrice+= item.getSubTotal();
+
+            totalPrice+= portageCal;
+            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+            String formatedvalue= decimalFormat.format(portageCal);
+            String portageTotal= ("R$ " + formatedvalue);
+
+            portage.set("Frete: " + portageTotal);
+
+            formatedvalue= decimalFormat.format(totalPrice);
+            String totalValue= ("R$ " + formatedvalue);
+
+            totalPurchase.set("Total: " + totalValue);
         }
         else {
             order= cartDao.getOrder(UserSession.getUserName());
@@ -81,8 +99,6 @@ public class PlaceOrderController {
             }
 
         }
-
-
     }
 
     /**
@@ -114,6 +130,11 @@ public class PlaceOrderController {
      */
     public void createOrder(Item item){
         purchaseDetailsDao.insertOrder(UserSession.getUserName(), item);
+    }
+
+    public void deleteOrder(){
+        purchaseDetailsDao.deleteOrder(UserSession.getUserName());
+        itemsList.clear();
     }
 
 

@@ -268,6 +268,33 @@ public class CartDao {
         }
     }
 
+
+    public boolean verifyCart(Item item, String username) throws SQLException
+    {
+        Connection connection= genericDao.getConnection();
+        String sql= """
+                SELECT op.id_product
+                FROM cart c, order_tbl ot, order_product op
+                WHERE c.id_order = ot.id_order
+                  AND ot.id_order = op.id_order
+                  AND op.id_product = ?
+                  and c.user_name = ?
+                """;
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, item.getProduct().getCod());
+        ps.setString(2, username);
+        ResultSet rs = ps.executeQuery();
+        int linha = 0;
+        if(rs.next()) {
+        	linha = rs.getRow();
+        }
+        ps.close();
+
+        return linha > 0;
+
+    }
+
     /**
      * Inseri um novo pedido de um determinado cliente.
      * @param client O cliente.

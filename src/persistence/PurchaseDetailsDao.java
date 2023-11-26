@@ -40,7 +40,8 @@ public class PurchaseDetailsDao {
                            order_prod.quantity,
                            order_prod.sub_total,
                            order_prod.sub_total + prod.shipping as total,
-                           order_tab.id_order
+                           order_tab.id_order,
+                           prod.shipping
                     from order_tbl order_tab inner join order_product order_prod on order_tab.id_order = order_prod.id_order
                          inner join product prod on order_prod.id_product = prod.id_product
                          inner join client cli on cli.user_name = order_tab.user_name_client
@@ -66,6 +67,7 @@ public class PurchaseDetailsDao {
                 item.setSubTotal(rs.getDouble(5));
                 order.setTotal(rs.getDouble(6));
                 order.setId(rs.getInt(7));
+                product.setShipping(rs.getDouble(8));
 
                 item.setProduct(product);
                 items.add(0, item);
@@ -228,7 +230,50 @@ public class PurchaseDetailsDao {
 
 
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir Order e pagamento pelo pagamento" + e.getMessage());
+            System.out.println("Erro ao inserir Order pela tela de produto" + e.getMessage());
+        }
+    }
+
+    public void deleteOrder(String login){
+        try {
+            Connection connection= genericDao.getConnection();
+            String sql= """
+                    select ot.id_order
+                    from order_tbl ot inner join order_product op on ot.id_order = op.id_order
+                          inner join client cli on ot.user_name_client = cli.user_name
+                          left join payment pay on pay.id_order = ot.id_order
+                          left join cart ca on ca.id_order = ot.id_order
+                    where ca.id_order is null
+                        and pay.id_order is null
+                        and cli.user_name = ?""";
+            PreparedStatement ps= connection.prepareStatement(sql);
+            ps.setString(1, login);
+
+            int orderId = 0;
+            ResultSet rs= ps.executeQuery();
+            if (rs.next()){
+                orderId= rs.getInt(1);
+            }
+
+            String sql2= "delete from order_product\n" +
+                    "where id_order = ?";
+            PreparedStatement ps2= connection.prepareStatement(sql2);
+            ps2.setInt(1, orderId);
+
+            ps2.executeUpdate();
+
+            String sql3= "delete from order_tbl\n" +
+                    "where id_order = ?";
+            PreparedStatement ps3= connection.prepareStatement(sql3);
+            ps3.setInt(1, orderId);
+
+            ps3.executeUpdate();
+
+            connection.close();
+
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar o pedido apartir da tela de compra!");
         }
     }
 

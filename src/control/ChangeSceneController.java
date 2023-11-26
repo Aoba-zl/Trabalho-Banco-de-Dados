@@ -149,6 +149,7 @@ public class ChangeSceneController
 					}
 					else
 						winCart = (WinShoppingCartConstructor) windowns.get(sceneName);
+					winCart.setCodValue(ipCod);
 					winCart.addElements(pWin);
 					break;
 				case PURCHASE_DETAILS:
@@ -159,6 +160,7 @@ public class ChangeSceneController
 					}
 					else
 						winPurchaseDetails = (WinPurchaseDetailsConstruct) windowns.get(sceneName);
+					winPurchaseDetails.setCodValue(ipCod);
 					winPurchaseDetails.addElements(pWin);
 					break;
 				case PURCHASE_HISTORY:
