@@ -68,7 +68,8 @@ public class RegisterUserController {
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		User u = new User();
-		u = uDao.consult(newUser); 
+		u.setLogin(newUser.getLogin());
+		u = uDao.consult(u);
 		if (u.getLogin() != newUser.getLogin()) {
 				return true;
 		}
