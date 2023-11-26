@@ -170,7 +170,7 @@ public class ProductController
 			return true;
 		}
 		
-		if(spInStock.get().trim().isBlank() || !spInStock.get().matches("\\d+"))
+		if(spInStock.get().trim().isBlank() || !spInStock.get().matches("\\d+") || spInStock.get().equals("0"))
 		{
 			lblMessage.set("Estoque Inválido");
 			return true;
