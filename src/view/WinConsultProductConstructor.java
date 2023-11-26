@@ -231,12 +231,12 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toCart(){
-		if (quant < product.getTotalStock()) {
+		if (quant <= product.getTotalStock()) {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
 			//quant = 1;
 			if(cCon.verifyCart(item, client.getLogin())) {
-				showPopup();
+				showPopup("Item Já Esta No Carrinho");
 			} else {
 				Order o =  cCon.getIdOrder();
 				if (o.getId() == null) {
@@ -247,6 +247,8 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 				fpCategory.getChildren().clear();
 				changeSceneController.changeScene(SceneName.CART, this.pWin);
 			}
+		}else {
+			showPopup("Quantidade Maior Que Estoque");
 		}
 	}
 	
@@ -255,13 +257,15 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
 			if(cCon.verifyCart(item, client.getLogin())) {
-				showPopup();
+				showPopup("Item Já Esta No Carrinho");
 			}else {
 				poCon.deleteOrder();
 				poCon.createOrder(item);
 				fpCategory.getChildren().clear();
 				changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 			}
+		}else {
+			showPopup("Quantidade Maior Que Estoque");
 		}
 	}
 	
@@ -294,8 +298,8 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
      * Obtém o valor de código de outra tela
      * @param cod O codigo do produto.
      */
-    private void showPopup() {
-		Label concluded = new Label("Item Já Esta No Carrinho");
+    private void showPopup(String menssagem) {
+		Label concluded = new Label();
         concluded.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
         
         Button btnConfirmed = new Button("Entendido!");
