@@ -199,6 +199,8 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         {
             int len = tfPhone.getText().length();
 
+            System.out.println(event.getText());
+
             if (len == 11 && tfPhone.getText().matches("\\d*"))
             {
                 lblErrorMsg.setVisible(false);
@@ -294,17 +296,6 @@ public class WinAccountClientConstructor implements GerericAccountMenuWinInterfa
         tfName      = new TextField();
         tfEmail     = new TextField();
         tfPhone     = new TextField();
-
-//        TextFormatter<Integer> textFormatterNumeric = new TextFormatter<>(new IntegerStringConverter(), 0,
-//                change -> {
-//                    String newText = change.getControlNewText();
-//                    if (newText.matches("\\d*")) {
-//                        return change;
-//                    }
-//                    return null;
-//                });
-//
-//        tfPhone.setTextFormatter(textFormatterNumeric);
 
         tfOtherSex       = new TextField();
         tfOtherSex.setVisible(false);

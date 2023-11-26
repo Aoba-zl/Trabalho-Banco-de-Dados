@@ -232,17 +232,6 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         tfEmail = new TextField();
         tfPhone = new TextField();
 
-//        TextFormatter<Integer> textFormatterNumeric = new TextFormatter<>(new IntegerStringConverter(), 0,
-//                change -> {
-//                    String newText = change.getControlNewText();
-//                    if (newText.matches("\\d*")) {
-//                        return change;
-//                    }
-//                    return null;
-//                });
-//
-//        tfPhone.setTextFormatter(textFormatterNumeric);
-
         btnDeleteAccount = new Button("Excluir Conta");
         btnDeleteAccount
                 .setStyle( "-fx-background-color: #ff5959; -fx-text-fill: white;" +
