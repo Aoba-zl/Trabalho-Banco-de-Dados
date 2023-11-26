@@ -16,16 +16,27 @@ import utils.SceneName;
 import utils.UserSession;
 
 
-
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * Cadastro de Endereço da loja.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinRegStoreAddressConstructor implements GenericWindownInterface {
 	Pane pWin;
 	private RegisterUserController uCon;
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
-	
+    /**
+     * Construtor da classe.
+     *
+     * @param uCon é o construtor onde se encontram as informaçoes da loja.
+     */
 	public WinRegStoreAddressConstructor(RegisterUserController uCon) {
 		this.uCon = uCon;
 	}
+    /**
+     * Construtor da classe.
+     */
 	public WinRegStoreAddressConstructor() {}
 
 	public void addElements(Pane pane) {

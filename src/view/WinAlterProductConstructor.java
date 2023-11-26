@@ -20,7 +20,11 @@ import model.Product;
 import model.Store;
 import utils.SceneName;
 
-
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * alteração de produto.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinAlterProductConstructor implements GenericWindownInterface
 {
 	Pane pWin;
@@ -34,6 +38,11 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
 	
+    /**
+     * Construtor da classe.
+     *
+     * @param pane O painel principal da interface gráfica.
+     */
 	public void addElements(Pane pane) 	
 	{
 		this.pWin = pane;
@@ -164,7 +173,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 		pane.getChildren().addAll(paneConsult);
 	}
 	
-	public void addCategory (String categoria) {
+	private void addCategory (String categoria) {
 		Label lblCategory = new Label("("+categoria+") ");
 		fpCategory.getChildren().add(lblCategory);
 	}

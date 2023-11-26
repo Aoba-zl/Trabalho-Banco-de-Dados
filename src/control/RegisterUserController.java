@@ -18,7 +18,9 @@ import persistence.GenericDao;
 import persistence.StoreDao;
 import persistence.UserDao;
 import utils.ServicoDeCep;
-
+/**
+ * Controlador responsável pelas operações dos cadastros de Loja, Usuario e Cliente .
+ */
 public class RegisterUserController {
     Store loja = new Store();
     Client cliente = new Client();
@@ -61,10 +63,6 @@ public class RegisterUserController {
     private StringProperty spAddressName = new SimpleStringProperty("");
   
     public boolean validateUserLogin(User newUser) throws SQLException {
-        //TODO: CtrlCadastroUsuario. Corpo da operacao
-        /*
-        se o login não estiver no BD -> True, pode criar user c/ o login.
-         */
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		User u = new User();
@@ -75,11 +73,12 @@ public class RegisterUserController {
 		}
         return false;
     }
-    public boolean generateClient() throws SQLException {
-        //TODO: CtrlCadastroUsuario. Corpo da operacao
-    	if(!checkValuesClient()) {
-    		return false;
-    	}
+	/**
+	 * Cria e insere um novo endereço de cliente, Usuario e Cliente no banco de dados.
+	 *
+	 * @throws SQLException Se ocorrer um erro ao acessar o banco de dados durante a inserção do novo endereço, user ou cliente.
+	 */
+    public void generateClient() throws SQLException {
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		ClientDao cDao = new ClientDao(gDao);
@@ -91,9 +90,12 @@ public class RegisterUserController {
         uDao.insert(newUser);
         cDao.insert(cliente);
         caDao.insert(endereco);
-        return true;
     }
-    
+	/**
+	 * Procura por uma CEP passado, fazendo verificaçoes antes.
+	 *
+	 * @throws Pois o CEP passado pode não existir.
+	 */
     public void completeAddress() {
     	if (getCepValue().length() == 9 && getCepValue().contains("-")) {
     		String[] cep = getCepValue().split("-");
@@ -115,8 +117,12 @@ public class RegisterUserController {
     		}
     	}
     }
+	/**
+	 * Cria e insere um novo endereço de loja, Usuario e loja no banco de dados.
+	 *
+	 * @throws SQLException Se ocorrer um erro ao acessar o banco de dados durante a inserção do novo endereço, user ou cliente.
+	 */
     public void generateStore() throws SQLException {
-        //TODO: CtrlCadastroUsuario. Corpo da operacao
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
 		StoreDao sDao = new StoreDao(gDao);
@@ -127,6 +133,13 @@ public class RegisterUserController {
         sDao.insert(loja);
         aDao.insert(novoEndereco);
     }
+	/**
+	 * Procura por uma loja pelo id e retorna ela completa.
+	 *
+	 * @param store tera o id da mesma para a procura.
+	 * @return O novo objeto store com todos os dados do banco.
+	 * @throws SQLException Se ocorrer um erro ao acessar o banco de dados durante a inserção do novo endereço.
+	 */
     public Store consultStore (Store store) {
 		GenericDao gDao = new GenericDao();
 		StoreDao sDao = new StoreDao(gDao);
@@ -139,17 +152,11 @@ public class RegisterUserController {
     	return store;
     }
     
-    
-    public Client updateClient() {
-        Client client = null;
-        //TODO: CtrlCadastroUsuario. Corpo da operacao
-        return client;
-    }
-    public Store updateStore() {
-        Store store = null;
-        //TODO: CtrlCadastroUsuario. Corpo da operacao
-        return store;
-    }
+   
+	/**
+	 * Checa se todos os valores do cliente estão validos.
+	 * @return True se for valido, false caso não
+	 */
     public boolean checkValuesClient () throws SQLException {
     	System.out.println(getName());
     	// 01-02-2013 formato que deve chegar
@@ -227,8 +234,14 @@ public class RegisterUserController {
         cliente.setCpf(getCpfValue());
         cliente.setDateBirth(getBirthDateValue());
         cliente.setSex(Sex);
+        
+        spWarning.setValue("");
     	return true;
     }
+	/**
+	 * Checa se o nome do endereço do cliente é valido
+	 * @return True se for valido, false caso não
+	 */
     public boolean checkAddressName() {
     	if (getAddressNameValue().trim().isBlank() || getAddressNameValue().length() > 50) {
     		spWarning.setValue("Nome Invalido");
@@ -236,7 +249,10 @@ public class RegisterUserController {
     	}
     	return true;
     }
-    
+	/**
+	 * Checa se todos os valores de endereço estão validos.
+	 * @return True se for valido, false caso não
+	 */
     public boolean checkValuesAddress () {
     	
     	if(getCepValue().trim().isBlank() || getCepValue().length() != 9 || !getCepValue().contains("-")) {
@@ -251,12 +267,16 @@ public class RegisterUserController {
     		spWarning.setValue("Numero Invalido");
     		return false;
     	}
-    	if(getComplementValue ().trim().isBlank() || getComplementValue ().length() > 50) {
+    	if(getComplementValue ().length() > 50) {
     		spWarning.setValue("Complemento Invalido");
     		return false;
     	}
     	return true;
     }
+	/**
+	 * Checa se todos os valores da loja estão validos.
+	 * @return True se for valido, false caso não
+	 */
     public boolean checkValuesStore() throws SQLException {
     	if (getPasswdValue ().trim().isBlank() || getPasswdValue ().length() > 60) {
     		spWarning.setValue("Senha Invalido");
@@ -296,8 +316,13 @@ public class RegisterUserController {
     	loja.setLogin(getNameValue());
     	loja.setNameStore(getStoreValue());
     	loja.setCnpj(getCnpjValue());
+    	
+        spWarning.setValue("");
     	return true;
     }
+	/**
+	 * Limpa todos os campos
+	 */
     public void clean () {
         spAddressName.setValue("");
         spBirthDate.setValue("");
@@ -320,49 +345,272 @@ public class RegisterUserController {
         spStore.setValue("");
     }
     // Conexão com dados
-    public StringProperty getName () { return spName; }
-    public StringProperty getCpf () { return spCpf; }
-    public StringProperty getEmail () { return spEmail; }
-    public StringProperty getPasswd () { return spPasswd; }
-    public StringProperty getSocialName () { return spSocialName; }
-    public StringProperty getPhone () { return spPhone; }
-    public StringProperty getBirthDate () { return spBirthDate; }
-    public StringProperty getSex () { return spSex; }
-    public StringProperty getWarning () { return spWarning; }
-    public BooleanProperty getMale () { return spMale; }
-    public BooleanProperty getFem () { return spFem; }
-    public BooleanProperty getOther () { return spOther; }
-    public StringProperty getCnpj () { return spCnpj; }
-    public StringProperty getStore () { return spStore; }
-    
-    
+    /**
+     * Retorna a propriedade do nome.
+     * 
+     * @return A propriedade do nome como StringProperty.
+     */
+    public StringProperty getName() {
+        return spName;
+    }
+    /**
+     * Retorna a propriedade do CPF.
+     * 
+     * @return A propriedade do CPF como StringProperty.
+     */
+    public StringProperty getCpf() {
+        return spCpf;
+    }
+    /**
+     * Retorna a propriedade do email.
+     * 
+     * @return A propriedade do email como StringProperty.
+     */
+    public StringProperty getEmail() {
+        return spEmail;
+    }
+    /**
+     * Retorna a propriedade da senha.
+     * 
+     * @return A propriedade da senha como StringProperty.
+     */
+    public StringProperty getPasswd() {
+        return spPasswd;
+    }
+    /**
+     * Retorna a propriedade do nome social.
+     * 
+     * @return A propriedade do nome social como StringProperty.
+     */
+    public StringProperty getSocialName() {
+        return spSocialName;
+    }
+    /**
+     * Retorna a propriedade do telefone.
+     * 
+     * @return A propriedade do telefone como StringProperty.
+     */
+    public StringProperty getPhone() {
+        return spPhone;
+    }
+    /**
+     * Retorna a propriedade da data de nascimento.
+     * 
+     * @return A propriedade da data de nascimento como StringProperty.
+     */
+    public StringProperty getBirthDate() {
+        return spBirthDate;
+    }
+    /**
+     * Retorna a propriedade do sexo.
+     * 
+     * @return A propriedade do sexo como StringProperty.
+     */
+    public StringProperty getSex() {
+        return spSex;
+    }
+    /**
+     * Retorna a propriedade do aviso.
+     * 
+     * @return A propriedade do aviso como StringProperty.
+     */
+    public StringProperty getWarning() {
+        return spWarning;
+    }
+    /**
+     * Retorna a propriedade indicando masculino.
+     * 
+     * @return A propriedade indicando masculino como BooleanProperty.
+     */
+    public BooleanProperty getMale() {
+        return spMale;
+    }
+    /**
+     * Retorna a propriedade indicando feminino.
+     * 
+     * @return A propriedade indicando feminino como BooleanProperty.
+     */
+    public BooleanProperty getFem() {
+        return spFem;
+    }
+    /**
+     * Retorna a propriedade indicando outro gênero.
+     * 
+     * @return A propriedade indicando outro gênero como BooleanProperty.
+     */
+    public BooleanProperty getOther() {
+        return spOther;
+    }
+    /**
+     * Retorna a propriedade do CNPJ.
+     * 
+     * @return A propriedade do CNPJ como StringProperty.
+     */
+    public StringProperty getCnpj() {
+        return spCnpj;
+    }
+    /**
+     * Retorna a propriedade da loja.
+     * 
+     * @return A propriedade da loja como StringProperty.
+     */
+    public StringProperty getStore() {
+        return spStore;
+    }
+	/**
+	 * Obtém o valor atual da propriedade de Name.
+	 * @return O valor do nome.
+	 */
     public String getNameValue () { return spName.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Cpf.
+	 * @return O valor do Cpf.
+	 */
     public String getCpfValue () { return spCpf.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Email.
+	 * @return O valor do Email.
+	 */
     public String getEmailValue () { return spEmail.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Passwd.
+	 * @return O valor da senha.
+	 */
     public String getPasswdValue () { return spPasswd.getValue(); }	
+	/**
+	 * Obtém o valor atual da propriedade de SocialName.
+	 * @return O valor do Nome social.
+	 */
     public String getSocialNameValue () { return spSocialName.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Phone.
+	 * @return O valor do Telefone.
+	 */
     public String getPhoneValue () { return spPhone.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de BirthDate.
+	 * @return O valor do aniversario.
+	 */
     public String getBirthDateValue () { return spBirthDate.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de tSex.
+	 * @return O valor do sexo.
+	 */
     public String getSexValue () { return spSex.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Cnpj.
+	 * @return O valor do Cnpj.
+	 */
     public String getCnpjValue () { return spCnpj.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Store.
+	 * @return O valor nome da loja.
+	 */
     public String getStoreValue () { return spStore.getValue(); }
     // Conexão com endereco
-    public StringProperty getAddressName () { return spAddressName; }
-    public StringProperty getCep () { return spCep; }
-    public StringProperty getState () { return spEstate; }
-    public StringProperty getNeighborhood () { return spNeighborhood; }
-    public StringProperty getNumber () { return spNumber; }
-    public StringProperty getCity () { return spCity; }
-    public StringProperty getComplement () { return spComplement; }
-    public StringProperty getStreet () { return spStreet; }
-
+    /**
+     * Retorna a propriedade do nome do endereço.
+     * 
+     * @return A propriedade do nome do endereço como StringProperty.
+     */
+    public StringProperty getAddressName() {
+        return spAddressName;
+    }
+    /**
+     * Retorna a propriedade do CEP.
+     * 
+     * @return A propriedade do CEP como StringProperty.
+     */
+    public StringProperty getCep() {
+        return spCep;
+    }
+    /**
+     * Retorna a propriedade do estado.
+     * 
+     * @return A propriedade do estado como StringProperty.
+     */
+    public StringProperty getState() {
+        return spEstate;
+    }
+    /**
+     * Retorna a propriedade do bairro.
+     * 
+     * @return A propriedade do bairro como StringProperty.
+     */
+    public StringProperty getNeighborhood() {
+        return spNeighborhood;
+    }
+    /**
+     * Retorna a propriedade do número.
+     * 
+     * @return A propriedade do número como StringProperty.
+     */
+    public StringProperty getNumber() {
+        return spNumber;
+    }
+    /**
+     * Retorna a propriedade da cidade.
+     * 
+     * @return A propriedade da cidade como StringProperty.
+     */
+    public StringProperty getCity() {
+        return spCity;
+    }
+    /**
+     * Retorna a propriedade do complemento.
+     * 
+     * @return A propriedade do complemento como StringProperty.
+     */
+    public StringProperty getComplement() {
+        return spComplement;
+    }
+    /**
+     * Retorna a propriedade da rua.
+     * 
+     * @return A propriedade da rua como StringProperty.
+     */
+    public StringProperty getStreet() {
+        return spStreet;
+    }
+	/**
+	 * Obtém o valor atual da propriedade de AddressName.
+	 * @return O valor do Nome do endereço.
+	 */
     public String getAddressNameValue () { return spAddressName.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Cep.
+	 * @return O valor do Cep.
+	 */
     public String getCepValue () { return spCep.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de State.
+	 * @return O valor do estado.
+	 */
     public String getStateValue () { return spEstate.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Neighborhood.
+	 * @return O valor do bairro.
+	 */
     public String getNeighborhoodValue () { return spNeighborhood.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Number.
+	 * @return O valor do numero da casa.
+	 */
     public String getNumberValue () { return spNumber.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de City.
+	 * @return O valor da cidade.
+	 */
     public String getCityValue () { return spCity.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de complement.
+	 * @return O valor do complemento.
+	 */
     public String getComplementValue () { return spComplement.getValue(); }
+	/**
+	 * Obtém o valor atual da propriedade de Street.
+	 * @return O valor da rua.
+	 */
     public String getStreetValue () { return spStreet.getValue(); }
     
 }

@@ -28,6 +28,11 @@ import model.Store;
 import utils.SceneName;
 import utils.UserSession;
 
+/**
+ * Classe responsável por construir e adicionar os elementos a interface gráfica de
+ * Consulta de produto.
+ * Implementa a interface GerericAccountMenuWinInterface.
+ */
 public class WinConsultProductConstructor implements GenericWindownInterface {
 	Pane pWin;
 	private CartController cCon = new CartController();
@@ -41,7 +46,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	private IntegerProperty ipCod = new SimpleIntegerProperty(0);
 	
 	private ChangeSceneController changeSceneController = new ChangeSceneController();
-	
+    /**
+     * Construtor da classe.
+     *
+     * @param pane O painel principal da interface gráfica.
+     */
 	public void addElements(Pane pane) {
 		this.pWin = pane;
 		
