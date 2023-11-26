@@ -8,6 +8,7 @@ import control.RegisterUserController;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -124,10 +125,11 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			
 			Button btnAdd = new Button("+");
 			btnAdd.setPrefWidth(24.1);
-			btnAdd.addEventFilter(MouseEvent.MOUSE_CLICKED,
-			         (MouseEvent ev) -> {
-			        	 addQuant(1,txQuantity);
-			         });
+			btnAdd.setOnMouseClicked(event -> {
+                if (quant < product.getTotalStock()){
+                	addQuant(1,txQuantity);
+                }
+            });
 			Button btnMinus = new Button("-");
 			btnMinus.setPrefWidth(24.1);
 			btnMinus.addEventFilter(MouseEvent.MOUSE_CLICKED,
@@ -297,10 +299,6 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         button.setStyle(styleExit);
     }
     
-    /**
-     * Obtém o valor de código de outra tela
-     * @param cod O codigo do produto.
-     */
     private void showPopup(String menssagem, int act) {
 		Label concluded = new Label(menssagem);
 		concluded.setMinHeight(40);
@@ -337,7 +335,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
     
     /**
      * Obtém o codigo de produto de outra tela.
-     * @param cod
+     * @param cod O codigo do produto.
      */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }
