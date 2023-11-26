@@ -41,6 +41,9 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
     private final HashMap<SubAccountWindows, GerericAccountMenuWinInterface> subWindowns = new HashMap<>();
     
     private final ChangeSceneController changeSceneController = new ChangeSceneController();
+
+    private String user;
+
     /**
      * Adiciona elementos à interface gráfica da janela de conta.
      *
@@ -50,7 +53,7 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
     {
     	pWin = pane;
 
-        String user = UserSession.getUserType();
+        user = UserSession.getUserType();
         double marginMenu = (Constants.WIDTH * 0.08);
         Button btnBack = new Button();
         setBtnBackImage(btnBack);
@@ -227,10 +230,10 @@ public class WinAccountMenuConstructor implements GenericWindownInterface
             case "goBack" -> toPreviousPage();
             case "orderRecord" ->
             {
-                if (UserSession.getUserName() == "client")
-                    changeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
-                else
+                if (user.equalsIgnoreCase("store"))
                     changeSceneController.changeScene(SceneName.ORDER_HISTORY, pWin);
+                else
+                changeSceneController.changeScene(SceneName.PURCHASE_HISTORY, pWin);
             }
         }
     }
