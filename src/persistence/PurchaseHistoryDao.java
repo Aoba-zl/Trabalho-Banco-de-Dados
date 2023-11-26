@@ -61,13 +61,14 @@ public class PurchaseHistoryDao {
         ps.setString(1, client.getLogin());
         ResultSet rs= ps.executeQuery();
 
-        List<Item> itemList= new ArrayList<>();
         while (rs.next()){
+            List<Item> itemList= new ArrayList<>();
             Order order= new Order();
 
             Product product= new Product();
             order.setId(rs.getInt(1));
             product.setName(rs.getString(2));
+            product.setCod(rs.getInt(5));
 
             Item item= new Item();
             item.setProduct(product);
@@ -76,7 +77,6 @@ public class PurchaseHistoryDao {
             Payment payment= new Payment();
             payment.setDate(rs.getDate(3).toLocalDate());
             payment.setStatus(rs.getString(4));
-            product.setCod(rs.getInt(5));
 
             order.setItems(itemList);
             order.setPayment(payment);

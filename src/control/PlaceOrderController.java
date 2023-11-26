@@ -51,7 +51,6 @@ public class PlaceOrderController {
             double portageCal= 0;
             double totalPrice= 0;
             Item item= order.getItems().get(0);
-            System.out.println(item.getProduct().getShipping());
 
             portageCal+= item.getProduct().getShipping();
             totalPrice+= item.getSubTotal();
