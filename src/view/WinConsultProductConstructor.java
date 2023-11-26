@@ -18,8 +18,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import model.Client;
-import model.Item;
 import model.Product;
 import model.Store;
 import utils.SceneName;

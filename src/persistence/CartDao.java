@@ -268,7 +268,7 @@ public class CartDao {
         }
     }
 
-    public boolean verifyCart(Connection con, Item item) throws SQLException
+    public boolean verifyCart(Connection con,Item item) throws SQLException
     {
         String sql= """
                 SELECT op.id_product
