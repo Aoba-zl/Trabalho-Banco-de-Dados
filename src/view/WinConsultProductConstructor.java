@@ -259,10 +259,10 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			}else {
 				poCon.deleteOrder();
 				poCon.createOrder(item);
+				fpCategory.getChildren().clear();
+				changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 			}
-			fpCategory.getChildren().clear();
 
-			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
 
 		}
 	}
