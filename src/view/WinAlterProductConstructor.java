@@ -124,12 +124,9 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 			btnReturn.relocate(4, 4);
 			
 			// ----- Creating Buttons ----- //
-			
-			Button btnDelete = new Button("Excluir");
-			btnDelete.relocate(482, 360);
-			btnDelete.setPrefWidth(140);
+
 			Button btnEdit = new Button("Editar");
-			btnEdit.relocate(291, 360);
+			btnEdit.relocate(395, 355);
 			btnEdit.setPrefWidth(140);
 			
 			// ----- Creating Label ----- //
@@ -154,12 +151,11 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 
 			
 		paneInfo.getChildren().addAll(hbInfo,lbNameProd,lbPrice,btnReturn,fpCategory);
-		paneConsult.getChildren().addAll(paneInfo,btnEdit,btnDelete,lbDescription,txDescription);
+		paneConsult.getChildren().addAll(paneInfo,btnEdit,lbDescription,txDescription);
 		
 		//ChangeScene
 		btnReturn.setOnAction(e -> toStore());
 		btnEdit.setOnAction(e -> toEditProduct());
-		btnDelete.setOnAction(e -> delete(product));
 		
 		pane.getChildren().addAll(paneConsult);
 	}
@@ -177,11 +173,6 @@ public class WinAlterProductConstructor implements GenericWindownInterface
 	private void setAlignment(TextField tf) {
 		tf.setPrefWidth(206);
 		tf.setStyle("-fx-font-size: 12px;");
-	}
-	private void delete (Product product) {
-		pCon.delete(product);
-		fpCategory.getChildren().clear();
-		changeSceneController.changeScene(SceneName.STORE, this.pWin);
 	}
 	
 	private void toStore()
