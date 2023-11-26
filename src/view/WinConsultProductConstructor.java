@@ -254,9 +254,12 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 		if (quant < product.getTotalStock()) {
 			Item item = new Item(product, quant);
 			Client client = new Client(UserSession.getUserName());
-
-			poCon.deleteOrder();
-			poCon.createOrder(item);
+			if(cCon.verifyCart(item, client.getLogin())) {
+				showPopup();
+			}else {
+				poCon.deleteOrder();
+				poCon.createOrder(item);
+			}
 			fpCategory.getChildren().clear();
 
 			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);
