@@ -222,7 +222,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 	}
 	
 	private void toHomePage(){
-		quant = 0;
+		quant = 1;
 		fpCategory.getChildren().clear();
 		changeSceneController.changeScene(SceneName.HOME_PAGE, this.pWin);
 	}
@@ -237,7 +237,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
 			changeSceneController.setCodValue(codProperty); 
 			// -----
-			quant = 0;
+			quant = 1;
 			fpCategory.getChildren().clear();
 			changeSceneController.changeScene(SceneName.CART, this.pWin);
 		}
@@ -253,7 +253,7 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
 			IntegerProperty codProperty = new SimpleIntegerProperty(product.getCod());
 			changeSceneController.setCodValue(codProperty);
 			// -----
-			quant = 0;
+			quant = 1;
 			fpCategory.getChildren().clear();
 			changeSceneController.changeScene(SceneName.PURCHASE_DETAILS, this.pWin);		
 		}
