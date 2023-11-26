@@ -13,6 +13,12 @@ public class ServicoDeCep {
     static String webService = "http://viacep.com.br/ws/";
     static int codigoSucesso = 200;
 
+    /**
+     * Busca o endereço direto pela api do cep
+     * @param cep O cep do endereço.
+     * @return O endereço
+     * @throws Exception Trata a exception causado pelo método.
+     */
     public static Address buscaEnderecoPelo(String cep) throws Exception {
         String urlParaChamada = webService + cep + "/json";
 

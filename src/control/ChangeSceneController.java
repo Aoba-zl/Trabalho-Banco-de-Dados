@@ -241,5 +241,9 @@ public class ChangeSceneController
 		}
 	}
 	
+	/**
+	 * Faz a movimentação de codigo de produto entre as telas.
+	 * @param cod O codigo do produto.
+	 */
 	public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

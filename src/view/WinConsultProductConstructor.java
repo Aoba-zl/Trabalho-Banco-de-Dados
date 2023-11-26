@@ -320,5 +320,9 @@ public class WinConsultProductConstructor implements GenericWindownInterface {
         
     }
     
+    /**
+     * Obtém o codigo de produto de outra tela.
+     * @param cod
+     */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 }

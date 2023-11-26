@@ -268,7 +268,13 @@ public class CartDao {
         }
     }
 
-
+    /**
+     * Faz a verificação de existência do produto no carrinho.
+     * @param item O item.
+     * @param username O nome de usuário.
+     * @return True para caso encontre o item, false caso o contrário.
+     * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+     */
     public boolean verifyCart(Item item, String username) throws SQLException
     {
         Connection connection= genericDao.getConnection();

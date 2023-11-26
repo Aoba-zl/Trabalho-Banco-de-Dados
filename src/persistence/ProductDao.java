@@ -33,7 +33,7 @@ public class ProductDao
 	{
 		Connection c = gDao.getConnection();
 		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, COALESCE(NULLIF(?,''), 'Sem categoria'), ?, 0);";
-		PreparedStatement ps = c.prepareStatement(sql); //Statement.RETURN_GENERATED_KEYS pode ser utilizado para caso queira pegar a PK que é gerado de forma automatica
+		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, UserSession.getUserName());
 		ps.setString(2, p.getName());
 		ps.setDouble(3, p.getPrice());
@@ -91,11 +91,23 @@ public class ProductDao
 		
 	}
 
+	/**
+	 * Deleta o produto da visão do usuário, permitindo o produto existir no banco de dados.
+	 * @param p
+	 * @return
+	 * @throws SQLException
+	 */
 	public boolean delete(Product p) throws SQLException 
 	{
 		return update(p);
 	}
 
+	/**
+	 * Consulta o produto no banco de dados.
+	 * @param product O produto.
+	 * @return Os dados do produto.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public Product consult(Product product) throws SQLException
 	{
 		Connection c = gDao.getConnection();
@@ -186,6 +198,12 @@ public class ProductDao
 		return products;
 	}
 	
+	/**
+	 * Busca a quantidade total do produto no banco de dados.
+	 * @param product O produto.
+	 * @return A quantidade total.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public int quantProduct(Product product) throws SQLException {
 		Connection c = gDao.getConnection();
 		String sql = """ 
