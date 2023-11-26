@@ -225,7 +225,7 @@ public class WinAlterProductConstructor implements GenericWindownInterface
     }
     
     /**
-     * Obtém o valor de código de outra tela
+     * Obtém o codigo de produto de outra tela.
      * @param cod O codigo do produto.
      */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }

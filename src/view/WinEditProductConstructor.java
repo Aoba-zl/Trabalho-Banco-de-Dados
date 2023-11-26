@@ -252,6 +252,10 @@ public class WinEditProductConstructor implements GenericWindownInterface
         button.setStyle(styleExit);
     }
 	
+    /**
+     * Obtém o codigo de produto de outra tela.
+     * @param cod O codigo do produto.
+     */
     public void setCodValue(IntegerProperty cod) { ipCod.bindBidirectional(cod); }
 
 }
