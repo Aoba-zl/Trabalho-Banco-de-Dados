@@ -9,6 +9,9 @@ import view.*;
 
 import java.util.HashMap;
 
+/**
+ * Classe responsável pela troca de tela e variável do aplicativo.
+ */
 public class ChangeSceneController
 {
 	private static HashMap<SceneName, GenericWindownInterface> windowns = new HashMap<>();
