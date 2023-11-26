@@ -210,7 +210,7 @@ public class WinPurchaseHistoryConstructor implements GenericWindownInterface {
         tfTotalValue.setEditable(false);
         tfMethodPayment.setEditable(false);
         tfStatus.setEditable(false);
-        tfQuantity.setMaxWidth(30);
+        tfQuantity.setMaxWidth(32);
         tfQuantity.setStyle("-fx-alignment: CENTER");
 
 
