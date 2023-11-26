@@ -145,7 +145,13 @@ public class AccountMenuController
 		ObservableList<ClientAddress> allAddress = controller.getAddressList(login);
 		for (ClientAddress addr : allAddress)
 			controller.deleteClientAddress(addr, login);
-    	clientDao.delete(new Client(login));
+		CartController cartController = new CartController();
+		CartDao cartDao = new CartDao(genericDAO);
+
+		Order order = cartController.getIdOrder();
+		cartDao.deleteAllItem(order);
+
+		clientDao.delete(new Client(login));
 		userDao.delete(new User(login));
     }
     
@@ -155,12 +161,6 @@ public class AccountMenuController
     	GenericDao genericDAO = new GenericDao();
     	UserDao userDao = new UserDao(genericDAO);
     	StoreDao storeDao = new StoreDao(genericDAO);
-		CartController cartController = new CartController();
-		CartDao cartDao = new CartDao(genericDAO);
-
-		Order order = cartController.getIdOrder();
-		cartDao.deleteAllItem(order);
-
 		addressMenuController.deleteStoreAddress(login);
 		storeDao.delete(new Store(login));
 		userDao.delete(new User(login));
