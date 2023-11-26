@@ -13,6 +13,7 @@ public class Product
     private String Category;
     private String description;
     private String login;
+    private int status = 0;
 
 	/**
 	 * Obtém o nome do produto.
@@ -174,6 +175,13 @@ public class Product
 		this.login = login;
 	}
     
+    public int getStatus()
+    {
+    	return status;
+    }
     
-    
+    public void setStatus(int status)
+    {
+    	this.status = status;
+    }
 }

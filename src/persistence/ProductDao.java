@@ -32,7 +32,7 @@ public class ProductDao
 	public boolean insert(Product p) throws SQLException //
 	{
 		Connection c = gDao.getConnection();
-		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, COALESCE(NULLIF(?,''), 'Sem categoria'), ?);";
+		String sql = "INSERT INTO product VALUES (?, ?, ?, ?, ?, COALESCE(NULLIF(?,''), 'Sem categoria'), ?, 0);";
 		PreparedStatement ps = c.prepareStatement(sql); //Statement.RETURN_GENERATED_KEYS pode ser utilizado para caso queira pegar a PK que é gerado de forma automatica
 		ps.setString(1, UserSession.getUserName());
 		ps.setString(2, p.getName());
@@ -69,7 +69,8 @@ public class ProductDao
 				   + "total_stock = ?, "
 				   + "shipping = ?, "
 				   + "category = COALESCE(NULLIF(?,''), 'Sem categoria'), "
-				   + "description = ? "
+				   + "description = ?, "
+				   + "status = ? "
 				   + "WHERE id_product = ?";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, p.getName());
@@ -78,7 +79,8 @@ public class ProductDao
 		ps.setDouble(4, p.getShipping());
 		ps.setString(5, p.getCategory());
 		ps.setString(6, p.getDescription());
-		ps.setInt(7, p.getCod());
+		ps.setInt(7, p.getStatus());
+		ps.setInt(8, p.getCod());
 		
 		int linha = ps.executeUpdate();
 		
@@ -91,17 +93,7 @@ public class ProductDao
 
 	public boolean delete(Product p) throws SQLException 
 	{
-		Connection connection = gDao.getConnection();
-		String querySql = "DELETE product WHERE id_product = ?";
-		PreparedStatement ps = connection.prepareStatement(querySql);
-		ps.setInt(1, p.getCod());
-
-		ps.execute();
-
-		ps.close();
-		connection.close();
-		
-		return true;
+		return update(p);
 	}
 
 	public Product consult(Product product) throws SQLException
@@ -111,6 +103,7 @@ public class ProductDao
 				SELECT id_product, user_name, name_product, unity_price, total_stock, shipping, category, description 
 				FROM product
 				WHERE id_product = ?
+					AND status = 0
 				""";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setInt(1, product.getCod());
@@ -140,7 +133,7 @@ public class ProductDao
 	{
 		List<Product> products = new ArrayList<Product>();
 		Connection c = gDao.getConnection();
-		String sql = "SELECT id_product, name_product, unity_price, description FROM product;";
+		String sql = "SELECT id_product, name_product, unity_price, description FROM product WHERE total_stock != 0 AND status = 0;";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next())
@@ -170,7 +163,7 @@ public class ProductDao
 	{
 		List<Product> products = new ArrayList<Product>();
 		Connection c = gDao.getConnection();
-		String sql = "SELECT id_product, name_product, unity_price, total_stock, description FROM product WHERE user_name = ?;";
+		String sql = "SELECT id_product, name_product, unity_price, total_stock, description FROM product WHERE user_name = ? AND status = 0;";
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setString(1, UserSession.getUserName());	
 		ResultSet rs = ps.executeQuery();
@@ -192,6 +185,7 @@ public class ProductDao
 		
 		return products;
 	}
+	
 	public int quantProduct(Product product) throws SQLException {
 		Connection c = gDao.getConnection();
 		String sql = """ 

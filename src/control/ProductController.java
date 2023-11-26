@@ -134,6 +134,7 @@ public class ProductController
 		
 		GenericDao gDao = new GenericDao();
 		ProductDao pDao = new ProductDao(gDao);
+		product.setStatus(1);
 		try {
 			return  pDao.delete(product);
 		} catch (SQLException e) {

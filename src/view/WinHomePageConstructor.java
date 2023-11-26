@@ -209,7 +209,7 @@ public class WinHomePageConstructor implements GenericWindownInterface
 					Product p = list.get(countProduct);
 					Label lblNameProduct = new Label(p.getName());
 					Label lblDescProduct = new Label(p.getDescription());
-					Label lblPrice = new Label("Preço: " + String.valueOf(p.getPrice()).replace(".", ",") + "R$");
+					Label lblPrice = new Label("Preço: R$" + String.valueOf(p.getPrice()).replace(".", ","));
 					lblDescProduct.setPrefHeight(55);
 					lblDescProduct.setWrapText(true);
 					lblDescProduct.setStyle("-fx-alignment: top-left");
