@@ -118,7 +118,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    toCart();
+                    toHome();
                 }
                 else if (cbPaymentMethod.getValue() == "Boleto") {
                     controllerPlaceOrder.placePayment(false);
@@ -130,7 +130,7 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
                     alert.showAndWait();
                     controllerPlaceOrder.clearItems();
                     pane.getChildren().clear();
-                    toCart();
+                    toHome();
                 }
                 else if (cbPaymentMethod.getValue() == null){
                     Alert alert= new Alert(Alert.AlertType.INFORMATION);

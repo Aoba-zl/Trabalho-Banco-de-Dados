@@ -166,6 +166,8 @@ public class WinShoppingCartConstructor implements GenericWindownInterface {
             if (!controllerCart.getListCart().isEmpty()){
                 tableCart.getColumns().clear();
                 controllerCart.getListCart().clear();
+                lblTotalPrice.setText("Total:");
+                lblPortage.setText("Frete:");
                 toDetails();
             }
             else {
