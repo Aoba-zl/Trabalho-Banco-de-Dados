@@ -183,8 +183,6 @@ public class WinPurchaseDetailsConstruct implements GenericWindownInterface {
 
         });
 
-        btnReturn.setOnAction(e -> toCart());
-
 
 
         //---------------------------------------------------------------------
