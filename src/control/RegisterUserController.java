@@ -61,7 +61,13 @@ public class RegisterUserController {
     
     // endereço cliente
     private StringProperty spAddressName = new SimpleStringProperty("");
-  
+	/**
+	 * Ve se o nome de usuario ja esta cadastrado.
+	 *
+	 * @param newUser tera o nome da mesma para a procura.
+	 * @return Se true não esta cadastrado, se false esta cadastrado
+	 * @throws SQLException Se ocorrer um erro ao acessar o banco de dados durante a inserção do novo endereço.
+	 */
     public boolean validateUserLogin(User newUser) throws SQLException {
 		GenericDao gDao = new GenericDao();
 		UserDao uDao = new UserDao(gDao);
