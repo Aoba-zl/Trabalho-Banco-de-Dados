@@ -122,6 +122,12 @@ public class UserDao implements CrudDao<User>
 		return u;
 	}
 	
+	/**
+	 * Verifica se um email existe no banco de dados.
+	 * @param u O usuário.
+	 * @return True para caso existe, false caso o contrário.
+	 * @throws SQLException Caso ocorra um erro de conexão no banco de dados.
+	 */
 	public boolean verifyEmail(User u) throws SQLException
 	{
 		Connection connection = gDao.getConnection();
