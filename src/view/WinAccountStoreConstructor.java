@@ -169,7 +169,7 @@ public class WinAccountStoreConstructor implements GerericAccountMenuWinInterfac
         {
             int len = tfPhone.getText().length();
 
-            if (len == 11 && tfPhone.getText().matches("\\d*"))
+            if (len == 9 && tfPhone.getText().matches("\\d*"))
             {
                 lblErrorMsg.setVisible(false);
                 setTextFieldNormalStyle(tfPhone);

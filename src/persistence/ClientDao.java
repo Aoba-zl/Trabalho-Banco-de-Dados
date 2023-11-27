@@ -20,8 +20,6 @@ import model.Client;
 public class ClientDao implements CrudDao<Client>
 {
 	private final GenericDao gDao;
-	SimpleDateFormat currentFormat = new SimpleDateFormat("dd/MM/yyyy");
-	SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * Construtor da classe ClientDao.
@@ -104,7 +102,7 @@ public class ClientDao implements CrudDao<Client>
 		Connection connection = gDao.getConnection();
 		String querySql = """
 				SELECT u.user_name AS login, u.email, u.telephone,
-					   c.sex, c.social_name, c.cpf, CONVERT(CHAR(10), c.date_birth, 103) AS date_birth
+					   c.sex, c.social_name, c.cpf, CONVERT(CHAR(10), c.date_birth, 105) AS date_birth
 				FROM user_tbl u, client c
 				WHERE u.user_name = ? AND c.user_name = u.user_name
 				""";

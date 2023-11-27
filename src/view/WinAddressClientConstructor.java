@@ -272,14 +272,6 @@ public class WinAddressClientConstructor
         tfNumber       = new TextField();
         tfComplement   = new TextField();
 
-        TextFormatter<Integer> textFormatterNumericCEP = new TextFormatter<>(new IntegerStringConverter(), 0,
-                change -> {
-                    String newText = change.getControlNewText();
-                    if (newText.matches("\\d*")) {
-                        return change;
-                    }
-                    return null;
-                });
         TextFormatter<Integer> textFormatterNumericDoorNmbr = new TextFormatter<>(new IntegerStringConverter(), 0,
                 change -> {
                     String newText = change.getControlNewText();
@@ -289,7 +281,6 @@ public class WinAddressClientConstructor
                     return null;
                 });
 
-        tfCep.setTextFormatter(textFormatterNumericCEP);
         tfNumber.setTextFormatter(textFormatterNumericDoorNmbr);
 
         tfCityEstate.setDisable(true);
@@ -342,7 +333,7 @@ public class WinAddressClientConstructor
     {
         String cep = tfCep.getText();
         int len = cep.length();
-        return (len == 8);
+        return (len == 8 && tfCep.getText().matches("\\d*"));
     }
 
     private void setTextFieldErrorStyle(TextField tf)
