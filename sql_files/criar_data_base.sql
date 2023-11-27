@@ -1,6 +1,6 @@
--- CREATE DATABASE marketplace
--- GO
--- USE marketplace
+CREATE DATABASE marketplace
+GO
+USE marketplace
 
 -- Criar tabelas MarketingPlace
 CREATE TABLE user_tbl
