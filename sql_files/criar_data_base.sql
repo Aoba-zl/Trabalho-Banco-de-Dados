@@ -1,24 +1,6 @@
-/*
-USE master
-*/
-
-USE marketplace
-GO
-
-/*DROP
-DROP TABLE payment_slip
-DROP TABLE pix
-DROP TABLE payment
-DROP TABLE order_product
-DROP TABLE order_tbl
-DROP TABLE product
-DROP TABLE cart
-DROP TABLE address
-DROP TABLE client
-DROP TABLE store_address
-DROP TABLE store
-DROP TABLE user_tbl
-*/
+-- CREATE DATABASE marketplace
+-- GO
+-- USE marketplace
 
 -- Criar tabelas MarketingPlace
 CREATE TABLE user_tbl
