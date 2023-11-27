@@ -15,7 +15,7 @@ Luan Camilo Nogueira; RA 1110482212016 <br>
 
 - Plataforma windows 10 ou 11
 - Montagem do Banco de Dados
-  - Executar o arquivo "criar_data_base.sql"
+  - Executar o arquivo "sql_files/criar_data_base.sql"
 
 ----
 
@@ -27,7 +27,7 @@ Deve conter:
 - Codificação (Projeto Eclipse) – Netbeans será recusado;
   - [x] ``Em "src/"``
 - Queries do Banco de Dados;
-  - [x] ``Em "sql_file/"``
+  - [x] ``Em "sql_files/"``
 - Jar do projeto para ser executado;
   - [x] `"marketplace.jar"`
 
