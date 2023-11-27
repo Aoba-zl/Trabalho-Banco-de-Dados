@@ -23,13 +23,20 @@ Luan Camilo Nogueira; RA 1110482212016 <br>
 
 Deve conter:
 - Documentação (Requisitos, Javadoc e Testes); 
-  - ``Requisitos no PDF ("Trabalho_BD.pdf")``
+  - [x] ``Requisitos no PDF ("Trabalho_BD.pdf")``
 - Codificação (Projeto Eclipse) – Netbeans será recusado;
-  - ``Em "src/"``
+  - [x] ``Em "src/"``
 - Queries do Banco de Dados;
-  - ``Em "sql_file/"``
+  - [x] ``Em "sql_file/"``
 - Jar do projeto para ser executado;
-  - `"marketplace.jar"`
+  - [x] `"marketplace.jar"`
+
+Limitações:
+- [x] Mínimo de 5 entidades;
+- [x] Mínimo de 5 operações de software que chamem consultas SQL com operações,
+condicionais, funções de agregação;
+- [x] Mínimo de 5 operações de software que chamem consultas SQL com que envolvam
+junções de tabelas;
 
 ----
 
