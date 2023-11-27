@@ -38,7 +38,8 @@ public class CartDao {
                            prod.id_product,
                            order_tab.id_order,
                            prod.shipping,
-                           prod.total_stock
+                           prod.total_stock,
+                           prod.status
                     from order_tbl order_tab, order_product order_prod, product prod,
                          cart car, client cli
                     where order_tab.id_order = order_prod.id_order
@@ -60,6 +61,7 @@ public class CartDao {
                 product.setCod(rs.getInt(5));
                 product.setShipping(rs.getDouble(7));
                 product.setTotalStock(rs.getInt(8));
+                product.setStatus(rs.getInt(9));
                 item.setProduct(product);
                 item.setQuantity(rs.getInt(3));
                 item.setSubTotal(rs.getDouble(4));

@@ -46,7 +46,13 @@ public class CartController {
 
             int listSize= items.size();
             for (int i = 0; i < listSize; i++) {
-                listCart.add(items.get(i));
+                Item item= items.get(i);
+                if (item.getProduct().getStatus() == 1){
+                    clearCart(item);
+                }
+                else {
+                    listCart.add(items.get(i));
+                }
             }
 
             DecimalFormat decimalFormat = new DecimalFormat("#0.00");
