@@ -148,7 +148,8 @@ public class AccountMenuController
 		CartDao cartDao = new CartDao(genericDAO);
 
 		Order order = cartController.getIdOrder();
-		cartDao.deleteAllItem(order);
+		if (order.getId() != null)
+			cartDao.deleteAllItem(order);
 
 		clientDao.delete(new Client(login));
 		userDao.delete(new User(login));
