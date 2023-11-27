@@ -39,8 +39,9 @@ public class WinRegClientAddressConstructor implements GenericWindownInterface
      * Construtor da classe.
      *
      */
-    public WinRegClientAddressConstructor() {
-		// TODO Auto-generated constructor stub
+    public WinRegClientAddressConstructor()
+	{
+		super();
 	}
 
 
