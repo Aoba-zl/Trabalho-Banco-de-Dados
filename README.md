@@ -22,29 +22,30 @@ Luan Camilo Nogueira; RA 1110482212016 <br>
 
 ## Screeshots
 
-<img src="Img's README\@BD-login.png" width="321" height="107">
+<img src="Img's README\@BD-login.png" width="500" height="335">
 
 ### Cliente
-
-<img src="Img's README\@BD-adicionar cliente, dados pessoais.png" width="280" height="107">
-<img src="Img's README\@BD-adicionar cliente, endereço.png" width="280" height="107">
-<img src="Img's README\@BD-home cli.png" width="321" height="107">
-<img src="Img's README\@BD-Menu conta cli.png" width="321" height="107">
-<img src="Img's README\@BD-Menu conta endereços cli.png" width="321" height="107">
-<img src="Img's README\@BD-Menu conta add endereço cli.png" width="321" height="107">
-<img src="Img's README\@BD-Detalhes compra.png" width="321" height="107">
-<img src="Img's README\@BD-historico de compras.png" width="321" height="107">
-<img src="Img's README\@BD-carrinho.png" width="321" height="107">
+<div class="image-container">
+<img src="Img's README\@BD-adicionar cliente, dados pessoais.png" width="500" height="335">
+<img src="Img's README\@BD-adicionar cliente, endereço.png" width="500" height="335">
+</div>
+<img src="Img's README\@BD-home cli.png" width="500" height="335">
+<img src="Img's README\@BD-Menu conta cli.png" width="500" height="335">
+<img src="Img's README\@BD-Menu conta endereços cli.png" width="500" height="335">
+<img src="Img's README\@BD-Menu conta add endereço cli.png" width="500" height="335">
+<img src="Img's README\@BD-Detalhes compra.png" width="500" height="335">
+<img src="Img's README\@BD-historico de compras.png" width="500" height="335">
+<img src="Img's README\@BD-carrinho.png" width="500" height="335">
 
 ### Loja
 
-<img src="Img's README\@BD-adicionar loja, dados pessoais.png" width="321" height="107">
-<img src="Img's README\@BD-adicionar loja, endereço.png" width="321" height="107">
+<img src="Img's README\@BD-adicionar loja, dados pessoais.png" width="500" height="335">
+<img src="Img's README\@BD-adicionar loja, endereço.png" width="500" height="335">
 
-<img src="Img's README\@BD-home loja.png" width="321" height="107">
-<img src="Img's README\@BD-Pagina da loja.png" width="321" height="107">
+<img src="Img's README\@BD-home loja.png" width="500" height="335">
+<img src="Img's README\@BD-Pagina da loja.png" width="500" height="335">
 
 
-<img src="Img's README\@BD-consultar produto loja.png" width="321" height="107"> 
-<img src="Img's README\@BD-adicionar produto loja.png" width="321" height="107">
-<img src="Img's README\@BD-editar produto loja.png" width="321" height="107"> 
+<img src="Img's README\@BD-consultar produto loja.png" width="500" height="335"> 
+<img src="Img's README\@BD-adicionar produto loja.png" width="500" height="335">
+<img src="Img's README\@BD-editar produto loja.png" width="500" height="335"> 
