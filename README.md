@@ -1,5 +1,7 @@
 # Trabalho de Banco de Dados
 
+CRUD de um marketplace simples.
+
 ## Equipe
 
 Débora Cristina; 1110482212031 <br>
@@ -15,10 +17,21 @@ Luan Camilo Nogueira; RA 1110482212016 <br>
 - Montagem do Banco de Dados
   - Executar o arquivo "criar_data_base.sql"
 
+----
 
 ## Trabalho
 
+Deve conter:
+- Documentação (Requisitos, Javadoc e Testes); 
+  - ``Requisitos no PDF ("Trabalho_BD.pdf")``
+- Codificação (Projeto Eclipse) – Netbeans será recusado;
+  - ``Em "src/"``
+- Queries do Banco de Dados;
+  - ``Em "sql_file/"``
+- Jar do projeto para ser executado;
+  - `"marketplace.jar"`
 
+----
 
 ## Screeshots
 
@@ -47,11 +60,9 @@ Luan Camilo Nogueira; RA 1110482212016 <br>
 
 <div>
 <img src="Img's README\@BD-carrinho.png" width="400" height="268">
-
 </div>
+
 ### Loja
-
-
 
 <div>
 <img src="Img's README\@BD-adicionar loja, dados pessoais.png" width="400" height="268">
